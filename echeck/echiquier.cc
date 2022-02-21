@@ -1,7 +1,28 @@
-#include <cstdio>
+// #include <cstdio>
 #include <iostream>
+#include "echiquier.hh"
+#include "square.hh"
+#include "piece.hh"
+
 using namespace std;
 
+Echiquier::Echiquier(){
+        for (size_t y = 0; y < 8; y++)
+        for (size_t x = 0; x < 8; x++)
+                echiquier[x][y] = NULL;
+
+        //plant de jeux
+}
+
+Piece * Echiquier::get_piece(Square const square)const{
+        return echiquier[square.ligne][square.colone];
+}
+
+bool Echiquier::est_case_vide(Square const square) const{
+        if(get_piece(square) == NULL)
+                return true;
+        return false;
+}
 
 string Echiquier::canonical_position() const {
       string output;
