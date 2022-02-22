@@ -10,7 +10,7 @@ class Square
 {
     public:
         short ligne, colone;
-        Square(string const & position);
-        ~Square();
+        Square(string const position);
+        // ~Square();
 };
 

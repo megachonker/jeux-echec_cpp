@@ -10,7 +10,7 @@ echecs : main.cc echiquier.o square.o jeu.o
 echiquier.o : echiquier.cc echiquier.hh piece.o square.o
 	$(CC) $(CFLAGS) -c echiquier.cc
 
-jeu.o : jeu.hh jeu.cc
+jeu.o : jeu.hh jeu.cc echiquier.o
 	$(CC) $(CFLAGS) -c jeu.cc
 
 square.o : square.cc square.hh
@@ -20,6 +20,6 @@ piece.o : piece.cc piece.hh
 	$(CC) $(CFLAGS) -c piece.cc
 
 clean:
-	rm -rf *.dSYM *.o echecs *~
+	rm -rf *.gch *.dSYM *.o echecs *~
 
 

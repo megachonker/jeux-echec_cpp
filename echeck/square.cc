@@ -14,8 +14,8 @@ bool saisie_correcte_petitroque(string const & cmd) {
     regex mouvmtpattern("(O|o|0)-(O|o|0)");
     return regex_match(cmd,mouvmtpattern);
 }
-
-Square::Square(string const & position)
+                        //& ?
+Square::Square(string const position)
 {
     //a déplacer dans le ':' si ça marche
     ligne  = (char)position[1]-'0';
@@ -23,6 +23,6 @@ Square::Square(string const & position)
     cout << "colone " << colone << " ,ligne " << ligne << endl;
 }
 
-Square::~Square()
-{
-}
+// Square::~Square()
+// {
+// }

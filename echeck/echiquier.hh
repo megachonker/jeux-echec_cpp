@@ -17,5 +17,5 @@ public:
 
 
     Echiquier();
-    ~Echiquier();
+    // ~Echiquier();
 };

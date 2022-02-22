@@ -1,8 +1,9 @@
 #include <iostream>
-// #include <string>
+#include <string>
 #include "jeu.hh"
 #include "square.hh"
 #include "echiquier.hh"
+
 using namespace std;
 
 //--------------------------------------------------------------
