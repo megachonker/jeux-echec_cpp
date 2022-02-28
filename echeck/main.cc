@@ -37,8 +37,8 @@ int main() {
             string orig = mouvement.substr(0, 2);
             string dest = mouvement.substr(2, 2);
             // cout << "origine" << orig << " destination " << dest << endl;
-            monjeu.deplace(orig, dest);
-            monjeu.affiche();
+            if(monjeu.deplace(orig, dest)==true)
+                monjeu.affiche();
         }
         else stop=true;
     } while (!stop);

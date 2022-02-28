@@ -1,16 +1,22 @@
 #include "piece.hh"
 #include <iostream>
 #include <string>
+#include "square.hh"
 using namespace std;
 
 
-Piece::Piece(std::string nom, bool couleur): nom(nom),couleur(couleur)
+Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position)
 {
     //incrémenter l'id de la piece ?
 }
 
-Pion::Pion(bool couleur) : Piece(couleur ? "\u2659" :"\u265F",couleur)
+Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u2659" :"\u265F",couleur,position)
 {
+    to_string();
+}
+
+void Pion::deplace(){
+
 }
 
 string Piece::to_string() const{

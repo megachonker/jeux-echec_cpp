@@ -8,7 +8,7 @@ enum {blanc, noir};
 class Jeu
 {
     private:
-        bool joueur;
+        Couleur joueur;
         Echiquier mon_echiquier;
     public:
         void affiche();

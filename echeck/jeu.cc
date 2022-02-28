@@ -14,8 +14,10 @@ void Jeu::affiche(){
 }
 
 bool Jeu::deplace(string const orig, string const dest){
-        if (orig==dest)
+        if (orig==dest){
+            cout << "la source est la déstination ne peuve etre la meme" << endl;
             return false;
+        }
         
         bool flag = true;
 
@@ -23,11 +25,9 @@ bool Jeu::deplace(string const orig, string const dest){
         Square porigine(orig);
         Square pdst(dest);
         //la piece existe ?
-        mon_echiquier.est_case_vide(porigine);
-        if (flag == false)
+        if (mon_echiquier.est_case_vide(porigine)==true)
         {
             cout << "la case" << orig <<" est vide "<< endl;
-            return false;
         }
         
         //la couleur est bonne ?

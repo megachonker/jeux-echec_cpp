@@ -6,24 +6,27 @@
 //15 avrille
 class Piece
 {
-private:
+protected:
     short uid;//numeroter de 0 a 32
     std::string nom;
-    bool couleur;
+    Couleur couleur;
     Square position; // a metre a jour
     virtual void deplace()=0; //fonction abstraite pure
 public:
     std::string to_string() const;
     void affiche() const;
-    Piece(std::string nom, bool couleur);
+    Piece(std::string nom, Couleur couleur, Square position);
     // ~Piece();
 };
+
+// get_pos
 
 class Pion : public Piece
 {
     private:
+        void deplace();
     public:
-        Pion(bool couleur);
+        Pion(Couleur couleur,Square position);
 };
 // class Toure : public Piece
 // {}

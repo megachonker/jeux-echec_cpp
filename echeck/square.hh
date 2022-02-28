@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-enum{
+enum Couleur{
     Blanc,
     Noir
 };
@@ -14,6 +14,7 @@ class Square
     public:
         short ligne, colone;
         Square(std::string const position);
+        Square(int ligne, int colone);
         std::string to_string() const;
         // ~Square();
 };

@@ -7,13 +7,16 @@
 using namespace std;
 
 
+Square Echiquier::get_pos(){
+        return position;
+}
+
 // constructeur
 Echiquier::Echiquier () 
 {
         for (size_t y = 0; y < 8; y++)
         for (size_t x = 0; x < 8; x++)
                 echiquier[x][y] = nullptr;
-
 
         // piecesb[0] = new Tour    (Blanc ,Square(0,0));
         // piecesb[1] = new Cavalier(Blanc ,Square(0,1));
@@ -32,22 +35,22 @@ Echiquier::Echiquier ()
         // piecesn[6] = new Cavalier(Noir  ,Square(7,6));
         // piecesn[7] = new Tour    (Noir  ,Square(7,7));
 
-        // // allocation des pions
-        // for (unsigned char i(0);i<NBCOL;i++) {
-        //         pionsb[i] =  new Pion(Blanc     , Square(1,i));
-        //         pionsn[i] =  new Pion(Noir      , Square(6,i));
-        // }
-        // // Pose des pieces en position initiale
-        // // pose des pieces blanches
-        // for (unsigned char i(0);i<NBCOL;i++) 
-        // // met à jour le tableau echiquier, à la case donnée par 
-        // // la position courante de la pièce obtenue avec 
-        // // piecesb[i]->get_pos(),
-        // // avec le pointeur vers la pièce (piecesb[i])
-        // pose_piece(piecesb[i],piecesb[i]->get_pos());   
+        // allocation des pions
+        for (unsigned char i(0);i<8;i++) {
+                pionsb[i] =  new Pion(Blanc     , Square(1,i));
+                pionsn[i] =  new Pion(Noir      , Square(6,i));
+        }
+        // Pose des pieces en position initiale
+        // pose des pieces blanches
+        for (unsigned char i(0);i<8;i++) 
+        // met à jour le tableau echiquier, à la case donnée par 
+        // la position courante de la pièce obtenue avec 
+        piecesb[i]->get_pos();
+        // avec le pointeur vers la pièce (piecesb[i])
+        pose_piece(piecesb[i],piecesb[i]->get_pos());   
 
-        // // puis pose des pièces noires, pions blancs, pions noirs
-        // // ....
+        // puis pose des pièces noires, pions blancs, pions noirs
+        // ....
 }
 
 
@@ -56,7 +59,7 @@ Piece * Echiquier::get_piece(Square const square)const{
 }
 
 bool Echiquier::est_case_vide(Square const square) const{
-        if(get_piece(square) == NULL)
+        if(get_piece(square) == nullptr)
                 return true;
         return false;
 }

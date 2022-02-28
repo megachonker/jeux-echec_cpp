@@ -20,7 +20,11 @@ Square::Square(string const position)
     //a déplacer dans le ':' si ça marche
     ligne  = (char)position[1]-'1';
     colone = (char)position[0]-'a';
-    // cout << "colone " << colone << " ,ligne " << ligne << endl;
+}
+
+Square::Square(int ligne, int colone) : ligne(ligne),colone(colone)
+{
+    
 }
 
 std::string Square::to_string() const{
