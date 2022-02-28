@@ -2,7 +2,6 @@
 // #include "piece.hh"
 #include "echiquier.hh"
 #include <string>
-using namespace std;
 
 enum {blanc, noir};
 
@@ -13,7 +12,7 @@ class Jeu
         Echiquier mon_echiquier;
     public:
         void affiche();
-        bool deplace(string JSP, string const orig, string const dest);
+        bool deplace(std::string JSP, std::string const orig, std::string const dest);
 
         Jeu(/* args */);
         // ~Jeu();

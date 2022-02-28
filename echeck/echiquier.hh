@@ -2,7 +2,6 @@
 #include <iostream>
 #include "piece.hh"
 #include "square.hh"
-using namespace std;
 
 class Echiquier
 {
@@ -12,8 +11,8 @@ private:
 public:
     bool  est_case_vide(Square const square) const;
     Piece * get_piece(Square const square)   const;
-    string canonical_position() const;
-    string pgn_piece_name(string const name, bool view_pawn, bool view_color) const;
+    std::string canonical_position() const;
+    std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
 
 
     Echiquier();

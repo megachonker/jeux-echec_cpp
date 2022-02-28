@@ -4,20 +4,23 @@ DFLAGS=DEBUG
 
 target : echecs
 
-echecs : main.cc echiquier.o square.o jeu.o
-	$(CC) $(CFLAGS) $< -o $@
+echecs : main.o echiquier.o square.o jeu.o piece.o
+	$(CC) $(CFLAGS) $^ -o $@
 
-echiquier.o : echiquier.cc echiquier.hh piece.o square.o
-	$(CC) $(CFLAGS) -c echiquier.cc
+main.o : main.cc jeu.hh square.hh echiquier.hh
+	$(CC) $(CFLAGS) -c $<
 
-jeu.o : jeu.hh jeu.cc echiquier.o
-	$(CC) $(CFLAGS) -c jeu.cc
+echiquier.o : echiquier.cc echiquier.hh piece.hh square.hh
+	$(CC) $(CFLAGS) -c $<
+
+jeu.o : jeu.cc jeu.hh echiquier.hh
+	$(CC) $(CFLAGS) -c $<
 
 square.o : square.cc square.hh
-	$(CC) $(CFLAGS) -c square.cc
+	$(CC) $(CFLAGS) -c $<
 
 piece.o : piece.cc piece.hh
-	$(CC) $(CFLAGS) -c piece.cc
+	$(CC) $(CFLAGS) -c $<
 
 clean:
 	rm -rf *.gch *.dSYM *.o echecs *~

@@ -1,11 +1,10 @@
 #pragma once
 #include <string>
-using namespace std;
 
 class Piece
 {
 private:
-    string test;
+    std::string test;
 
     //uid
     //nom \u2656 affichera ♖
@@ -13,15 +12,9 @@ private:
     //position
 
 public:
-    string to_string() const;
+    std::string to_string() const;
     Piece(/* args */);
     ~Piece();
 };
 
-Piece::Piece(/* args */)
-{
-}
 
-Piece::~Piece()
-{
-}
