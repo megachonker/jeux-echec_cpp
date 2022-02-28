@@ -18,10 +18,15 @@ bool saisie_correcte_petitroque(string const & cmd) {
 Square::Square(string const position)
 {
     //a déplacer dans le ':' si ça marche
-    ligne  = (char)position[1]-'0';
+    ligne  = (char)position[1]-'1';
     colone = (char)position[0]-'a';
-    cout << "colone " << colone << " ,ligne " << ligne << endl;
+    // cout << "colone " << colone << " ,ligne " << ligne << endl;
 }
+
+std::string Square::to_string() const{
+    return "colone: "+std::to_string(colone)+" Ligne: "+std::to_string(ligne);
+}
+
 
 // Square::~Square()
 // {

@@ -9,15 +9,32 @@ Jeu::Jeu(/* args */){
     mon_echiquier = Echiquier();
 }
 
-void Jeu::affiche(){}
-bool Jeu::deplace(string coordoner, string const orig, string const dest){
-    //convertion
-    Square square(coordoner);
-    //la piece existe ?
-    mon_echiquier.est_case_vide(square);
-    
-    //la couleur est bonne ?
-    mon_echiquier.get_piece(square);//.color et self couleur
+void Jeu::affiche(){
+    mon_echiquier.affiche();
+}
 
-    return true;
+bool Jeu::deplace(string const orig, string const dest){
+        if (orig==dest)
+            return false;
+        
+        bool flag = true;
+
+        //convertion
+        Square porigine(orig);
+        Square pdst(dest);
+        //la piece existe ?
+        mon_echiquier.est_case_vide(porigine);
+        if (flag == false)
+        {
+            cout << "la case" << orig <<" est vide "<< endl;
+            return false;
+        }
+        
+        //la couleur est bonne ?
+        mon_echiquier.get_piece(porigine);//.color et self couleur
+        mon_echiquier.get_piece(pdst);//.color et self couleur
+
+        // mon_echiquier.deplace(pdst);
+
+        return flag;
     }

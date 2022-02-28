@@ -12,7 +12,7 @@ class Jeu
         Echiquier mon_echiquier;
     public:
         void affiche();
-        bool deplace(std::string JSP, std::string const orig, std::string const dest);
+        bool deplace(std::string const orig, std::string const dest);
 
         Jeu(/* args */);
         // ~Jeu();

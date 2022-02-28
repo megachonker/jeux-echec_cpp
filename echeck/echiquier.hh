@@ -13,7 +13,7 @@ public:
     Piece * get_piece(Square const square)   const;
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
-
+    void affiche () const;
 
     Echiquier();
     // ~Echiquier();
