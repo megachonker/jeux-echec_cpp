@@ -6,10 +6,10 @@
 
 using namespace std;
 
+void Echiquier::pose_piece(Piece * piece,Square position){
 
-Square Echiquier::get_pos(){
-        return position;
 }
+
 
 // constructeur
 Echiquier::Echiquier () 
@@ -42,13 +42,13 @@ Echiquier::Echiquier ()
         }
         // Pose des pieces en position initiale
         // pose des pieces blanches
-        for (unsigned char i(0);i<8;i++) 
-        // met à jour le tableau echiquier, à la case donnée par 
-        // la position courante de la pièce obtenue avec 
-        piecesb[i]->get_pos();
-        // avec le pointeur vers la pièce (piecesb[i])
-        pose_piece(piecesb[i],piecesb[i]->get_pos());   
-
+        for (unsigned char i(0);i<8;i++){
+                // met à jour le tableau echiquier, à la case donnée par 
+                // la position courante de la pièce obtenue avec 
+                piecesb[i]->get_pos();
+                // avec le pointeur vers la pièce (piecesb[i])
+                pose_piece(piecesb[i],piecesb[i]->get_pos());   
+        }
         // puis pose des pièces noires, pions blancs, pions noirs
         // ....
 }

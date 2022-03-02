@@ -18,7 +18,7 @@ public:
     std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
     void affiche () const;
     Square get_pos();
-
+    void pose_piece(Piece *piece,Square position);
     Echiquier();
     // ~Echiquier();
 };

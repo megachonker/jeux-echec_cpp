@@ -4,6 +4,9 @@
 #include "square.hh"
 using namespace std;
 
+Square Piece::get_pos(){
+    return position;
+}
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position)
 {
@@ -15,7 +18,7 @@ Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u26
     to_string();
 }
 
-void Pion::deplace(){
+void Pion::deplace(Square dst){
 
 }
 
