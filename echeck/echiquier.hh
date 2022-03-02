@@ -7,6 +7,7 @@ class Echiquier
 {
 private:
     Piece * echiquier[8][8];
+    //faire des vecteur comme un clochard
     Pion  * pionsb[8];//nombre de Pion par joueur
     Pion  * pionsn[8];
     Piece * piecesb[8];//nombre de Piece par joueur
@@ -18,7 +19,7 @@ public:
     std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
     void affiche () const;
     Square get_pos();
-    void pose_piece(Piece *piece,Square position);
+    void pose_piece(Piece *piece);
     Echiquier();
     // ~Echiquier();
 };

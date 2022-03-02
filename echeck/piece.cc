@@ -30,6 +30,6 @@ return  "uid:"+std::to_string(uid)+"\n"+
 }
 
 void Piece::affiche() const{
-    cout << nom << endl;   
+    cout << nom ;   
 }
 

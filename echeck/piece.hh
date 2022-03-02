@@ -11,8 +11,8 @@ protected:
     std::string nom;
     Couleur couleur;
     Square position; // a metre a jour
-    // virtual void deplace(Square dst)=0; //fonction abstraite pure <== peut pas
-    virtual void deplace(Square dst); //fonction abstraite pure
+    virtual void deplace(Square dst)=0; //fonction abstraite pure <== peut pas
+    // virtual void deplace(Square dst); //fonction abstraite pure
 public:
     std::string to_string() const;
     void affiche() const;
@@ -21,7 +21,6 @@ public:
     // ~Piece();
 };
 
-// get_pos
 
 class Pion : public Piece
 {

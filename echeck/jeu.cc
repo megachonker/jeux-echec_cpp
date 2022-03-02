@@ -24,10 +24,10 @@ bool Jeu::deplace(string const orig, string const dest){
         //convertion
         Square porigine(orig);
         Square pdst(dest);
-        //la piece existe ?
+        //piece source
         if (mon_echiquier.est_case_vide(porigine)==true)
         {
-            cout << "la case" << orig <<" est vide "<< endl;
+            cout << "la case origine" << orig <<" est vide "<< endl;
         }
         
         //la couleur est bonne ?

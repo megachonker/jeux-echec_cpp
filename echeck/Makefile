@@ -23,6 +23,6 @@ piece.o : piece.cc piece.hh
 	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.*
 
 

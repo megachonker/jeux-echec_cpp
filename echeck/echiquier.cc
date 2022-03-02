@@ -6,8 +6,12 @@
 
 using namespace std;
 
-void Echiquier::pose_piece(Piece * piece,Square position){
-
+void Echiquier::pose_piece(Piece * piece){
+        echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
+        // piece->deplace(position);
+        // Square oldpos = piece->get_pos(); 
+        // echiquier[position.ligne][position.colone] = echiquier[oldpos.ligne][oldpos.colone];
+        // echiquier[oldpos.ligne][oldpos.colone] = nullptr;
 }
 
 
@@ -39,18 +43,17 @@ Echiquier::Echiquier ()
         for (unsigned char i(0);i<8;i++) {
                 pionsb[i] =  new Pion(Blanc     , Square(1,i));
                 pionsn[i] =  new Pion(Noir      , Square(6,i));
+                pose_piece(pionsn[i]);
+                pose_piece(pionsb[i]);
         }
-        // Pose des pieces en position initiale
-        // pose des pieces blanches
-        for (unsigned char i(0);i<8;i++){
-                // met à jour le tableau echiquier, à la case donnée par 
-                // la position courante de la pièce obtenue avec 
-                piecesb[i]->get_pos();
-                // avec le pointeur vers la pièce (piecesb[i])
-                pose_piece(piecesb[i],piecesb[i]->get_pos());   
-        }
-        // puis pose des pièces noires, pions blancs, pions noirs
-        // ....
+//         // pose des pieces blanches
+//         for (unsigned char i(0);i<8;i++){       //on part du principe qu'il y a 8 piece spécial blance !
+//                 pose_piece(piecesb[i]);   
+//         }
+//         // puis pose des pièces noires, pions blancs, pions noirs
+//         for (unsigned char i(0);i<8;i++){
+//                 pose_piece(piecesn[i]);   
+//         }
 }
 
 
