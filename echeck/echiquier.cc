@@ -6,14 +6,18 @@
 
 using namespace std;
 
+
+
 void Echiquier::pose_piece(Piece * piece){
-        echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
-        // piece->deplace(position);
-        // Square oldpos = piece->get_pos(); 
-        // echiquier[position.ligne][position.colone] = echiquier[oldpos.ligne][oldpos.colone];
-        // echiquier[oldpos.ligne][oldpos.colone] = nullptr;
+        deplace(piece,piece->get_pos());
 }
 
+
+bool Echiquier::deplace(Piece * piece, Square const dst){
+        echiquier[piece->get_pos().ligne][piece->get_pos().colone]=nullptr;
+        echiquier[dst.ligne][dst.colone]=piece;
+        return true;
+}
 
 // constructeur
 Echiquier::Echiquier () 

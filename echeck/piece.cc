@@ -19,7 +19,7 @@ Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u26
 }
 
 void Pion::deplace(Square dst){
-
+    
 }
 
 string Piece::to_string() const{

@@ -11,9 +11,9 @@ protected:
     std::string nom;
     Couleur couleur;
     Square position; // a metre a jour
-    virtual void deplace(Square dst)=0; //fonction abstraite pure <== peut pas
     // virtual void deplace(Square dst); //fonction abstraite pure
 public:
+    virtual void deplace(Square dst)=0; //fonction abstraite pure <== peut pas
     std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);

@@ -1,6 +1,7 @@
 #include "jeu.hh"
 #include "echiquier.hh"
 #include "square.hh"
+#include "piece.hh"
 #include <string>
 using namespace std;
 
@@ -31,10 +32,11 @@ bool Jeu::deplace(string const orig, string const dest){
         }
         
         //la couleur est bonne ?
-        mon_echiquier.get_piece(porigine);//.color et self couleur
+        Piece * piece_sel = mon_echiquier.get_piece(porigine);//.color et self couleur
         mon_echiquier.get_piece(pdst);//.color et self couleur
 
-        // mon_echiquier.deplace(pdst);
+        flag = mon_echiquier.deplace(piece_sel,pdst);//passer une ref au lieux d'un pointeurs
+
 
         return flag;
     }
