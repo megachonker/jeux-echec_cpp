@@ -30,11 +30,12 @@ bool Pion::deplace(Square dst){
     cout << "distance "<<distance << endl;
     if (distance <= 0)
     {
-        //deplacement_null
+        cout << "deplacement_null" << endl;
         return false;
     }
     
     if((vierge==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
+        cout << "déplacement imposible" << endl;
         return true;
     }
     return false;
@@ -52,3 +53,7 @@ Couleur Piece::get_couleur(){
     return couleur;
 }
 
+Pion::~Pion(){
+    cout << "destructeur de pion" << endl;
+    // delete this;
+}

@@ -9,8 +9,6 @@ using namespace std;
 //--------------------------------------------------------------
 int main() {
 
-    // Square foo("a1");
-    // cout << foo.ligne << "," << foo.colone << endl;
     Jeu monjeu;  // initialise le jeu
     bool stop(false);
     monjeu.affiche();
@@ -38,11 +36,11 @@ int main() {
             // découper case origine et destination
             string orig = mouvement.substr(0, 2);
             string dest = mouvement.substr(2, 2);
-            // cout << "origine" << orig << " destination " << dest << endl;
             if(monjeu.deplace(orig, dest)==true)
                 monjeu.affiche();
         }
         else stop=true;
     } while (!stop);
+
     return 0;
 }

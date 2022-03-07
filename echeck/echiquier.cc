@@ -25,7 +25,6 @@ bool Echiquier::deplace(Piece * piece, Square const dst){
         return true;
 }
 
-// constructeur
 Echiquier::Echiquier () 
 {
         for (size_t y = 0; y < 8; y++)
@@ -64,6 +63,23 @@ Echiquier::Echiquier ()
 //         for (unsigned char i(0);i<8;i++){
 //                 pose_piece(piecesn[i]);   
 //         }
+}
+
+
+Echiquier::~Echiquier(){
+        cout << "destructeur echiquier" << endl;
+        // for (unsigned char i(0);i<8;i++) {
+        
+        //         pionsb[i]->~Pion();
+        //         pionsn[i]->~Pion();
+        // }
+        // for (unsigned char i(0);i<8;i++) {
+        //         delete pionsb[i];
+        //         delete pionsn[i];
+        // }
+        
+        // delete [] pionsb;
+        // delete [] pionsn;
 }
 
 

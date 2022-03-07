@@ -3,8 +3,8 @@ CFLAGS=--std=c++11 -Wall -Wextra -ggdb
 # -O2
 DFLAGS=DEBUG
 
-target : echecs
-	valgrind  -s  --track-origins=yes --leak-check=full ./echecs	
+target : echecs themove.auchan
+	cat themove.auchan|valgrind --track-origins=yes --leak-check=full ./echecs
 
 echecs : main.o echiquier.o square.o jeu.o piece.o
 	$(CC) $(CFLAGS) $^ -o $@

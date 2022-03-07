@@ -53,4 +53,7 @@ bool Jeu::deplace(string const orig, string const dest){
         //fin du tour on change 
         joueur==Blanc ? joueur=Noir : joueur =Blanc;
         return flag;
-    }
+}
+Jeu::~Jeu(){
+    cout << "destructeur jeux " << endl;
+}

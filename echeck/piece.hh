@@ -7,19 +7,16 @@
 class Piece
 {
 protected:
-    // short uid;//numeroter de 0 a 32
     std::string nom;
     Couleur couleur;
     Square position; // a metre a jour
-    // virtual void deplace(Square dst); //fonction abstraite pure
 public:
-    virtual bool deplace(Square dst)=0; //fonction abstraite pure <== peut pas
+    virtual bool deplace(Square dst)=0;
     std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos();
     Couleur get_couleur();
-    // ~Piece();
 };
 
 
@@ -31,6 +28,7 @@ class Pion : public Piece
     public:
         std::string to_string() const;
         Pion(Couleur couleur,Square position,bool vierge);
+        ~Pion();
 };
 // class Toure : public Piece
 // {}

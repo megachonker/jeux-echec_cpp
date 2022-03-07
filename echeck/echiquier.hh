@@ -22,5 +22,5 @@ public:
     void pose_piece(Piece * piece);
     bool deplace(Piece * piece, Square const dst);
     Echiquier();
-    // ~Echiquier();
+    ~Echiquier();
 };

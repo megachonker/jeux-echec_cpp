@@ -13,5 +13,5 @@ class Jeu
         bool deplace(std::string const orig, std::string const dest);
 
         Jeu(/* args */);
-        // ~Jeu();
+        ~Jeu();
 };
