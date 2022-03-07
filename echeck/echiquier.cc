@@ -14,8 +14,12 @@ void Echiquier::pose_piece(Piece * piece){
 
 
 bool Echiquier::deplace(Piece * piece, Square const dst){
+        // if (piece->deplace(dst)==false)
+        //         return false;
+
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=nullptr;
         echiquier[dst.ligne][dst.colone]=piece;
+
         return true;
 }
 

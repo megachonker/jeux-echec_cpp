@@ -13,11 +13,12 @@ protected:
     Square position; // a metre a jour
     // virtual void deplace(Square dst); //fonction abstraite pure
 public:
-    virtual void deplace(Square dst)=0; //fonction abstraite pure <== peut pas
+    virtual bool deplace(Square dst)=0; //fonction abstraite pure <== peut pas
     std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos();
+    Couleur get_couleur();
     // ~Piece();
 };
 
@@ -25,7 +26,7 @@ public:
 class Pion : public Piece
 {
     private:
-        void deplace(Square dst);
+        bool deplace(Square dst);
     public:
         Pion(Couleur couleur,Square position);
 };

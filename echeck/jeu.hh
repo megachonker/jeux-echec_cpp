@@ -1,9 +1,7 @@
 #pragma once
-// #include "piece.hh"
 #include "echiquier.hh"
 #include <string>
-
-enum {blanc, noir};
+// #include "square.hh" // import enum
 
 class Jeu
 {

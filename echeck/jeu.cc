@@ -7,6 +7,7 @@ using namespace std;
 
 Jeu::Jeu(/* args */){
     //init du plateaux
+    joueur=Blanc;//commance par les blanc
     mon_echiquier = Echiquier();
 }
 
@@ -15,6 +16,7 @@ void Jeu::affiche(){
 }
 
 bool Jeu::deplace(string const orig, string const dest){
+    //REMPLACER LES FALSE PAR DES NOMS ERREUR 
         if (orig==dest){
             cout << "la source est la déstination ne peuve etre la meme" << endl;
             return false;
@@ -26,17 +28,29 @@ bool Jeu::deplace(string const orig, string const dest){
         Square porigine(orig);
         Square pdst(dest);
         //piece source
-        if (mon_echiquier.est_case_vide(porigine)==true)
-        {
+        if (mon_echiquier.est_case_vide(porigine)==true){
             cout << "la case origine" << orig <<" est vide "<< endl;
+            return false;
+        }
+
+        Piece * piece_sel = mon_echiquier.get_piece(porigine);
+        //piece source bonne couleur dst couleur opposer 
+            //modifier si troc
+        if( piece_sel->get_couleur()!=joueur){            //tes si la piece sel appartien au joueur
+            cout << "vous avez selectioner une piece d'un autre joueur" << endl;
+            return false;
+        }
+
+        if (    mon_echiquier.get_piece(pdst) != nullptr    //tes si dest est une piece
+            &&  mon_echiquier.get_piece(pdst)->get_couleur()!=joueur) //test couleur opposer)
+        {
+            cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
+            return false;
         }
         
-        //la couleur est bonne ?
-        Piece * piece_sel = mon_echiquier.get_piece(porigine);//.color et self couleur
-        mon_echiquier.get_piece(pdst);//.color et self couleur
-
         flag = mon_echiquier.deplace(piece_sel,pdst);//passer une ref au lieux d'un pointeurs
 
-
+        //fin du tour on change 
+        joueur==Blanc ? joueur=Noir : joueur =Blanc;
         return flag;
     }

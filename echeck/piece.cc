@@ -18,8 +18,8 @@ Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u26
     to_string();
 }
 
-void Pion::deplace(Square dst){
-    
+bool Pion::deplace(Square dst){
+    return true;
 }
 
 string Piece::to_string() const{
@@ -31,5 +31,9 @@ return  "uid:"+std::to_string(uid)+"\n"+
 
 void Piece::affiche() const{
     cout << nom ;   
+}
+
+Couleur Piece::get_couleur(){
+    return couleur;
 }
 
