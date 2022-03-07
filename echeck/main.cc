@@ -12,14 +12,16 @@ int main() {
     // Square foo("a1");
     // cout << foo.ligne << "," << foo.colone << endl;
     Jeu monjeu;  // initialise le jeu
-    string mouvement;
     bool stop(false);
     monjeu.affiche();
+    string mouvement;
     do
     {
+        mouvement.clear();    
         cout << "Coup (eg. a1a8) ? ";
         cin >> mouvement;
-        if (mouvement != "/quit") {
+        //catch le ctrl+d
+        if (mouvement != "/quit" && !mouvement.empty()) {
             //lower case
             mouvement[0] = tolower(mouvement[0]);
             mouvement[2] = tolower(mouvement[2]);
@@ -42,4 +44,5 @@ int main() {
         }
         else stop=true;
     } while (!stop);
+    return 0;
 }
