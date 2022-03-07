@@ -6,8 +6,6 @@
 
 using namespace std;
 
-
-
 void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
@@ -28,26 +26,28 @@ bool Echiquier::deplace(Piece * piece, Square const dst){
 
 Echiquier::Echiquier () 
 {
-        for (size_t y = 0; y < 8; y++)
-        for (size_t x = 0; x < 8; x++)
-                echiquier[x][y] = nullptr;
-
-        // piecesb[0] = new Tour    (Blanc ,Square(0,0));
+        for (size_t y = 0; y < 8; y++){
+                for (size_t x = 0; x < 8; x++)
+                        echiquier[x][y] = nullptr;
+                piecesb[y] = nullptr;
+                piecesn[y] = nullptr;
+        }
+        piecesb[0] = new Tour    (Blanc ,Square(0,0));
         // piecesb[1] = new Cavalier(Blanc ,Square(0,1));
         // piecesb[2] = new Fou     (Blanc ,Square(0,2));
         // piecesb[3] = new Dame    (Blanc ,Square(0,3));
         // piecesb[4] = new Roi     (Blanc ,Square(0,4));
         // piecesb[5] = new Fou     (Blanc ,Square(0,5));
         // piecesb[6] = new Cavalier(Blanc ,Square(0,6));
-        // piecesb[7] = new Tour    (Blanc ,Square(0,7));
-        // piecesn[0] = new Tour    (Noir  ,Square(7,0));
+        piecesb[7] = new Tour    (Blanc ,Square(0,7));
+        piecesn[0] = new Tour    (Noir  ,Square(7,0));
         // piecesn[1] = new Cavalier(Noir  ,Square(7,1));
         // piecesn[2] = new Fou     (Noir  ,Square(7,2));
         // piecesn[3] = new Dame    (Noir  ,Square(7,3));
         // piecesn[4] = new Roi     (Noir  ,Square(7,4));
         // piecesn[5] = new Fou     (Noir  ,Square(7,5));
         // piecesn[6] = new Cavalier(Noir  ,Square(7,6));
-        // piecesn[7] = new Tour    (Noir  ,Square(7,7));
+        piecesn[7] = new Tour    (Noir  ,Square(7,7));
 
         // allocation des pions
         for (unsigned char i(0);i<8;i++) {
@@ -56,14 +56,19 @@ Echiquier::Echiquier ()
                 pose_piece(pionsn[i]);
                 pose_piece(pionsb[i]);
         }
-//         // pose des pieces blanches
-//         for (unsigned char i(0);i<8;i++){       //on part du principe qu'il y a 8 piece spécial blance !
-//                 pose_piece(piecesb[i]);   
-//         }
-//         // puis pose des pièces noires, pions blancs, pions noirs
-//         for (unsigned char i(0);i<8;i++){
-//                 pose_piece(piecesn[i]);   
-//         }
+        // pose des pieces blanches
+        for (unsigned char i(0);i<8;i++){       //on part du principe qu'il y a 8 piece spécial blance !
+                if(piecesb[i]!=nullptr)
+                        pose_piece(piecesb[i]);   
+        }
+        // puis pose des pièces noires, pions blancs, pions noirs
+        for (unsigned char i(0);i<8;i++){
+                if(piecesn[i]!=nullptr)
+                        pose_piece(piecesn[i]);   
+        }
+
+
+        
 }
 
 

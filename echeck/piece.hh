@@ -30,6 +30,15 @@ class Pion : public Piece
         Pion(Couleur couleur,Square position,bool vierge);
         ~Pion();
 };
+
+class Tour : public Piece
+{
+    private:
+        bool deplace(Square dst);
+    public:
+        Tour(Couleur couleur,Square position);
+};
+
 // class Toure : public Piece
 // {}
 

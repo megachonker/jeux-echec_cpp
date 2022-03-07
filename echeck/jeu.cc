@@ -41,10 +41,14 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
 
-        if (    mon_echiquier.get_piece(pdst) != nullptr    //tes si dest est une piece
-            &&  mon_echiquier.get_piece(pdst)->get_couleur()!=joueur) //test couleur opposer)
+        if (mon_echiquier.get_piece(pdst) != nullptr)   //test si dest est une piece
         {
-            cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
+            //destination moi
+            if(mon_echiquier.get_piece(pdst)->get_couleur()==joueur)//test couleur opposer)
+                cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
+            //destination piece enemie
+            else
+                //charger un autre patern d'attaque / flag pour le pion ?
             return false;
         }
         
