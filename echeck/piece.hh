@@ -7,7 +7,7 @@
 class Piece
 {
 protected:
-    short uid;//numeroter de 0 a 32
+    // short uid;//numeroter de 0 a 32
     std::string nom;
     Couleur couleur;
     Square position; // a metre a jour
@@ -25,9 +25,11 @@ public:
 class Pion : public Piece
 {
     private:
+        bool vierge;
         void deplace(Square dst);
     public:
-        Pion(Couleur couleur,Square position);
+        std::string to_string() const;
+        Pion(Couleur couleur,Square position,bool vierge);
 };
 // class Toure : public Piece
 // {}

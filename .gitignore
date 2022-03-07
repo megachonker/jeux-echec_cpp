@@ -30,3 +30,9 @@ agence/.vscode/tasks.json
 agence/a.out
 agence/main
 echeck/.vscode/settings.json
+echeck/square.o
+echeck/piece.o
+echeck/main.o
+echeck/jeu.o
+echeck/echiquier.o
+echeck/echecs
