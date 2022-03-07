@@ -51,8 +51,8 @@ Echiquier::Echiquier ()
 
         // allocation des pions
         for (unsigned char i(0);i<8;i++) {
-                pionsb[i] =  new Pion(Blanc     , Square(1,i));
-                pionsn[i] =  new Pion(Noir      , Square(6,i));
+                pionsb[i] =  new Pion(Blanc     , Square(1,i),true);
+                pionsn[i] =  new Pion(Noir      , Square(6,i),true);
                 pose_piece(pionsn[i]);
                 pose_piece(pionsb[i]);
         }

@@ -50,3 +50,9 @@ puissance4/partie.h.gch
 puissance4/.vscode/settings.json
 puissance4/main
 echeck/run.m
+echeck/square.o
+echeck/piece.o
+echeck/main.o
+echeck/jeu.o
+echeck/echiquier.o
+echeck/echecs

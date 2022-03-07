@@ -8,14 +8,17 @@ Square Piece::get_pos(){
     return position;
 }
 
-Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position)
-{
-    //incrémenter l'id de la piece ?
+Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
+
+string Piece::to_string() const{    
+return  string("\n")+
+        "noms:      "+nom+"\n"+
+        "position:  "+ position.to_string()+"\n"+
+        "couleur:   "+(couleur==Blanc?"Blanc":"Noir");
 }
 
-Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u2659" :"\u265F",couleur,position)
-{
-    to_string();
+void Piece::affiche() const{
+    cout << nom ;   
 }
 
 
@@ -31,21 +34,18 @@ bool Pion::deplace(Square dst){
         return false;
     }
     
-    if((purity==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
+    if((vierge==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
         return true;
     }
     return false;
 }
+Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
+{cout << to_string()<< endl;}
 
-string Piece::to_string() const{
-return  "uid:"+std::to_string(uid)+"\n"+
-        "couleur:"+std::to_string(couleur)+"\n"+
-        "noms:"+nom+"\n"+
-        "position: "+ position.to_string();
-}
 
-void Piece::affiche() const{
-    cout << nom ;   
+string Pion::to_string() const{    
+return  Piece::to_string()+"\n"+
+        "vierge:    "+(vierge==true?"Oui":"Non");
 }
 
 Couleur Piece::get_couleur(){
