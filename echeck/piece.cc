@@ -35,9 +35,11 @@ bool Pion::deplace(Square dst){
     }
     
     if((vierge==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
-        cout << "déplacement imposible" << endl;
+        position = dst;
         return true;
     }
+    
+    cout << "déplacement imposible" << endl;
     return false;
 }
 Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)

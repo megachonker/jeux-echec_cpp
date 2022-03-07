@@ -48,11 +48,13 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
         
-        flag = mon_echiquier.deplace(piece_sel,pdst);//passer une ref au lieux d'un pointeurs
-
-        //fin du tour on change 
-        joueur==Blanc ? joueur=Noir : joueur =Blanc;
-        return flag;
+        //fin du tour on change
+        if(mon_echiquier.deplace(piece_sel,pdst))
+            joueur==Blanc ? joueur=Noir : joueur =Blanc;
+        
+        
+        //pas claire le flag
+        return true;
 }
 Jeu::~Jeu(){
     cout << "destructeur jeux " << endl;
