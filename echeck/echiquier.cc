@@ -9,13 +9,15 @@ using namespace std;
 
 
 void Echiquier::pose_piece(Piece * piece){
-        deplace(piece,piece->get_pos());
+        echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
 
 
 bool Echiquier::deplace(Piece * piece, Square const dst){
-        // if (piece->deplace(dst)==false)
-        //         return false;
+        if (piece->deplace(dst)==false)
+                return false;
+
+        cout << "vrite position" << endl;
 
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=nullptr;
         echiquier[dst.ligne][dst.colone]=piece;

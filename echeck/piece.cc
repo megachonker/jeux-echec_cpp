@@ -18,8 +18,23 @@ Pion::Pion(Couleur couleur,Square position) : Piece(nom = couleur==Blanc ? "\u26
     to_string();
 }
 
+
 bool Pion::deplace(Square dst){
-    return true;
+    int distance = dst.ligne-position.ligne;
+    if (couleur==Noir)
+        distance*=-1;
+
+    cout << "distance "<<distance << endl;
+    if (distance <= 0)
+    {
+        //deplacement_null
+        return false;
+    }
+    
+    if((purity==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
+        return true;
+    }
+    return false;
 }
 
 string Piece::to_string() const{
