@@ -132,3 +132,18 @@ bool Dame::deplace(Square dst) const {
     return  F.deplace(dst)
         ||  T.deplace(dst);
 }
+
+/////////////
+//  Roi    //
+/////////////
+
+Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position){}
+
+bool Roi::deplace(Square dst) const {
+    //afaire !!!!!!!!!!!!!!!!!!
+    Fou F(couleur,position);
+    Tour T(couleur,position);
+
+    return  F.deplace(dst)
+        ||  T.deplace(dst);
+}

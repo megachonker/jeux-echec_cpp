@@ -64,16 +64,11 @@ class Dame : public Piece
         virtual ~Dame(){}
 };
 
+class Roi : public Piece
+{
+    public:
+        bool deplace(Square dst) const override;
+        Roi(Couleur couleur,Square position);
+        virtual ~Roi(){}
+};
 
-//   if      (name=="\u2656") psymb="R";  // Rook W
-//   else if (name=="\u2658") psymb="N";  // Knight W
-//   else if (name=="\u2655") psymb="Q";  // Queen W
-//   else if (name=="\u2654") psymb="K";  // King W
-
-
-// pion fout cavalier renet toure  rois 
-// \u2656
-// \u2658
-// \u2657
-// \u2655
-// \u2654
