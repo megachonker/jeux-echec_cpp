@@ -32,13 +32,13 @@ Couleur Piece::get_couleur(){
 Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
 {cout << to_string()<< endl;}
 
-// bool Pion::mangerdiag(Square dst){
-//     //bon ?
-//     if(dst.to_string()==Square(position.ligne+1,dst.colone+(couleur==Noir ? -1: 1)).to_string()
-//     || dst.to_string()==Square(position.ligne-1,dst.colone+(couleur==Noir ? -1: 1)).to_string())
-//         return true;
-//     return false;
-// }
+bool Pion::mangerdiag(Square dst){
+    //bon ?
+    if(dst.to_string()==Square(position.ligne+1,dst.colone+(couleur==Noir ? -1: 1)).to_string()
+    || dst.to_string()==Square(position.ligne-1,dst.colone+(couleur==Noir ? -1: 1)).to_string())
+        return true;
+    return false;
+}
 
 
 bool Pion::deplace(Square dst){
@@ -55,9 +55,7 @@ bool Pion::deplace(Square dst){
         return false;
     }
 
-    if((vierge==true && dst.ligne-position.ligne<=2)||(dst.ligne-position.ligne<=1)){
-        position = dst;    
-    // if((vierge==true && distance<=2)||(distance<=1)||mangerdiag(dst)){
+    if((vierge==true && distance<=2)||(distance<=1)||mangerdiag(dst)){
         return true;
     }
     
@@ -71,39 +69,39 @@ return  Piece::to_string()+"\n"+
 }
 
 
-Pion::~Pion(){
-    cout << "destructeur de pion" << endl;
-    // delete this;
+// Pion::~Pion(){
+//     cout << "destructeur de pion" << endl;
+//     // delete this;
+// }
+
+//////////////
+//  Tour    //
+//////////////
+
+Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
+
+bool Tour::deplace(Square dst){
+    //jeu verifie que la src est destination ne sont pas les meme
+    if(position.colone == dst.colone){
+        return true;
+    }
+    else if (position.ligne == dst.ligne)
+    {
+        return true;
+    }
+    return false;
 }
 
-// //////////////
-// //  Tour    //
-// //////////////
-
-// Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
-
-// bool Tour::deplace(Square dst){
-//     //jeu verifie que la src est destination ne sont pas les meme
-//     if(position.colone == dst.colone){
-//         return true;
-//     }
-//     else if (position.ligne == dst.ligne)
-//     {
-//         return true;
-//     }
-//     return false;
-// }
-
-// //////////////
-// //  fout    //
-// //////////////
+//////////////
+//  fout    //
+//////////////
  
-// Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u265D",couleur,position){}
+Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u265D",couleur,position){}
 
-// bool Fou::deplace(Square dst){
-//     //check ratio de déplacement a 1
-//     if(((dst.colone-position.colone)/(dst.ligne-position.ligne))==1){
-//         return true;
-//     }
-//     return false;
-// }
+bool Fou::deplace(Square dst){
+    //check ratio de déplacement a 1
+    if(((dst.colone-position.colone)/(dst.ligne-position.ligne))==1){
+        return true;
+    }
+    return false;
+}
