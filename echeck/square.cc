@@ -31,6 +31,9 @@ std::string Square::to_string() const{
     return "colone: "+std::to_string(colone)+" Ligne: "+std::to_string(ligne);
 }
 
+bool Square::operator== (Square cmp) const{
+    return (ligne==cmp.ligne)&&(colone==cmp.ligne);
+}
 
 // Square::~Square()
 // {

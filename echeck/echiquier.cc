@@ -33,20 +33,20 @@ Echiquier::Echiquier ()
                 piecesn[y] = nullptr;
         }
         piecesb[0] = new Tour    (Blanc ,Square(0,0));
-        // piecesb[1] = new Cavalier(Blanc ,Square(0,1));
-        // piecesb[2] = new Fou     (Blanc ,Square(0,2));
-        // piecesb[3] = new Dame    (Blanc ,Square(0,3));
+        piecesb[1] = new Cavalier(Blanc ,Square(0,1));
+        piecesb[2] = new Fou     (Blanc ,Square(0,2));
+        piecesb[3] = new Dame    (Blanc ,Square(0,3));
         // piecesb[4] = new Roi     (Blanc ,Square(0,4));
-        // piecesb[5] = new Fou     (Blanc ,Square(0,5));
-        // piecesb[6] = new Cavalier(Blanc ,Square(0,6));
+        piecesb[5] = new Fou     (Blanc ,Square(0,5));
+        piecesb[6] = new Cavalier(Blanc ,Square(0,6));
         piecesb[7] = new Tour    (Blanc ,Square(0,7));
         piecesn[0] = new Tour    (Noir  ,Square(7,0));
-        // piecesn[1] = new Cavalier(Noir  ,Square(7,1));
-        // piecesn[2] = new Fou     (Noir  ,Square(7,2));
-        // piecesn[3] = new Dame    (Noir  ,Square(7,3));
+        piecesn[1] = new Cavalier(Noir  ,Square(7,1));
+        piecesn[2] = new Fou     (Noir  ,Square(7,2));
+        piecesn[3] = new Dame    (Noir  ,Square(7,3));
         // piecesn[4] = new Roi     (Noir  ,Square(7,4));
-        // piecesn[5] = new Fou     (Noir  ,Square(7,5));
-        // piecesn[6] = new Cavalier(Noir  ,Square(7,6));
+        piecesn[5] = new Fou     (Noir  ,Square(7,5));
+        piecesn[6] = new Cavalier(Noir  ,Square(7,6));
         piecesn[7] = new Tour    (Noir  ,Square(7,7));
 
         // allocation des pions
@@ -65,10 +65,7 @@ Echiquier::Echiquier ()
         for (unsigned char i(0);i<8;i++){
                 if(piecesn[i]!=nullptr)
                         pose_piece(piecesn[i]);   
-        }
-
-
-        
+        }   
 }
 
 
@@ -76,10 +73,10 @@ Echiquier::~Echiquier(){
         cout << "destructeur echiquier" << endl;
 
         for (unsigned char i(0);i<8;i++) {
-                if ( pionsb[i] != nullptr)
+                if (pionsb[i] != nullptr)
                         delete pionsb[i];
         
-                if ( pionsn[i] != nullptr)        
+                if (pionsn[i] != nullptr)        
                         delete pionsn[i];
         
                 if(piecesb[i] != nullptr)
@@ -87,13 +84,8 @@ Echiquier::~Echiquier(){
                         
                 if(piecesn[i] != nullptr)
                         delete piecesn[i];
-                
         }
-        
-        // delete [] pionsb;
-        // delete [] pionsn;
 }
-
 
 Piece * Echiquier::get_piece(Square const square)const{
         return echiquier[square.ligne][square.colone];
