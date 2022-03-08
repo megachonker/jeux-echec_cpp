@@ -22,12 +22,11 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
         
-        bool flag = true;
-
         //convertion
         Square porigine(orig);
         Square pdst(dest);
-        //piece source
+
+        //piece origine non vide
         if (mon_echiquier.est_case_vide(porigine)==true){
             cout << "la case origine" << orig <<" est vide "<< endl;
             return false;
@@ -51,6 +50,21 @@ bool Jeu::deplace(string const orig, string const dest){
                 //charger un autre patern d'attaque / flag pour le pion ?
             return false;
         }
+
+
+
+        // if (mon_echiquier.est_case_vide(pdst) != false)   //test si dest est une piece
+        // {
+        //     //destination moi
+        //     if(mon_echiquier.get_piece(pdst)->get_couleur()==joueur){//test couleur opposer)
+        //         cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
+        //         return false;
+        //     }
+        //     // //destination piece enemie
+        //     // else
+        //     //     mon_echiquier.get_piece(pdst)->deplace(dest);
+        //     //     //charger un autre patern d'attaque / flag pour le pion ?
+        // }
         
         //fin du tour on change
         if(mon_echiquier.deplace(piece_sel,pdst))
@@ -63,3 +77,4 @@ bool Jeu::deplace(string const orig, string const dest){
 Jeu::~Jeu(){
     cout << "destructeur jeux " << endl;
 }
+

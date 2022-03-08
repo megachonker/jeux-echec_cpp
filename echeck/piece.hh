@@ -17,6 +17,7 @@ public:
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos();
     Couleur get_couleur();
+    // virtual ~Piece(){};
 };
 
 
@@ -24,20 +25,30 @@ class Pion : public Piece
 {
     private:
         bool vierge;
+        // bool deplace(Square dst);
         bool deplace(Square dst);
+        // bool mangerdiag(Square dst);
     public:
         std::string to_string() const;
-        Pion(Couleur couleur,Square position,bool vierge);
-        ~Pion();
+        Pion(Couleur couleur,Square position,bool vierge); 
+            ~Pion();
 };
 
-class Tour : public Piece
-{
-    private:
-        bool deplace(Square dst);
-    public:
-        Tour(Couleur couleur,Square position);
-};
+// class Tour : public Piece
+// {
+//     private:
+//         bool deplace(Square dst);
+//     public:
+//         Tour(Couleur couleur,Square position);
+// };
+
+// class Fou : public Piece
+// {
+//     private:
+//         bool deplace(Square dst);
+//     public:
+//         Fou(Couleur couleur,Square position);
+// };
 
 // class Toure : public Piece
 // {}
