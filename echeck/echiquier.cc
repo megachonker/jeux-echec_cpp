@@ -74,15 +74,21 @@ Echiquier::Echiquier ()
 
 Echiquier::~Echiquier(){
         cout << "destructeur echiquier" << endl;
-        // for (unsigned char i(0);i<8;i++) {
+
+        for (unsigned char i(0);i<8;i++) {
+                if ( pionsb[i] != nullptr)
+                        delete pionsb[i];
         
-        //         pionsb[i]->~Pion();
-        //         pionsn[i]->~Pion();
-        // }
-        // for (unsigned char i(0);i<8;i++) {
-        //         delete pionsb[i];
-        //         delete pionsn[i];
-        // }
+                if ( pionsn[i] != nullptr)        
+                        delete pionsn[i];
+        
+                if(piecesb[i] != nullptr)
+                        delete piecesb[i];
+                        
+                if(piecesn[i] != nullptr)
+                        delete piecesn[i];
+                
+        }
         
         // delete [] pionsb;
         // delete [] pionsn;

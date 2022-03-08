@@ -8,7 +8,6 @@ using namespace std;
 Jeu::Jeu(/* args */){
     //init du plateaux
     joueur=Blanc;//commance par les blanc
-    mon_echiquier = Echiquier();
 }
 
 void Jeu::affiche(){

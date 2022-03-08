@@ -17,6 +17,8 @@ public:
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos();
     Couleur get_couleur();
+    virtual ~Piece(){}
+
 };
 
 
@@ -28,7 +30,7 @@ class Pion : public Piece
     public:
         std::string to_string() const;
         Pion(Couleur couleur,Square position,bool vierge);
-        ~Pion();
+        virtual ~Pion(){}
 };
 
 class Tour : public Piece
@@ -37,6 +39,7 @@ class Tour : public Piece
         bool deplace(Square dst);
     public:
         Tour(Couleur couleur,Square position);
+        virtual ~Tour(){}
 };
 
 // class Toure : public Piece

@@ -62,10 +62,10 @@ return  Piece::to_string()+"\n"+
 }
 
 
-Pion::~Pion(){
-    cout << "destructeur de pion" << endl;
-    // delete this;
-}
+// Pion::~Pion(){
+//     cout << "destructeur de pion" << endl;
+//     // delete this;
+// }
 
 //////////////
 //  Tour    //
