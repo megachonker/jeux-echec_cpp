@@ -14,6 +14,10 @@ void Jeu::affiche(){
     mon_echiquier.affiche();
 }
 
+Couleur Jeu::get_couleur(){
+    return joueur;
+}
+
 bool Jeu::deplace(string const orig, string const dest){
     //REMPLACER LES FALSE PAR DES NOMS ERREUR 
         if (orig==dest){
@@ -46,30 +50,18 @@ bool Jeu::deplace(string const orig, string const dest){
                 cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
             }
             //destination piece enemie
-            else
-                mon_echiquier.get_piece(porigine)->deplace(dest);
-            return false;
+            // else
+            //     mon_echiquier.get_piece(porigine)->deplace(dest);
+            // return false;
         }
         //case vide
-        else
-            mon_echiquier.get_piece(porigine)->deplace(dest);
-
-
-
-
-        // if (mon_echiquier.est_case_vide(pdst) != false)   //test si dest est une piece
-        // {
-        //     //destination moi
-        //     if(mon_echiquier.get_piece(pdst)->get_couleur()==joueur){//test couleur opposer)
-        //         cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
-        //         return false;
-        //     }
-        //     // //destination piece enemie
-        //     // else
-        //     //     mon_echiquier.get_piece(pdst)->deplace(dest);
-        //     //     //charger un autre patern d'attaque / flag pour le pion ?
-        // }
+        // else
         
+        if(mon_echiquier.get_piece(porigine)->deplace(dest)==false){
+            cout << "erreur dans les déplacement ..." << endl;
+            return false;
+        }
+
         //on prend en compte le déplacement
         if(mon_echiquier.deplace(piece_sel,pdst)==false)
             return false;

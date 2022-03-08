@@ -16,7 +16,7 @@ int main() {
     do
     {
         mouvement.clear();    
-        cout << "Coup (eg. a1a8) ? ";
+        cout <<  couleur_to_str(monjeu.get_couleur()) << ": Coup (eg. a1a8) ? ";
         cin >> mouvement;
         //catch le ctrl+d
         if (mouvement != "/quit" && !mouvement.empty()) {

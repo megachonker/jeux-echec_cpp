@@ -16,8 +16,6 @@ bool Echiquier::deplace(Piece * piece, Square const dst){
         if (piece->deplace(dst)==false)
                 return false;
 
-        cout << "vrite position" << endl;
-
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         echiquier[dst.ligne][dst.colone]=piece;
 

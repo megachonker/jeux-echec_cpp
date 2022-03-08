@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include "square.hh"
+
 using namespace std;
 
 bool saisie_correcte(string const & cmd) {
@@ -35,6 +36,8 @@ bool Square::operator== (Square cmp) const{
     return (ligne==cmp.ligne)&&(colone==cmp.ligne);
 }
 
-// Square::~Square()
-// {
-// }
+
+////////////////////////////////////////////////
+std::string couleur_to_str(Couleur ma_couleur){
+    return ma_couleur==Blanc ? "Blanc" : "Noir";
+}
