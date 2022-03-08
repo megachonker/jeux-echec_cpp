@@ -11,7 +11,7 @@ protected:
     Couleur couleur;
     Square position; // a metre a jour
 public:
-    virtual bool deplace(Square dst)=0;
+    virtual bool deplace(Square dst)=0 const;
     std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);
@@ -48,9 +48,25 @@ class Fou : public Piece
         Fou(Couleur couleur,Square position);
 };
 
+class Cavalier : public Piece
+{
+    private:
+        bool deplace(Square dst);
+    public:
+        Cavalier(Couleur couleur,Square position);
+};
+
+class Dame : public Piece
+{
+    private:
+        bool deplace(Square dst);
+    public:
+        Dame(Couleur couleur,Square position);
+};
+
+
 //   if      (name=="\u2656") psymb="R";  // Rook W
 //   else if (name=="\u2658") psymb="N";  // Knight W
-//   else if (name=="\u2657") psymb="B";  // Bishop W
 //   else if (name=="\u2655") psymb="Q";  // Queen W
 //   else if (name=="\u2654") psymb="K";  // King W
 

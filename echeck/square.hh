@@ -16,6 +16,7 @@ class Square
         Square(std::string const position);
         Square(int ligne, int colone);
         std::string to_string() const;
+        bool operator== (Square cmp)const;
         // ~Square();
 };
 
