@@ -10,12 +10,22 @@ Square Piece::get_pos(){
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
 
+/**
+ * @brief déplace la piece
+ * 
+ *  met a jour ces coordoner si check_dst() est bon
+ * 
+ * peut être vue comme un setter de la position de la piece
+ * 
+ * @param dst   mouvement de déstination
+ * @return true déplacement effectuer
+ * @return false déplacement non effecif
+ */
 bool Piece::deplace(Square dst){
     //le déplacement est possible ?
     if (check_dst(dst)==true)
     {
-        //metre a jour
-        cout << "old pose: " << position.to_string() << " newpos: " << dst.to_string() << endl;
+        //metre a jour la position
         position=dst;
         return true;
     }
@@ -44,21 +54,42 @@ Couleur Piece::get_couleur(){
 Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
 {cout << to_string()<< endl;}
 
+
+/**
+ * @brief test les mouvent d'attaque du pion
+ * 
+ * prend en compte si le pion a déja avancer
+ * 
+ * @param dst 
+ * @return true 
+ * @return false 
+ */
 bool Pion::mangerdiag(Square dst) const{
-    //bon ?
-    if(dst.to_string()==Square(position.ligne+1,dst.colone+(couleur==Noir ? -1: 1)).to_string()
-    || dst.to_string()==Square(position.ligne-1,dst.colone+(couleur==Noir ? -1: 1)).to_string())
+    //a déja bouger ?
+    char distance = (vierge==true ? 2 : 1);
+    //si noir on inverse le sens
+    char sens = (couleur==Noir ? -1: 1);
+    //portée effectif du coup
+    char porter = dst.colone+(distance*sens);
+
+    if(dst==Square(position.ligne+1,porter)
+    || dst==Square(position.ligne-1,porter))
         return true;
+
+    cout << "déplacement offensif du pion invalide" << endl;
     return false;
 }
 
-
+/**
+ * @brief vérifie géométriquement la fesabilitée d'un mouvement du pion
+ * @param dst 
+ * @return true 
+ * @return false 
+ */
 bool Pion::check_dst(Square dst) const {
-    // return true;
-    int distance = dst.ligne-position.ligne;
 
-    if (couleur==Noir)
-        distance*=-1;
+    int distance =  (dst.ligne-position.ligne)//distance parcourue
+                    *(couleur==Noir ? -1 : 1);//si noir on inverse le sens
 
     //check si le pion avance
     if (distance <= 0)
@@ -67,9 +98,8 @@ bool Pion::check_dst(Square dst) const {
         return false;
     }
 
-    if((vierge==true && distance<=2)||(distance<=1)||mangerdiag(dst)){
+    if((vierge==true && distance<=2)||(distance<=1)||mangerdiag(dst))
         return true;
-    }
     
     cout << "déplacement imposible" << endl;
     return false;
@@ -79,6 +109,27 @@ string Pion::to_string() const{
 return  Piece::to_string()+"\n"+
         "vierge:    "+(vierge==true?"Oui":"Non");
 }
+
+// /**
+//  * @brief 
+//  * @param dst 
+//  * @return true 
+//  * @return false 
+//  */
+// bool Pion::deplace(Square dst){
+
+//     if (check_dst(dst)==true)
+//     {
+//         //metre a jour la position
+//         position=dst;
+//         vierge=false;
+//         return true;
+//     }
+
+
+//     return false;
+// }
+
 
 //////////////
 //  Tour    //

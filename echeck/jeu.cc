@@ -31,14 +31,15 @@ bool Jeu::deplace(string const orig, string const dest){
 
         //piece origine non vide
         if (mon_echiquier.est_case_vide(porigine)==true){
-            cout << "la case origine" << orig <<" est vide "<< endl;
+            cout << "la case origine" << porigine.to_string() <<" est vide "<< endl;
             return false;
         }
 
         Piece * piece_sel = mon_echiquier.get_piece(porigine);
+
         //piece source bonne couleur dst couleur opposer 
             //modifier si troc
-        if( piece_sel->get_couleur()!=joueur){            //tes si la piece sel appartien au joueur
+        if( piece_sel->get_couleur()!=joueur){//tes si la piece sel appartien au joueur
             cout << "vous avez selectioner une piece d'un autre joueur" << endl;
             return false;
         }

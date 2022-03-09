@@ -12,7 +12,7 @@ void Echiquier::pose_piece(Piece * piece){
 
 
 bool Echiquier::deplace(Piece * piece, Square const dst){
-        
+
         Square old_pos = piece->get_pos();
         if (piece->deplace(dst)==false)
                 return false;
@@ -91,8 +91,9 @@ Piece * Echiquier::get_piece(Square const square)const{
 }
 
 bool Echiquier::est_case_vide(Square const square) const{
-        if(get_piece(square) == nullptr)
+        if(get_piece(square) == nullptr){
                 return true;
+        }
         return false;
 }
 
