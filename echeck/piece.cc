@@ -23,7 +23,9 @@ Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur
  * @return true déplacement effectuer
  * @return false déplacement non effecif
  */
-bool Piece::deplace(Square dst){
+bool Piece::deplace(Square dst,bool ofensif){
+    (void)ofensif; //utiliser juste pour pion
+
     //le déplacement est possible ?
     if (check_dst(dst)==true)
     {
@@ -33,6 +35,7 @@ bool Piece::deplace(Square dst){
     }
     return false;
 }
+
 
 string Piece::to_string() const{    
 return  string("\n")+
@@ -67,12 +70,10 @@ Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ?
  * @return false 
  */
 bool Pion::mangerdiag(Square dst) const{
-    //a déja bouger ?
-    char distance = (vierge==true ? 2 : 1);
     //si noir on inverse le sens
     char sens = (couleur==Noir ? -1: 1);
     //portée effectif du coup
-    char porter = dst.colone+(distance*sens);
+    char porter = dst.colone+sens;
 
     if(dst==Square(position.ligne+1,porter)
     || dst==Square(position.ligne-1,porter))
@@ -100,7 +101,15 @@ bool Pion::check_dst(Square dst) const {
         return false;
     }
 
-    if((vierge==true && distance<=2)||(distance<=1)||mangerdiag(dst))
+    
+    if (position.colone!=dst.colone)
+    {
+        cout << "le pion ne peut ce déplacer que en avant" << endl;
+        return false;
+    }
+    
+
+    if((vierge==true && distance<=2)||(distance<=1))
         return true;
     
     cout << "déplacement imposible" << endl;
@@ -113,18 +122,22 @@ return  Piece::to_string()+"\n"+
 }
 
 /**
- * @brief 
+ * @brief réécriture du déplacement de piece
+ * le pion étant la soeule piece qui possède un déplacement alternative s'il est agressif
+ * dans la redéfinition on fait appelle a une fonction alternative mangerdiag
  * @param dst 
  * @return true 
  * @return false 
  */
-bool Pion::deplace(Square dst){
-    if (!Piece::deplace(dst))
+bool Pion::deplace(Square dst,bool offensif){
+    if (!offensif && !Piece::deplace(dst,false))//verrification clasique
         return false;
+    if (offensif && !mangerdiag(dst))  //verifie les paterne d'aggression
+        return false;
+    
     vierge=false;
     return true;
 }
-
 
 //////////////
 //  Tour    //

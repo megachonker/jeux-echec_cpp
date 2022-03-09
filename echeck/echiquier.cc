@@ -19,25 +19,28 @@ void Echiquier::pose_piece(Piece * piece){
  * @return true 
  * @return false 
  */
-bool Echiquier::deplace(Piece * piece, Square const dst){
+bool Echiquier::deplace(Piece * piece, Square const dst,bool offensif=false){
 
         Square old_pos = piece->get_pos();
-        if (piece->deplace(dst)==false)
+        if (piece->deplace(dst,offensif)==false)
                 return false;
 
         //supression de la piece sur l'echequier
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         echiquier[dst.ligne][dst.colone]=piece;
-        
-        //supression des piece dans les main des joueur
-        for (size_t i = 0; i < 8; i++)
-        {
-                if(piecesb[i]!=nullptr && piecesb[i]->get_pos()==old_pos)
-                        piecesb[i]=nullptr;
-                if(piecesn[i]!=nullptr && piecesn[i]->get_pos()==old_pos)
-                        piecesn[i]=nullptr;
-        }
-        
+
+
+        if (offensif){
+                //supression des piece dans les main des joueur
+                for (size_t i = 0; i < 8; i++)
+                {
+                        if(piecesb[i]!=nullptr && piecesb[i]->get_pos()==old_pos)
+                                piecesb[i]=nullptr;
+                        if(piecesn[i]!=nullptr && piecesn[i]->get_pos()==old_pos)
+                                piecesn[i]=nullptr;
+                }
+        }        
+      
 
         return true;
 }

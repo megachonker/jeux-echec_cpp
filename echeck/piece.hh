@@ -11,7 +11,7 @@ protected:
     Couleur couleur;
     Square position; // a metre a jour
 public:
-    virtual bool deplace(Square dst); //setter de la position
+    virtual bool deplace(Square dst,bool offensif);
     virtual bool check_dst(Square dst) const =0; //virtuel pure
     std::string to_string() const;
     void affiche() const;
@@ -28,7 +28,7 @@ class Pion : public Piece
         bool vierge;
         bool mangerdiag(Square dst) const;
     public:
-        bool deplace(Square dst) override; 
+        bool deplace(Square dst,bool offensif) override; 
         bool check_dst(Square dst) const override ;
         std::string to_string() const;
         Pion(Couleur couleur,Square position,bool vierge); 

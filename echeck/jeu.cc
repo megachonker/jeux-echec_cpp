@@ -52,13 +52,13 @@ bool Jeu::deplace(string const orig, string const dest){
             }
             // destination piece enemie
             else
-                if(mon_echiquier.deplace(piece_sel,pdst)==false)
+                if(mon_echiquier.deplace(piece_sel,pdst,true)==false)
                     return false;
         }
         //case vide
         else
             //on prend en compte le déplacement
-            if(mon_echiquier.deplace(piece_sel,pdst)==false)
+            if(mon_echiquier.deplace(piece_sel,pdst,false)==false)
                 return false;
 
         //fin du tour on change

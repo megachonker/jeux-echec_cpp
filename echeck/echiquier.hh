@@ -20,7 +20,7 @@ public:
     void affiche () const;
     Square get_pos();
     void pose_piece(Piece * piece);
-    bool deplace(Piece * piece, Square const dst);
+    bool deplace(Piece * piece, Square const dst,bool offensif);
     Echiquier();
     ~Echiquier();
 };
