@@ -10,6 +10,18 @@ Square Piece::get_pos(){
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
 
+bool Piece::deplace(Square dst){
+    //le déplacement est possible ?
+    if (check_dst(dst)==true)
+    {
+        //metre a jour
+        cout << "old pose: " << position.to_string() << " newpos: " << dst.to_string() << endl;
+        position=dst;
+        return true;
+    }
+    return false;
+}
+
 string Piece::to_string() const{    
 return  string("\n")+
         "noms:      "+nom+"\n"+
@@ -41,7 +53,7 @@ bool Pion::mangerdiag(Square dst) const{
 }
 
 
-bool Pion::deplace(Square dst) const {
+bool Pion::check_dst(Square dst) const {
     // return true;
     int distance = dst.ligne-position.ligne;
 
@@ -51,7 +63,7 @@ bool Pion::deplace(Square dst) const {
     //check si le pion avance
     if (distance <= 0)
     {
-        cout << "deplacement_null" << endl;
+        cout << "check_dstment_null" << endl;
         return false;
     }
 
@@ -74,7 +86,7 @@ return  Piece::to_string()+"\n"+
 
 Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
 
-bool Tour::deplace(Square dst) const  {
+bool Tour::check_dst(Square dst) const  {
 
     //jeu verifie que la src est destination ne sont pas les meme
     if(position.colone == dst.colone){
@@ -93,7 +105,7 @@ bool Tour::deplace(Square dst) const  {
  
 Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u265D",couleur,position){}
 
-bool Fou::deplace(Square dst) const {
+bool Fou::check_dst(Square dst) const {
     //check ratio de déplacement a 1
     if(((dst.colone-position.colone)/(dst.ligne-position.ligne))==1){
         return true;
@@ -107,7 +119,7 @@ bool Fou::deplace(Square dst) const {
  
 Cavalier::Cavalier(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2658" :"\u265E",couleur,position){}
 
-bool Cavalier::deplace(Square dst) const {
+bool Cavalier::check_dst(Square dst) const {
     return
     Square(position.ligne+2,position.colone+1) == dst ||
     Square(position.ligne+2,position.colone-1) == dst ||
@@ -125,12 +137,12 @@ bool Cavalier::deplace(Square dst) const {
  
 Dame::Dame(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2655" :"\u265B",couleur,position){}
 
-bool Dame::deplace(Square dst) const {
+bool Dame::check_dst(Square dst) const {
     Fou F(couleur,position);
     Tour T(couleur,position);
 
-    return  F.deplace(dst)
-        ||  T.deplace(dst);
+    return  F.check_dst(dst)
+        ||  T.check_dst(dst);
 }
 
 /////////////
@@ -139,7 +151,7 @@ bool Dame::deplace(Square dst) const {
 
 Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position){}
 
-bool Roi::deplace(Square dst) const {
+bool Roi::check_dst(Square dst) const {
     return
         Square(position.ligne+1,position.colone+1) == dst ||
         Square(position.ligne+1,position.colone-1) == dst ||

@@ -56,3 +56,5 @@ echeck/main.o
 echeck/jeu.o
 echeck/echiquier.o
 echeck/echecs
+echeck/.vscode/launch.json
+echeck/.vscode/tasks.json

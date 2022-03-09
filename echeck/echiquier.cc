@@ -12,6 +12,7 @@ void Echiquier::pose_piece(Piece * piece){
 
 
 bool Echiquier::deplace(Piece * piece, Square const dst){
+        
         Square old_pos = piece->get_pos();
         if (piece->deplace(dst)==false)
                 return false;

@@ -11,7 +11,8 @@ protected:
     Couleur couleur;
     Square position; // a metre a jour
 public:
-    virtual bool deplace(Square dst) const =0; //virtuel pure
+    bool deplace(Square dst); //setter de la position
+    virtual bool check_dst(Square dst) const =0; //virtuel pure
     std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);
@@ -27,7 +28,7 @@ class Pion : public Piece
         bool vierge;
         bool mangerdiag(Square dst) const;
     public:
-        bool deplace(Square dst) const override ;
+        bool check_dst(Square dst) const override ;
         std::string to_string() const;
         Pion(Couleur couleur,Square position,bool vierge); 
 };
@@ -35,7 +36,7 @@ class Pion : public Piece
 class Tour : public Piece
 {
     public:
-        bool deplace(Square dst) const override;
+        bool check_dst(Square dst) const override;
         Tour(Couleur couleur,Square position);
         virtual ~Tour(){}
 };
@@ -43,7 +44,7 @@ class Tour : public Piece
 class Fou : public Piece
 {
     public:
-        bool deplace(Square dst) const override;
+        bool check_dst(Square dst) const override;
         Fou(Couleur couleur,Square position);
         virtual ~Fou(){}
 };
@@ -51,7 +52,7 @@ class Fou : public Piece
 class Cavalier : public Piece
 {
     public:
-        bool deplace(Square dst) const override ;
+        bool check_dst(Square dst) const override ;
         Cavalier(Couleur couleur,Square position);
         virtual ~Cavalier(){}
 };
@@ -59,7 +60,7 @@ class Cavalier : public Piece
 class Dame : public Piece
 {
     public:
-        bool deplace(Square dst) const override;
+        bool check_dst(Square dst) const override;
         Dame(Couleur couleur,Square position);
         virtual ~Dame(){}
 };
@@ -67,7 +68,7 @@ class Dame : public Piece
 class Roi : public Piece
 {
     public:
-        bool deplace(Square dst) const override;
+        bool check_dst(Square dst) const override;
         Roi(Couleur couleur,Square position);
         virtual ~Roi(){}
 };

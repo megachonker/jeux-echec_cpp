@@ -57,11 +57,6 @@ bool Jeu::deplace(string const orig, string const dest){
         //case vide
         // else
         
-        if(mon_echiquier.get_piece(porigine)->deplace(dest)==false){
-            cout << "erreur dans les déplacement ..." << endl;
-            return false;
-        }
-
         //on prend en compte le déplacement
         if(mon_echiquier.deplace(piece_sel,pdst)==false)
             return false;
