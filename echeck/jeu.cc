@@ -50,17 +50,16 @@ bool Jeu::deplace(string const orig, string const dest){
             if(mon_echiquier.get_piece(pdst)->get_couleur()==joueur){//test couleur opposer)
                 cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
             }
-            //destination piece enemie
-            // else
-            //     mon_echiquier.get_piece(porigine)->deplace(dest);
-            // return false;
+            // destination piece enemie
+            else
+                if(mon_echiquier.deplace(piece_sel,pdst)==false)
+                    return false;
         }
         //case vide
-        // else
-        
-        //on prend en compte le déplacement
-        if(mon_echiquier.deplace(piece_sel,pdst)==false)
-            return false;
+        else
+            //on prend en compte le déplacement
+            if(mon_echiquier.deplace(piece_sel,pdst)==false)
+                return false;
 
         //fin du tour on change
         joueur==Blanc ? joueur=Noir : joueur =Blanc;

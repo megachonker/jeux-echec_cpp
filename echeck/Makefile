@@ -4,7 +4,7 @@ CFLAGS=--std=c++11 -Wall -Wextra -ggdb
 DFLAGS=DEBUG
 
 target : echecs themove.auchan
-	cat themove.auchan|valgrind --track-origins=yes --leak-check=full ./echecs
+	cat pion.auchan|valgrind --track-origins=yes --leak-check=full ./echecs
 
 echecs : main.o echiquier.o square.o jeu.o piece.o
 	$(CC) $(CFLAGS) $^ -o $@

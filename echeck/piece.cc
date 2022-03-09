@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include "square.hh"
+#include "mad.h"//calcule absolut facilement
+
 using namespace std;
 
 Square Piece::get_pos(){
@@ -110,25 +112,18 @@ return  Piece::to_string()+"\n"+
         "vierge:    "+(vierge==true?"Oui":"Non");
 }
 
-// /**
-//  * @brief 
-//  * @param dst 
-//  * @return true 
-//  * @return false 
-//  */
-// bool Pion::deplace(Square dst){
-
-//     if (check_dst(dst)==true)
-//     {
-//         //metre a jour la position
-//         position=dst;
-//         vierge=false;
-//         return true;
-//     }
-
-
-//     return false;
-// }
+/**
+ * @brief 
+ * @param dst 
+ * @return true 
+ * @return false 
+ */
+bool Pion::deplace(Square dst){
+    if (!Piece::deplace(dst))
+        return false;
+    vierge=false;
+    return true;
+}
 
 
 //////////////
@@ -158,7 +153,8 @@ Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u
 
 bool Fou::check_dst(Square dst) const {
     //check ratio de déplacement a 1
-    if(((dst.colone-position.colone)/(dst.ligne-position.ligne))==1){
+    cout << "COLONE " << dst.colone-position.colone << "LIGNE" <<  dst.ligne-position.ligne << endl;
+    if((abs((dst.colone-position.colone))/abs((dst.ligne-position.ligne)))==1){
         return true;
     }
     return false;

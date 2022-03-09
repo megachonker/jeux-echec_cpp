@@ -10,15 +10,34 @@ void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
 
-
+/**
+ * @brief déplace la piece 
+ *      effectue les verification necessaire
+ * attention les piece ne sont pas désaouler
+ * @param piece 
+ * @param dst 
+ * @return true 
+ * @return false 
+ */
 bool Echiquier::deplace(Piece * piece, Square const dst){
 
         Square old_pos = piece->get_pos();
         if (piece->deplace(dst)==false)
                 return false;
 
+        //supression de la piece sur l'echequier
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         echiquier[dst.ligne][dst.colone]=piece;
+        
+        //supression des piece dans les main des joueur
+        for (size_t i = 0; i < 8; i++)
+        {
+                if(piecesb[i]!=nullptr && piecesb[i]->get_pos()==old_pos)
+                        piecesb[i]=nullptr;
+                if(piecesn[i]!=nullptr && piecesn[i]->get_pos()==old_pos)
+                        piecesn[i]=nullptr;
+        }
+        
 
         return true;
 }
