@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Square Piece::get_pos(){
+Square Piece::get_pos()const{
     return position;
 }
 
@@ -15,27 +15,20 @@ Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur
 /**
  * @brief déplace la piece
  * 
- *  met a jour ces coordoner si check_dst() est bon
- * 
  * peut être vue comme un setter de la position de la piece
  * 
  * @param dst   mouvement de déstination
  * @return true déplacement effectuer
  * @return false déplacement non effecif
  */
-bool Piece::deplace(Square dst,bool ofensif){
-    (void)ofensif; //utiliser juste pour pion
-
-    //le déplacement est possible ?
-    if (check_dst(dst)==true)
-    {
-        //metre a jour la position
-        position=dst;
-        return true;
-    }
-    return false;
+void Piece::deplace(Square dst){
+    position=dst;
 }
 
+bool Piece::check_dst(Square dst,bool aggression)const{
+    (void)aggression;//utiliser juste pour la redefinition du pion
+    return check_dst(dst);
+}
 
 string Piece::to_string() const{    
 return  string("\n")+
@@ -47,7 +40,7 @@ return  string("\n")+
 void Piece::affiche() const{
     cout << nom ;   
 }
-Couleur Piece::get_couleur(){
+Couleur Piece::get_couleur()const{
     return couleur;
 }
 
@@ -90,9 +83,15 @@ bool Pion::mangerdiag(Square dst) const{
  * @return false 
  */
 bool Pion::check_dst(Square dst) const {
-
-    int distance =  (dst.ligne-position.ligne)//distance parcourue
-                    *(couleur==Noir ? -1 : 1);//si noir on inverse le sens
+    //si noir on inverse le sens
+    int sens = couleur==Noir ? -1 : 1;
+    int distance =  (dst.ligne-position.ligne)*sens;//distance parcourue
+    cout << "distance !" << distance << endl;
+    if (distance<0)
+    {
+        cout << "déplacement négatif" << endl;
+        return false;
+    }
 
     //check si le pion avance
     if (distance <= 0)
@@ -129,13 +128,17 @@ return  Piece::to_string()+"\n"+
  * @return true 
  * @return false 
  */
-bool Pion::deplace(Square dst,bool offensif){
-    if (!offensif && !Piece::deplace(dst,false))//verrification clasique
+void Pion::deplace(Square dst){
+    Piece::deplace(dst);//verrification clasique
+    vierge=false;
+}
+
+
+bool Pion::check_dst(Square dst,bool offensif)const{
+    if (!offensif && !Pion::check_dst(dst))//verrification clasique
         return false;
     if (offensif && !mangerdiag(dst))  //verifie les paterne d'aggression
         return false;
-    
-    vierge=false;
     return true;
 }
 

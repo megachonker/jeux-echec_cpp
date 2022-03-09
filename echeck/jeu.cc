@@ -25,6 +25,8 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
         
+        bool deplacement_aggressif=false;
+
         //convertion
         Square porigine(orig);
         Square pdst(dest);
@@ -49,17 +51,20 @@ bool Jeu::deplace(string const orig, string const dest){
             //destination moi
             if(mon_echiquier.get_piece(pdst)->get_couleur()==joueur){//test couleur opposer)
                 cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
+                return false;
             }
-            // destination piece enemie
+            // test déplacement agressif
             else
-                if(mon_echiquier.deplace(piece_sel,pdst,true)==false)
+                if(!piece_sel->check_dst(dest,(deplacement_aggressif=true)))
                     return false;
         }
         //case vide
         else
-            //on prend en compte le déplacement
-            if(mon_echiquier.deplace(piece_sel,pdst,false)==false)
+            //test deplacement
+            if(!piece_sel->check_dst(dest,false))
                 return false;
+
+        mon_echiquier.deplace(piece_sel,pdst,deplacement_aggressif);
 
         //fin du tour on change
         joueur==Blanc ? joueur=Noir : joueur =Blanc;
