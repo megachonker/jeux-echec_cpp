@@ -19,6 +19,7 @@ Couleur Jeu::get_couleur(){
     return joueur;
 }
 
+
 bool Jeu::deplace(string const orig, string const dest){
     //REMPLACER LES FALSE PAR DES NOMS ERREUR 
         if (orig==dest){
@@ -47,9 +48,9 @@ bool Jeu::deplace(string const orig, string const dest){
 
         bool deplacement_aggressif=false;
 
+
         //si le déplacment final est bon
-        mouvement deplacement;
-        //  = {piece_sel,pdst,deplacement_aggressif,joueur};
+        struct mouvement deplacement = {piece_sel,pdst,deplacement_aggressif,joueur};
         int erreur = mon_echiquier.check(deplacement);
         //print l'erreur de déplacement
         errorhande(erreur);

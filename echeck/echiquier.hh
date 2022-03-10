@@ -14,8 +14,8 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 public:
-    bool check(mouvement move)const;
-    bool pseudocheck(mouvement move)const;
+    bool check(struct mouvement move)const;
+    bool pseudocheck(struct mouvement move)const;
     bool slidecheck(Piece &source,direction direction)const;
     bool slidecheck(Piece &source);
     bool gen_colimap(Piece &source);

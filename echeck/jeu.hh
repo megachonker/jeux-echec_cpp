@@ -4,13 +4,12 @@
 #include "square.hh"
 #include <string>
 
-std::string couleur_to_str(Couleur ma_couleur);
 class Jeu
 {
     private:        
         Couleur joueur;
         Echiquier mon_echiquier;
-        int check(mouvement);
+        int check(struct mouvement);
         void errorhande(int errono);
     public:
         void affiche();
