@@ -7,11 +7,10 @@
 std::string couleur_to_str(Couleur ma_couleur);
 class Jeu
 {
-    private:
+    private:        
         Couleur joueur;
         Echiquier mon_echiquier;
-        int check(Piece * const piece, Square const pos_dst);
-        int check(Piece * const piece, Square const pos_dst,bool &deplacement_aggressif);
+        int check(mouvement);
         void errorhande(int errono);
     public:
         void affiche();
@@ -19,4 +18,19 @@ class Jeu
         Couleur get_couleur();
         Jeu(/* args */);
         ~Jeu();
+};
+
+struct mouvement
+{
+    Piece * piece;
+    Square position_dst;
+    bool &deplacement_aggressif;
+    Couleur couleur;
+};
+
+enum erreurJeuCheck{
+    OK,
+    mauvaisecouleur,
+    deplacement_sois_meme,
+    checkdsterr
 };

@@ -40,10 +40,16 @@ return  string("\n")+
 void Piece::affiche() const{
     cout << nom ;   
 }
+
+
 Couleur Piece::get_couleur()const{
     return couleur;
 }
 
+//atention peut checker toute les piece !
+bool Piece::get_colision(Square test) const{
+    return colisionmap_map[test.colone][test.ligne];
+}
 
 //////////////
 //  PION    //
@@ -51,6 +57,8 @@ Couleur Piece::get_couleur()const{
 
 Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
 {cout << to_string()<< endl;}
+
+typePc Piece::get_type() const {return pion;}
 
 
 /**
@@ -148,6 +156,9 @@ bool Pion::check_dst(Square dst,bool offensif)const{
 
 Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
 
+typePc Tour::get_type() const {return tour;}
+
+
 bool Tour::check_dst(Square dst) const  {
 
     //jeu verifie que la src est destination ne sont pas les meme
@@ -167,6 +178,8 @@ bool Tour::check_dst(Square dst) const  {
  
 Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u265D",couleur,position){}
 
+typePc Fou::get_type() const{return fou;}
+
 bool Fou::check_dst(Square dst) const {
     //check ratio de déplacement a 1
     cout << "COLONE " << dst.colone-position.colone << "LIGNE" <<  dst.ligne-position.ligne << endl;
@@ -181,6 +194,8 @@ bool Fou::check_dst(Square dst) const {
 //////////////////
  
 Cavalier::Cavalier(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2658" :"\u265E",couleur,position){}
+
+typePc Cavalier::get_type() const{return cavalier;}
 
 bool Cavalier::check_dst(Square dst) const {
     return
@@ -200,6 +215,8 @@ bool Cavalier::check_dst(Square dst) const {
  
 Dame::Dame(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2655" :"\u265B",couleur,position){}
 
+typePc Dame::get_type() const{return dame;}
+
 bool Dame::check_dst(Square dst) const {
     Fou F(couleur,position);
     Tour T(couleur,position);
@@ -213,6 +230,8 @@ bool Dame::check_dst(Square dst) const {
 /////////////
 
 Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position){}
+
+typePc Roi::get_type() const{return roi;}
 
 bool Roi::check_dst(Square dst) const {
     return

@@ -2,6 +2,7 @@
 #include <iostream>
 #include "piece.hh"
 #include "square.hh"
+#include "jeu.hh"//pour mouvement
 
 class Echiquier
 {
@@ -13,10 +14,18 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 public:
+    bool check(mouvement move)const;
+    bool pseudocheck(mouvement move)const;
+    bool slidecheck(Piece &source,direction direction)const;
+    bool slidecheck(Piece &source);
+    bool gen_colimap(Piece &source);
+
+
+
     bool  est_case_vide(Square const square) const;
     Piece * get_piece(Square const square)   const; //peut etre priver a la fin ?
     std::string canonical_position() const;
-    std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
+    std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
     void affiche () const;
     Square get_pos();
     void pose_piece(Piece * piece);
@@ -24,3 +33,10 @@ public:
     Echiquier();
     ~Echiquier();
 };
+
+
+enum direction{
+        lignecolone,
+        diagonal
+};
+

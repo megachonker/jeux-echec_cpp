@@ -3,12 +3,13 @@
 #include "echiquier.hh"
 #include "square.hh"
 #include "piece.hh"
-
+#include "jeu.hh" //include mouvement
 using namespace std;
 
 void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
+
 
 /**
  * @brief déplace la piece 
@@ -187,4 +188,81 @@ void Echiquier::affiche () const {
                 cout << "|\n  +-----+-----+-----+-----+-----+-----+-----+-----+";
                 cout << endl;
         }
+}
+
+
+bool Echiquier::check(mouvement move)const{
+
+    if(!pseudocheck(move)){
+        cout << "pseudo check géometrique echouer" << endl;
+        return false;
+    }
+    if (!slidecheck(move))
+    {
+        cout << "pseudo check géometrique echouer" << endl;
+        return false;
+    }
+    
+
+    return true;
+}
+
+
+
+/**
+ * @brief verifie les piece ayant des colision
+ * 
+ *      slidecheque pourait retourner une carte des collision est apres on verrifie si la piece dedant donc on fait le call de la map si elle existe pas !     
+ * 
+ * @param source 
+ * @param direction 
+ * @return true 
+ * @return false 
+ */
+bool Echiquier::slidecheck(Piece &source){
+
+        //bonne pice
+        switch (source.get_type())
+        {
+        case tour:
+                return slidecheck(source,lignecolone);
+                break;
+        case fou:
+                return slidecheck(source,diagonal);
+                break;
+        case dame:
+                return slidecheck(source,diagonal) || slidecheck(source,lignecolone);
+                break;
+        }
+        return true;
+}
+
+bool Echiquier::slidecheck(Piece &source,direction look)const{
+        return true;
+}
+
+bool Echiquier::gen_colimap(Piece &source) {
+        return true;
+}
+
+
+bool Echiquier::pseudocheck(mouvement move)const{
+        if (get_piece(move.position_dst) != nullptr)   //test si dest est une piece
+        {
+                //destination moi
+                if(get_piece(move.position_dst)->get_couleur()==move.couleur){//test couleur opposer)
+                        cout << "vous avez selectioner une piece d'un autre joueur" << endl;
+                        return deplacement_sois_meme;
+                }
+                // test déplacement agressif
+                else
+                        if(!move.piece->check_dst(move.position_dst,(move.deplacement_aggressif=true)))
+                        return false;
+        }
+        //case vide
+        else
+                //test deplacement
+                if(!move.piece->check_dst(move.position_dst,false))
+                        return false;
+        return true;
 }

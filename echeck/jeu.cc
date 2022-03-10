@@ -3,6 +3,7 @@
 #include "square.hh"
 #include "piece.hh"
 #include <string>
+
 using namespace std;
 
 Jeu::Jeu(/* args */){
@@ -18,70 +19,6 @@ Couleur Jeu::get_couleur(){
     return joueur;
 }
 
-
-/**
- * @brief peut utiliser le check sans avoir a passer le déplacemnt
- * 
- * @param piece 
- * @param pos_dst 
- * @return int 
- */
-int Jeu::check(Piece * const piece, Square const pos_dst){
-    bool osef = false;
-    return check(piece,pos_dst,osef);
-}
-
-/**
- * @brief est utisiler pour check les collision
- * 
- * @param [in] piece car on a un attribut virtuel donc on peut pas associer lespace 
- * @param [in] position_dst 
- * @param [out] deplacement_aggressif va la modifier si le déplacement est aggresif
- * @return int erreur numero
- */
-int Jeu::check(Piece * piece, Square position_dst,bool &deplacement_aggressif){
-
-    //piece source bonne couleur dst couleur opposer 
-        //modifier si troc
-    if( piece->get_couleur()!=joueur){//tes si la piece sel appartien au joueur
-        cout << "vous avez selectioner une piece d'un autre joueur" << endl;
-        return false;
-    }
-
-    if (mon_echiquier.get_piece(position_dst) != nullptr)   //test si dest est une piece
-    {
-        //destination moi
-        if(mon_echiquier.get_piece(position_dst)->get_couleur()==joueur){//test couleur opposer)
-            cout << "vous pouvez pas vous déplacer sur vos propre piece /!\\ troc ?" << endl;
-            return false;
-        }
-        // test déplacement agressif
-        else
-            if(!piece->check_dst(position_dst,(deplacement_aggressif=true)))
-                return false;
-    }
-    //case vide
-    else
-        //test deplacement
-        if(!piece->check_dst(position_dst,false))
-            return false;
-
-    return true;
-}
-
-
-void Jeu::errorhande(int errono){
-    switch (errono)
-    {
-    case 0:
-        break;
-    
-    default:
-        break;
-    }
-}
-
-
 bool Jeu::deplace(string const orig, string const dest){
     //REMPLACER LES FALSE PAR DES NOMS ERREUR 
         if (orig==dest){
@@ -89,7 +26,6 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
         
-
         //convertion
         Square porigine(orig);
         Square pdst(dest);
@@ -102,10 +38,19 @@ bool Jeu::deplace(string const orig, string const dest){
 
         Piece * piece_sel = mon_echiquier.get_piece(porigine);
 
+        //piece source bonne couleur dst couleur opposer 
+        //modifier si troc
+        if( piece_sel->get_couleur()!=joueur){//tes si la piece sel appartien au joueur
+            cout << "la pece selectioner n'apartien pas au joueur" << endl;    
+            return false;
+        }
+
         bool deplacement_aggressif=false;
 
         //si le déplacment final est bon
-        int erreur = check(piece_sel,pdst,deplacement_aggressif);
+        mouvement deplacement;
+        //  = {piece_sel,pdst,deplacement_aggressif,joueur};
+        int erreur = mon_echiquier.check(deplacement);
         //print l'erreur de déplacement
         errorhande(erreur);
 
