@@ -14,7 +14,7 @@ private:
     Piece * piecesn[8];
 public:
     bool  est_case_vide(Square const square) const;
-    Piece * get_piece(Square const square)   const;
+    Piece * get_piece(Square const square)   const; //peut etre priver a la fin ?
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name, bool view_pawn, bool view_color) const;
     void affiche () const;

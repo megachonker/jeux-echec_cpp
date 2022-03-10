@@ -18,6 +18,14 @@ Couleur Jeu::get_couleur(){
     return joueur;
 }
 
+
+/**
+ * @brief peut utiliser le check sans avoir a passer le déplacemnt
+ * 
+ * @param piece 
+ * @param pos_dst 
+ * @return int 
+ */
 int Jeu::check(Piece * const piece, Square const pos_dst){
     bool osef = false;
     return check(piece,pos_dst,osef);
@@ -26,9 +34,9 @@ int Jeu::check(Piece * const piece, Square const pos_dst){
 /**
  * @brief est utisiler pour check les collision
  * 
- * @param piece 
- * @param position_dst 
- * @param deplacement_aggressif 
+ * @param [in] piece car on a un attribut virtuel donc on peut pas associer lespace 
+ * @param [in] position_dst 
+ * @param [out] deplacement_aggressif va la modifier si le déplacement est aggresif
  * @return int erreur numero
  */
 int Jeu::check(Piece * piece, Square position_dst,bool &deplacement_aggressif){
@@ -103,21 +111,7 @@ bool Jeu::deplace(string const orig, string const dest){
 
         //quit en cas d'erreur
         if (!erreur)
-            return false;
-
-
-        //compute tout les déplacemnt:
-
-        for (size_t x = 0; x < 8; x++)
-        {
-            for (size_t y = 0; y < 8; y++)
-            {
-                if (check(piece_sel,Square(x,y)))
-                    break;
-            }
-        }
-        
-
+            return false;     
 
         //effectue le deplacemnt
         mon_echiquier.deplace(piece_sel,pdst,deplacement_aggressif);
