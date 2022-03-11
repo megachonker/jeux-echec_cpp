@@ -13,13 +13,16 @@ private:
     Pion  * pionsn[8];
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
-public:
-    bool check(struct mouvement move)const;
-    bool pseudocheck(struct mouvement move)const;
-    bool slidecheck(Piece &source,direction direction)const;
-    bool slidecheck(Piece &source);
-    bool gen_colimap(Piece &source);
 
+    bool pseudocheck(struct mouvement move)const;
+    bool slidecheck(Piece * source,Square const position_dst, direction direction);
+    bool slidecheck(Piece * source,Square const position_dst);
+    bool slide(Square origine,Square decalage);
+    bool gen_colimap(Piece * source,direction look);
+
+
+public:
+    bool check(struct mouvement move);
 
 
     bool  est_case_vide(Square const square) const;
@@ -39,4 +42,3 @@ enum direction{
         lignecolone,
         diagonal
 };
-

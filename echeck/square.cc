@@ -36,6 +36,31 @@ bool Square::operator== (Square cmp) const{
     return (ligne==cmp.ligne)&&(colone==cmp.ligne);
 }
 
+void Square::operator= (Square cmp){
+    ligne=cmp.ligne;
+    colone=cmp.ligne;
+}
+
+Square Square::operator+ (Square add){
+    return Square(ligne+add.ligne,colone+add.colone);
+}
+
+void Square::operator+=(Square cible){
+    Square(ligne,colone) = Square(ligne,colone)+cible;
+}
+
+void Square::inv (){
+    ligne*=-1;
+}
+void Square::swap(){
+    int tmp = ligne;
+    ligne = colone;
+    colone = ligne;
+}
+
+bool Square::inside(){
+    return (colone<8)&&(ligne<8);
+}
 
 ////////////////////////////////////////////////
 std::string couleur_to_str(Couleur ma_couleur){

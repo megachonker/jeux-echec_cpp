@@ -22,7 +22,7 @@ class Jeu
 struct mouvement
 {
     Piece * piece;
-    Square position_dst;
+    Square const position_dst;
     bool &deplacement_aggressif;
     Couleur couleur;
 };

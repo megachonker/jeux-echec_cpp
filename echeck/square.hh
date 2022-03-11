@@ -12,11 +12,17 @@ bool saisie_correcte_petitroque(std::string const & cmd);
 class Square
 {
     public:
-        short ligne, colone;
+        short ligne, colone;//checker si priver bon
         Square(std::string const position);
         Square(int ligne, int colone);
         std::string to_string() const;
         bool operator== (Square cmp)const;
+        void operator= (Square cmp);
+        Square operator+ (Square add);
+        void operator+=(Square cible);
+        void inv ();
+        void swap();
+        bool inside();
         // ~Square();
 };
 

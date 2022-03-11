@@ -191,13 +191,13 @@ void Echiquier::affiche () const {
 }
 
 
-bool Echiquier::check(mouvement move)const{
+bool Echiquier::check(mouvement move){
 
     if(!pseudocheck(move)){
         cout << "pseudo check géometrique echouer" << endl;
         return false;
     }
-    if (!slidecheck(move))
+    if (!slidecheck(move.piece))
     {
         cout << "pseudo check géometrique echouer" << endl;
         return false;
@@ -214,36 +214,89 @@ bool Echiquier::check(mouvement move)const{
  * 
  *      slidecheque pourait retourner une carte des collision est apres on verrifie si la piece dedant donc on fait le call de la map si elle existe pas !     
  * 
+ *      pour plus de lisibilitée j'ai 2 énume qui veule dire les meme chause utile ?
  * @param source 
  * @param direction 
  * @return true 
  * @return false 
  */
-bool Echiquier::slidecheck(Piece &source){
+bool Echiquier::slidecheck(Piece * source,Square const position_dst){
 
-        //bonne pice
-        switch (source.get_type())
+        //choix bonne piece
+        switch (source->get_type())
         {
-        case tour:
-                return slidecheck(source,lignecolone);
-                break;
-        case fou:
-                return slidecheck(source,diagonal);
-                break;
-        case dame:
-                return slidecheck(source,diagonal) || slidecheck(source,lignecolone);
-                break;
+        case tour:      return  slidecheck(source,position_dst,lignecolone    );
+        case fou:       return  slidecheck(source,position_dst,diagonal       );
+        case dame:      return  slidecheck(source,position_dst,diagonal       ) 
+                        ||      slidecheck(source,position_dst,lignecolone    );
         }
         return true;
 }
 
-bool Echiquier::slidecheck(Piece &source,direction look)const{
+/**
+ * @brief vérifie si le déplacemetn est possible sans colision
+ * 
+ * vérifie si la colymap est bonne puis vérifie le masque avec la position de destination si elle n'es pas bonne le regenère 
+ * 
+ * @param source 
+ * @param position_dst 
+ * @param look 
+ * @return true 
+ * @return false 
+ */
+bool Echiquier::slidecheck(Piece *source,Square position_dst,direction look){
+        if (!source->colisionvalide)
+                gen_colimap(source,look);
+        
+        if (source->get_colision(position_dst)){
+                cout << "collision avec une piece !" << endl;
+                return false;
+        }
+        
         return true;
 }
 
-bool Echiquier::gen_colimap(Piece &source) {
-        return true;
+/**
+ * @brief génère une carte des colision est raporte s'il y a eux colision
+ * 
+ * @param source 
+ * @param look 
+ * @return true 
+ * @return false 
+ */
+bool Echiquier::gen_colimap(Piece * source,direction look) {/////////////manque la colimap
+        Square decalage = look==lignecolone ? Square(1,0) : Square(1,1);
+        Square virtual_case = source->get_pos();
+
+        slide(virtual_case,decalage);
+        virtual_case.inv();
+        slide(virtual_case,decalage);
+        virtual_case.swap();
+        slide(virtual_case,decalage);
 }
+
+
+/**
+ * @brief va avancer la piece j'usqua une colision
+ * 
+ * @param origine enplacement pour tester
+ * @param decalage direction du déplacement
+ * @return true pas de colision
+ * @return false il y a eux une colision
+ */
+bool Echiquier::slide(Square origine,Square decalage){
+        //tan que la position a tester est dans le jeux decheque
+        int flag=true;
+        while (flag)
+                // colisionmap_map[]++++++++++++++ faire le masque
+                if (origine.inside())
+                        flag=true;
+                if (est_case_vide(origine))
+                        flag=false;
+                origine+=decalage;
+        return flag;
+}
+
 
 
 bool Echiquier::pseudocheck(mouvement move)const{
