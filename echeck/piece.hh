@@ -25,7 +25,7 @@ public:
     bool colisionvalide; // faire un setter est gettter propre ?
     virtual bool get_colision(Square test) const; //doit etre utiliser que par les bonne piece
 
-    virtual typePc Piece::get_type() const =0;
+    virtual typePc get_type() const =0;
     virtual void deplace(Square dst);
     virtual bool check_dst(Square dst) const =0;
     virtual bool check_dst(Square dst,bool offensif) const;
