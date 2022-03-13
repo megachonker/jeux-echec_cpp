@@ -4,6 +4,11 @@
 #include "square.hh"
 #include "jeu.hh"//pour mouvement
 
+enum direction{
+        lignecolone,
+        diagonal
+};
+
 class Echiquier
 {
 private:
@@ -14,11 +19,11 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 
-    bool pseudocheck(struct mouvement move)const;
-    bool slidecheck(Piece * source,Square const position_dst, direction direction);
+    bool pseudocheck(struct mouvement const move)const;
+    bool slidecheck(Piece * source,Square const position_dst, direction const direction);
     bool slidecheck(Piece * source,Square const position_dst);
-    bool slide(Square origine,Square decalage);
-    bool gen_colimap(Piece * source,direction look);
+    void slide(Square origine,Square decalage);
+    void gen_colimap(Piece * source,direction look);
 
 
 public:
@@ -32,13 +37,8 @@ public:
     void affiche () const;
     Square get_pos();
     void pose_piece(Piece * piece);
-    void deplace(Piece * piece, Square const dst,bool offensif);
+    void deplace(Piece * piece, Square dst,bool offensif);
     Echiquier();
     ~Echiquier();
 };
 
-
-enum direction{
-        lignecolone,
-        diagonal
-};
