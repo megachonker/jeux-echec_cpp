@@ -16,15 +16,19 @@ enum typePc{
 class Piece
 {
 protected:
-    bool colisionmap_map[8][8];//a déclarer que dans eles bonne classe
 
     std::string nom;
     Couleur couleur;
     Square position; // a metre a jour
 public:
+
+    //UNE CLASSE
+    bool colisionmap_map[8][8];//a déclarer que dans eles bonne classe
     bool colisionvalide; // faire un setter est gettter propre ?
     virtual bool get_colision(Square test) const; //doit etre utiliser que par les bonne piece
+    ///
 
+    
     virtual typePc get_type() const =0;
     virtual void deplace(Square dst);
     virtual bool check_dst(Square dst) const =0;

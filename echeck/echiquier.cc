@@ -247,6 +247,7 @@ bool Echiquier::slidecheck(Piece * source,Square const position_dst){
  */
 bool Echiquier::slidecheck(Piece *source,Square position_dst,direction const look){
         if (!source->colisionvalide)
+                clear_colimap(source);
                 gen_colimap(source,look);
         
         if (source->get_colision(position_dst)){
@@ -256,6 +257,14 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,direction const loo
         
         return true;
 }
+
+
+void Echiquier::clear_colimap(Piece * source){
+        for (size_t i = 0; i < 8; i++)
+                for (size_t u = 0; u < 8; i++)
+                        source->colisionmap_map[i][u]=false;
+}
+
 
 /**
  * @brief génère une carte des colision est raporte s'il y a eux colision
@@ -285,20 +294,24 @@ void Echiquier::gen_colimap(Piece * source,direction look) {/////////////manque 
  * @return true pas de colision
  * @return false il y a eux une colision
  */
-void Echiquier::slide(Square origine,Square decalage){
+void Echiquier::slide(Square origine,Square decalage){//ADD LA PÏCE
         //tan que la position a tester est dans le jeux decheque
-        int flag=true;
-        while (flag){
-                // colisionmap_map[]++++++++++++++ faire le masque
-                if (origine.inside())
-                        flag=true;
-                if (est_case_vide(origine))
-                        flag=false;//on pourait set a la pice directemnt l'ataquand !
+        while (true){
                 origine+=decalage;
+                if (origine.inside())
+                        break;
+                if (est_case_vide(origine))
+                        break;//on pourait set a la pice toucher l'info de l'ataquand  !
+                set_colimap(origine);
+                // colisionmap_map[]++++++++++++++ faire le masque
         }
 }
 
 
+void Echiquier::set_colimap(Square dst){
+        //senser acceder au colimap
+        
+}
 
 bool Echiquier::pseudocheck(mouvement move)const{
         if (get_piece(move.position_dst) != nullptr)   //test si dest est une piece
