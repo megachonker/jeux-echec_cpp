@@ -36,10 +36,10 @@ bool Square::operator== (Square cmp) const{
     return (ligne==cmp.ligne)&&(colone==cmp.ligne);
 }
 
-void Square::operator= (Square cmp){
-    ligne=cmp.ligne;
-    colone=cmp.ligne;
-}
+// void Square::operator= (Square cmp){
+//     ligne=cmp.ligne;
+//     colone=cmp.ligne;
+// }
 
 Square Square::operator+ (Square add){
     return Square(ligne+add.ligne,colone+add.colone);

@@ -17,7 +17,7 @@ class Square
         Square(int ligne, int colone);
         std::string to_string() const;
         bool operator== (Square cmp)const;
-        void operator= (Square cmp);
+        // void operator= (Square cmp);
         Square operator+ (Square add);
         void operator+=(Square cible);
         void inv ();
@@ -26,3 +26,5 @@ class Square
         // ~Square();
 };
 
+///////////////////
+std::string couleur_to_str(Couleur ma_couleur);
