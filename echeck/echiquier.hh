@@ -1,8 +1,11 @@
 #pragma once
+
+class Echiquier; // forfward declaration
+
 #include <iostream>
 #include "piece.hh"
 #include "square.hh"
-#include "jeu.hh"//pour mouvement
+// #include "jeu.hh"//pour mouvement
 
 enum direction{
         lignecolone,
@@ -24,10 +27,7 @@ private:
     //classe ?
     bool slidecheck(Piece * source,Square const position_dst, direction const direction);
     bool slidecheck(Piece * source,Square const position_dst);
-    void slide(Square origine,Square decalage);
-    void gen_colimap(Piece * source,direction look);
-    void clear_colimap(Piece * source);
-    void set_colimap(Square pos);
+    bool slide(Square origine,Square decalage);
     
 public:
     bool check(struct mouvement move);

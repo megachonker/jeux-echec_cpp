@@ -21,24 +21,16 @@ protected:
     Couleur couleur;
     Square position; // a metre a jour
 public:
-
-    //UNE CLASSE
-    bool colisionmap_map[8][8];//a déclarer que dans eles bonne classe
-    bool colisionvalide; // faire un setter est gettter propre ?
-    virtual bool get_colision(Square test) const; //doit etre utiliser que par les bonne piece
-    ///
-
-    
-    virtual typePc get_type() const =0;
+    virtual typePc get_type() const =0;//peut etre enlever
     virtual void deplace(Square dst);
     virtual bool check_dst(Square dst) const =0;
     virtual bool check_dst(Square dst,bool offensif) const;
-    std::string to_string() const;
+    virtual std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos()const;
     Couleur get_couleur()const;
-    virtual ~Piece(){};
+    virtual ~Piece();
 };
 
 
@@ -52,8 +44,9 @@ class Pion : public Piece
         void deplace(Square dst) override; 
         bool check_dst(Square dst) const override ;
         bool check_dst(Square dst,bool aggresssion) const override ;
-        std::string to_string() const;
-        Pion(Couleur couleur,Square position,bool vierge); 
+        std::string to_string() const override;
+        Pion(Couleur couleur,Square position,bool vierge);
+        ~Pion() override;
 };
 
 class Tour : public Piece
@@ -62,7 +55,7 @@ class Tour : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Tour(Couleur couleur,Square position);
-        virtual ~Tour(){}
+        // ~Tour(){}
 };
 
 class Fou : public Piece
@@ -71,7 +64,7 @@ class Fou : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Fou(Couleur couleur,Square position);
-        virtual ~Fou(){}
+        // ~Fou(){}
 };
 
 class Cavalier : public Piece
@@ -80,7 +73,7 @@ class Cavalier : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override ;
         Cavalier(Couleur couleur,Square position);
-        virtual ~Cavalier(){}
+        // ~Cavalier(){}
 };
 
 class Dame : public Piece
@@ -89,7 +82,7 @@ class Dame : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Dame(Couleur couleur,Square position);
-        virtual ~Dame(){}
+        // ~Dame(){}
 };
 
 class Roi : public Piece
@@ -98,6 +91,6 @@ class Roi : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Roi(Couleur couleur,Square position);
-        virtual ~Roi(){}
+        // ~Roi(){}
 };
 

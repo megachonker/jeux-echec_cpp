@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include "square.hh"
-#include "mad.h"//calcule absolut facilement
+#include <math.h>// absolut facilement
 
 using namespace std;
 
@@ -11,6 +11,8 @@ Square Piece::get_pos()const{
 }
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
+
+Piece::~Piece(){};
 
 /**
  * @brief déplace la piece
@@ -30,6 +32,8 @@ bool Piece::check_dst(Square dst,bool aggression)const{
     return check_dst(dst);
 }
 
+
+
 string Piece::to_string() const{    
 return  string("\n")+
         "noms:      "+nom+"\n"+
@@ -46,16 +50,12 @@ Couleur Piece::get_couleur()const{
     return couleur;
 }
 
-//atention peut checker toute les piece !
-bool Piece::get_colision(Square test) const{
-    return colisionmap_map[test.colone][test.ligne];
-}
-
 //////////////
 //  PION    //
 //////////////
 
-Pion::Pion(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
+Pion::Pion(Couleur couleur,Square position,bool vierge) 
+: Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
 {cout << to_string()<< endl;}
 
 typePc Piece::get_type() const {return pion;}
@@ -123,6 +123,14 @@ bool Pion::check_dst(Square dst) const {
     return false;
 }
 
+bool Pion::check_dst(Square dst,bool offensif)const{
+    if (!offensif && !Pion::check_dst(dst))//verrification clasique
+        return false;
+    if (offensif && !mangerdiag(dst))  //verifie les paterne d'aggression
+        return false;
+    return true;
+}
+
 string Pion::to_string() const{    
 return  Piece::to_string()+"\n"+
         "vierge:    "+(vierge==true?"Oui":"Non");
@@ -141,14 +149,11 @@ void Pion::deplace(Square dst){
     vierge=false;
 }
 
+Pion::~Pion()
+{
 
-bool Pion::check_dst(Square dst,bool offensif)const{
-    if (!offensif && !Pion::check_dst(dst))//verrification clasique
-        return false;
-    if (offensif && !mangerdiag(dst))  //verifie les paterne d'aggression
-        return false;
-    return true;
 }
+
 
 //////////////
 //  Tour    //
@@ -235,6 +240,7 @@ typePc Roi::get_type() const{return roi;}
 
 bool Roi::check_dst(Square dst) const {
     return
+        // position-dst ||
         Square(position.ligne+1,position.colone+1) == dst ||
         Square(position.ligne+1,position.colone-1) == dst ||
         Square(position.ligne-1,position.colone+1) == dst ||

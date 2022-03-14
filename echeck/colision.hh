@@ -1,6 +1,6 @@
 #include "square.hh"
 #include "piece.hh"
-#
+
 enum direction{
         lignecolone,
         diagonal

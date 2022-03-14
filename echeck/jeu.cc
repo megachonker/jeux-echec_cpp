@@ -52,8 +52,6 @@ bool Jeu::deplace(string const orig, string const dest){
         //si le déplacment final est bon
         struct mouvement deplacement = {piece_sel,pdst,deplacement_aggressif,joueur};
         int erreur = mon_echiquier.check(deplacement);
-        //print l'erreur de déplacement
-        errorhande(erreur);
 
         //quit en cas d'erreur
         if (!erreur)

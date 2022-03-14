@@ -1,4 +1,3 @@
-// #include <cstdio>
 #include <iostream>
 #include "echiquier.hh"
 #include "square.hh"
@@ -199,7 +198,7 @@ bool Echiquier::check(mouvement move){
     }
     if (!slidecheck(move.piece,move.position_dst))
     {
-        cout << "pseudo check géometrique echouer" << endl;
+        cout << "collision" << endl;
         return false;
     }
     
@@ -221,17 +220,10 @@ bool Echiquier::check(mouvement move){
  * @return false 
  */
 bool Echiquier::slidecheck(Piece * source,Square const position_dst){
-
-        //choix bonne piece
-        switch (source->get_type())
-        {
-        case tour:      return  slidecheck(source,position_dst,lignecolone    );
-        case fou:       return  slidecheck(source,position_dst,diagonal       );
-        case dame:      return  slidecheck(source,position_dst,diagonal       ) 
-                        ||      slidecheck(source,position_dst,lignecolone    );
-        default: return true;
-        }
-        return true;
+        return slidecheck(source,position_dst,
+        source->get_pos().colone!=position_dst.colone
+        && source->get_pos().ligne!=position_dst.ligne
+         ? lignecolone : diagonal);
 }
 
 /**
@@ -246,71 +238,15 @@ bool Echiquier::slidecheck(Piece * source,Square const position_dst){
  * @return false 
  */
 bool Echiquier::slidecheck(Piece *source,Square position_dst,direction const look){
-        if (!source->colisionvalide)
-                clear_colimap(source);
-                gen_colimap(source,look);
-        
-        if (source->get_colision(position_dst)){
-                cout << "collision avec une piece !" << endl;
-                return false;
-        }
-        
-        return true;
-}
-
-
-void Echiquier::clear_colimap(Piece * source){
-        for (size_t i = 0; i < 8; i++)
-                for (size_t u = 0; u < 8; i++)
-                        source->colisionmap_map[i][u]=false;
-}
-
-
-/**
- * @brief génère une carte des colision est raporte s'il y a eux colision
- * 
- * @param source 
- * @param look 
- * @return true 
- * @return false 
- */
-void Echiquier::gen_colimap(Piece * source,direction look) {/////////////manque la colimap
         Square decalage = look==lignecolone ? Square(1,0) : Square(1,1);
-        Square virtual_case = source->get_pos();
+        Square origine = source->get_pos();
 
-        slide(virtual_case,decalage);
-        virtual_case.inv();
-        slide(virtual_case,decalage);
-        virtual_case.swap();
-        slide(virtual_case,decalage);
-}
-
-
-/**
- * @brief va avancer la piece j'usqua une colision
- * 
- * @param origine enplacement pour tester
- * @param decalage direction du déplacement
- * @return true pas de colision
- * @return false il y a eux une colision
- */
-void Echiquier::slide(Square origine,Square decalage){//ADD LA PÏCE
-        //tan que la position a tester est dans le jeux decheque
-        while (true){
+        while (est_case_vide(origine)){
                 origine+=decalage;
-                if (origine.inside())
-                        break;
-                if (est_case_vide(origine))
-                        break;//on pourait set a la pice toucher l'info de l'ataquand  !
-                set_colimap(origine);
-                // colisionmap_map[]++++++++++++++ faire le masque
+                if(origine==position_dst)
+                        return true;
         }
-}
-
-
-void Echiquier::set_colimap(Square dst){
-        //senser acceder au colimap
-        
+        return false;
 }
 
 bool Echiquier::pseudocheck(mouvement move)const{
