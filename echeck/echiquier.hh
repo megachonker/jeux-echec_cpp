@@ -5,7 +5,6 @@ class Echiquier; // forfward declaration
 #include <iostream>
 #include "piece.hh"
 #include "square.hh"
-// #include "jeu.hh"//pour mouvement
 
 enum direction{
         lignecolone,
@@ -22,15 +21,16 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 
-    bool pseudocheck(struct mouvement const move)const;
-
+    bool pseudocheck(Piece * piece,Square position_dst)const;
     //classe ?
-    bool slidecheck(Piece * source,Square const position_dst, direction const direction);
     bool slidecheck(Piece * source,Square const position_dst);
     bool slide(Square origine,Square decalage);
     
+    bool chk_echec_roi(Square position_dst);
+
+
 public:
-    bool check(struct mouvement move);
+    bool check(Piece * piece,Square position_dst);
 
 
     bool  est_case_vide(Square const square) const;
@@ -40,7 +40,7 @@ public:
     void affiche () const;
     Square get_pos();
     void pose_piece(Piece * piece);
-    void deplace(Piece * piece, Square dst,bool offensif);
+    void deplace(Piece * piece, Square dst,bool offensif=false);
     Echiquier();
     ~Echiquier();
 };

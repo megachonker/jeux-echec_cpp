@@ -18,18 +18,3 @@ class Jeu
         Jeu(/* args */);
         ~Jeu();
 };
-
-struct mouvement
-{
-    Piece * piece;
-    Square const position_dst;
-    bool &deplacement_aggressif;
-    Couleur couleur;
-};
-
-enum erreurJeuCheck{
-    OK,
-    mauvaisecouleur,
-    deplacement_sois_meme,
-    checkdsterr
-};

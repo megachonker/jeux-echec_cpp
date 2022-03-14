@@ -177,6 +177,11 @@ bool Tour::check_dst(Square dst) const  {
     return false;
 }
 
+Tour::~Tour()
+{
+
+}
+
 //////////////
 //  Fout    //
 //////////////

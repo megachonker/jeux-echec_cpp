@@ -21,7 +21,6 @@ Couleur Jeu::get_couleur(){
 
 
 bool Jeu::deplace(string const orig, string const dest){
-    //REMPLACER LES FALSE PAR DES NOMS ERREUR 
         if (orig==dest){
             cout << "la source est la déstination ne peuve etre la meme" << endl;
             return false;
@@ -46,19 +45,15 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
 
-        bool deplacement_aggressif=false;
-
-
         //si le déplacment final est bon
-        struct mouvement deplacement = {piece_sel,pdst,deplacement_aggressif,joueur};
-        int erreur = mon_echiquier.check(deplacement);
+        int erreur = mon_echiquier.check(piece_sel,pdst);
 
         //quit en cas d'erreur
         if (!erreur)
             return false;     
 
         //effectue le deplacemnt
-        mon_echiquier.deplace(piece_sel,pdst,deplacement_aggressif);
+        mon_echiquier.deplace(piece_sel,pdst);
 
         //fin du tour on change
         joueur==Blanc ? joueur=Noir : joueur =Blanc;
@@ -67,4 +62,5 @@ bool Jeu::deplace(string const orig, string const dest){
 Jeu::~Jeu(){
     cout << "destructeur jeux " << endl;
 }
+
 

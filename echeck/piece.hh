@@ -55,7 +55,7 @@ class Tour : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Tour(Couleur couleur,Square position);
-        // ~Tour(){}
+        ~Tour();
 };
 
 class Fou : public Piece
