@@ -30,7 +30,7 @@ public:
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos()const;
     Couleur get_couleur()const;
-    virtual ~Piece();
+    virtual ~Piece(){};
 };
 
 
@@ -46,7 +46,7 @@ class Pion : public Piece
         bool check_dst(Square dst,bool aggresssion) const override ;
         std::string to_string() const override;
         Pion(Couleur couleur,Square position,bool vierge);
-        ~Pion() override;
+        virtual ~Pion(){}
 };
 
 class Tour : public Piece
@@ -55,7 +55,7 @@ class Tour : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Tour(Couleur couleur,Square position);
-        ~Tour();
+        virtual ~Tour(){}
 };
 
 class Fou : public Piece
@@ -64,7 +64,7 @@ class Fou : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Fou(Couleur couleur,Square position);
-        // ~Fou(){}
+        virtual ~Fou(){}
 };
 
 class Cavalier : public Piece
@@ -73,7 +73,7 @@ class Cavalier : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override ;
         Cavalier(Couleur couleur,Square position);
-        // ~Cavalier(){}
+        virtual ~Cavalier(){}
 };
 
 class Dame : public Piece
@@ -82,7 +82,7 @@ class Dame : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Dame(Couleur couleur,Square position);
-        // ~Dame(){}
+        virtual ~Dame(){}
 };
 
 class Roi : public Piece
@@ -91,6 +91,6 @@ class Roi : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst) const override;
         Roi(Couleur couleur,Square position);
-        // ~Roi(){}
+        virtual ~Roi(){}
 };
 

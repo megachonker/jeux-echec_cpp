@@ -12,7 +12,6 @@ Square Piece::get_pos()const{
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
 
-Piece::~Piece(){};
 
 /**
  * @brief déplace la piece
@@ -56,9 +55,10 @@ Couleur Piece::get_couleur()const{
 
 Pion::Pion(Couleur couleur,Square position,bool vierge) 
 : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
-{cout << to_string()<< endl;}
+{}
+// {cout << to_string()<< endl;}
 
-typePc Piece::get_type() const {return pion;}
+typePc Pion::get_type() const {return pion;}
 
 
 /**
@@ -149,11 +149,6 @@ void Pion::deplace(Square dst){
     vierge=false;
 }
 
-Pion::~Pion()
-{
-
-}
-
 
 //////////////
 //  Tour    //
@@ -177,10 +172,6 @@ bool Tour::check_dst(Square dst) const  {
     return false;
 }
 
-Tour::~Tour()
-{
-
-}
 
 //////////////
 //  Fout    //

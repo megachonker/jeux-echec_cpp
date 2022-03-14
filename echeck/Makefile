@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb
 # -O2
 DFLAGS=DEBUG
