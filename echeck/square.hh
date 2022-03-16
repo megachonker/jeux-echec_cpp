@@ -11,20 +11,25 @@ bool saisie_correcte_petitroque(std::string const & cmd);
 
 class Square
 {
-    public:
-        short ligne, colone;//checker si priver bon
-        Square(std::string const position);
-        Square(int ligne, int colone);
-        std::string to_string() const;
-        bool operator== (Square cmp)const;
-        // void operator= (Square cmp);
-        Square operator+ (Square add);
-        void operator+=(Square cible);
+    private:
         void inv ();
         void swap();
         bool inside();
+    public:
+        short ligne, colone;//checker si priver bon
+
+        Square(std::string const position);
+        Square(int ligne=0, int colone=0);
+        std::string to_string() const;
+        bool operator== (Square cmp)const;
+        Square operator+ (Square add);
+        void operator+=(Square cible);
+
         // ~Square();
 };
+
+
+Square sens_deplacement(Square cible,Square destination);
 
 ///////////////////
 std::string couleur_to_str(Couleur ma_couleur);

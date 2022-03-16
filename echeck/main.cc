@@ -4,11 +4,11 @@
 #include "square.hh"
 #include "echiquier.hh"
 
+#include "macro.hh"
 using namespace std;
 
 //--------------------------------------------------------------
 int main() {
-
     Jeu monjeu;  // initialise le jeu
     bool stop(false);
     monjeu.affiche();

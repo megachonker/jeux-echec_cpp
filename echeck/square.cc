@@ -3,6 +3,8 @@
 #include <iostream>
 #include "square.hh"
 
+#include "macro.hh"
+
 using namespace std;
 
 bool saisie_correcte(string const & cmd) {
@@ -24,29 +26,24 @@ Square::Square(string const position)
 }
 
 Square::Square(int ligne, int colone) : ligne(ligne),colone(colone)
-{
-    
-}
+{}
 
 std::string Square::to_string() const{
     return "colone: "+std::to_string(colone)+" Ligne: "+std::to_string(ligne);
 }
 
 bool Square::operator== (Square cmp) const{
-    return (ligne==cmp.ligne)&&(colone==cmp.ligne);
+    return ((ligne==cmp.ligne)&&(colone==cmp.colone));
 }
-
-// void Square::operator= (Square cmp){
-//     ligne=cmp.ligne;
-//     colone=cmp.ligne;
-// }
 
 Square Square::operator+ (Square add){
     return Square(ligne+add.ligne,colone+add.colone);
 }
 
 void Square::operator+=(Square cible){
-    Square(ligne,colone) = Square(ligne,colone)+cible;
+    ligne = this->ligne + cible.ligne;
+    colone = this->colone + cible.colone;
+    // Square(ligne,colone) = Square(ligne,colone)+cible;
 }
 
 void Square::inv (){
@@ -61,6 +58,28 @@ void Square::swap(){
 bool Square::inside(){
     return (colone<8)&&(ligne<8);
 }
+
+
+/**
+ * @brief determine dans quelle sens la piece bouge
+ * 
+ * @param source 
+ * @param destination 
+ * @return Square 
+ */
+Square sens_deplacement(Square source,Square destination){
+        Square decalage;
+        decalage.colone=source.colone<destination.colone ? 1 : -1;
+        decalage.ligne=source.ligne<destination.ligne ? 1 : -1;
+
+        if (source.colone==destination.colone)
+            decalage.colone=0;
+        if (source.ligne==destination.ligne)
+            decalage.ligne=0;
+
+        return decalage;
+}
+
 
 ////////////////////////////////////////////////
 std::string couleur_to_str(Couleur ma_couleur){
