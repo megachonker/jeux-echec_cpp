@@ -3,7 +3,17 @@
 #include "square.hh"
 #include "piece.hh"
 #include "jeu.hh" //include mouvement
+
+
+
 using namespace std;
+
+
+
+
+#include "macro.hh"
+
+
 
 void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
@@ -189,26 +199,26 @@ void Echiquier::affiche () const {
         }
 }
 
-bool Echiquier::chk_echec_roi(Square position_dst){
-        Couleur couleur_joueur = get_piece(position_dst)->get_couleur();
+bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
+        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
+        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]: piecesn[4])->get_pos();
         for (short i = 0; i < 8; i++)
         {
-                Piece ** board_piece = couleur_joueur==Blanc ? piecesb : piecesn;
-                Pion  ** board_pion  = couleur_joueur==Blanc ? pionsb : pionsn;
                 
                 //piece ataque roi
                 if (board_piece[i] != nullptr
-                && pseudocheck(board_piece[i],position_dst)
-                && slidecheck(board_piece[i],position_dst))
-                        return false;
+                && pseudocheck(board_piece[i],pos_roi)
+                && slidecheck(board_piece[i],pos_roi))
+                        return true;
         
                 //pion attaque un roi
                 if (board_pion[i] != nullptr
-                && pseudocheck(board_pion[i],position_dst) 
-                && slidecheck(board_pion[i],position_dst))
-                        return false;
+                && pseudocheck(board_pion[i],pos_roi) 
+                && slidecheck(board_pion[i],pos_roi))
+                        return true;
         }
-        return true;
+        return false;
 }
 
 bool Echiquier::check(Piece * piece,Square position_dst){
@@ -217,33 +227,43 @@ bool Echiquier::check(Piece * piece,Square position_dst){
                 cout << "pseudo check géometrique echouer" << endl;
                 return false;
         }
-        if (!slidecheck(piece,position_dst))
-                return false;    
-
-        // check lecheque est le roi
-        if(chk_echec_roi(position_dst))
+        if (!slidecheck(piece,position_dst)){
+                WARNING("les piece entre en colision");
                 return false;
+        }
+        
+        // check lecheque est le roi
+        if(chk_echec_roi(piece->get_couleur())){
+                cout << "mise en echeque" << endl;
+                return false;
+        }
                 
         return true;
 }
 
 
 bool Echiquier::slidecheck(Piece *source,Square position_dst){
-        //determine dans quelle sens verifier
-        Square decalage = 
-                source->get_pos().colone!=position_dst.colone
-             && source->get_pos().ligne!=position_dst.ligne
-        ? Square(1,0) : Square(1,1);
-
+        
+        if (source->get_type() != tour 
+        &&  source->get_type() != fou 
+        &&  source->get_type() != dame)
+                return true;        
+        
         Square origine = source->get_pos();
+        Square decalage= sens_deplacement(origine,position_dst);
 
+        DEBUG("origine avant: " << origine.to_string() << "décalage: " << decalage.to_string())
+
+        origine+=decalage;
         while (est_case_vide(origine)){
-                origine+=decalage;
-                if(origine==position_dst)
+                DEBUG("origine: " << origine.to_string() << "\tdestination: " << position_dst.to_string());
+                if(origine==position_dst){
+                        VERBEUX("slide ok")
                         return true;
+                }
+                origine+=decalage;
         }
         
-        cout << "collision" << endl;
         return false;
 }
 
@@ -263,7 +283,7 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst)const{
         //case vide
         else
                 //test deplacement
-                if(piece->check_dst(position_dst,false))
+                if(!piece->check_dst(position_dst,false))
                         return false;
         return true;
 }

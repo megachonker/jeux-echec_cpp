@@ -24,7 +24,7 @@ public:
     virtual typePc get_type() const =0;//peut etre enlever
     virtual void deplace(Square dst);
     virtual bool check_dst(Square dst) const =0;
-    virtual bool check_dst(Square dst,bool offensif) const;
+    virtual bool check_dst(Square dst,bool offensif) const;//metre un false est chanbger
     virtual std::string to_string() const;
     void affiche() const;
     Piece(std::string nom, Couleur couleur, Square position);

@@ -26,7 +26,7 @@ private:
     bool slidecheck(Piece * source,Square const position_dst);
     bool slide(Square origine,Square decalage);
     
-    bool chk_echec_roi(Square position_dst);
+    bool chk_echec_roi(Couleur courleur);
 
 
 public:

@@ -4,6 +4,8 @@
 #include "square.hh"
 #include <math.h>// absolut facilement
 
+#include "macro.hh"
+
 using namespace std;
 
 Square Piece::get_pos()const{
@@ -94,7 +96,7 @@ bool Pion::check_dst(Square dst) const {
     //si noir on inverse le sens
     int sens = couleur==Noir ? -1 : 1;
     int distance =  (dst.ligne-position.ligne)*sens;//distance parcourue
-    cout << "distance !" << distance << endl;
+    DEBUG("distance !" << distance);
     if (distance<0)
     {
         cout << "déplacement négatif" << endl;
@@ -114,7 +116,6 @@ bool Pion::check_dst(Square dst) const {
         cout << "le pion ne peut ce déplacer que en avant" << endl;
         return false;
     }
-    
 
     if((vierge==true && distance<=2)||(distance<=1))
         return true;
@@ -124,11 +125,10 @@ bool Pion::check_dst(Square dst) const {
 }
 
 bool Pion::check_dst(Square dst,bool offensif)const{
-    if (!offensif && !Pion::check_dst(dst))//verrification clasique
-        return false;
-    if (offensif && !mangerdiag(dst))  //verifie les paterne d'aggression
-        return false;
-    return true;
+    if(offensif)
+        return mangerdiag(dst);
+    else
+        return Pion::check_dst(dst);
 }
 
 string Pion::to_string() const{    
