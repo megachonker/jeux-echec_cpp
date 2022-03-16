@@ -4,6 +4,8 @@
 #include "piece.hh"
 #include <string>
 
+#include "macro.hh"
+
 using namespace std;
 
 Jeu::Jeu(/* args */){
@@ -22,7 +24,7 @@ Couleur Jeu::get_couleur(){
 
 bool Jeu::deplace(string const orig, string const dest){
         if (orig==dest){
-            cout << "la source est la déstination ne peuve etre la meme" << endl;
+            INFO("la source est la déstination ne peuve etre la meme");
             return false;
         }
         
@@ -30,9 +32,11 @@ bool Jeu::deplace(string const orig, string const dest){
         Square porigine(orig);
         Square pdst(dest);
 
+        VERBEUX(porigine.print_deplace(pdst))
+
         //piece origine non vide
         if (mon_echiquier.est_case_vide(porigine)==true){
-            cout << "la case origine" << porigine.to_string() <<" est vide "<< endl;
+            INFO("la case origine" << porigine.to_string() <<" est vide ");
             return false;
         }
 
@@ -41,16 +45,17 @@ bool Jeu::deplace(string const orig, string const dest){
         //piece source bonne couleur dst couleur opposer 
         //modifier si troc
         if( piece_sel->get_couleur()!=joueur){//tes si la piece sel appartien au joueur
-            cout << "la pece selectioner n'apartien pas au joueur" << endl;    
+            INFO("la pece selectioner n'apartien pas au joueur" );    
             return false;
         }
 
         //si le déplacment final est bon
-        int erreur = mon_echiquier.check(piece_sel,pdst);
+        if(!mon_echiquier.check(piece_sel,pdst)){
+            INFO("déplacement pas bon");
+            return false;
+        }
 
-        //quit en cas d'erreur
-        if (!erreur)
-            return false;     
+
 
         //effectue le deplacemnt
         mon_echiquier.deplace(piece_sel,pdst);

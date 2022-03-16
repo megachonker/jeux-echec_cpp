@@ -24,10 +24,10 @@ class Square
         bool operator== (Square cmp)const;
         Square operator+ (Square add);
         void operator+=(Square cible);
+        std::string print_deplace(Square dst); //,Square src   =   BVITCH =Square(colone,ligne)
 
         // ~Square();
 };
-
 
 Square sens_deplacement(Square cible,Square destination);
 

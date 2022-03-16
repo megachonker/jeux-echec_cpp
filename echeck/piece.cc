@@ -74,15 +74,15 @@ typePc Pion::get_type() const {return pion;}
  */
 bool Pion::mangerdiag(Square dst) const{
     //si noir on inverse le sens
-    char sens = (couleur==Noir ? -1: 1);
+    int sens = (couleur==Noir ? -1: 1);
     //portée effectif du coup
-    char porter = dst.colone+sens;
+    int porter = dst.colone+sens;
 
     if(dst==Square(position.ligne+1,porter)
     || dst==Square(position.ligne-1,porter))
         return true;
 
-    cout << "déplacement offensif du pion invalide" << endl;
+    WARNING("déplacement offensif du pion invalide")
     return false;
 }
 
@@ -183,7 +183,6 @@ typePc Fou::get_type() const{return fou;}
 
 bool Fou::check_dst(Square dst) const {
     //check ratio de déplacement a 1
-    cout << "COLONE " << dst.colone-position.colone << "LIGNE" <<  dst.ligne-position.ligne << endl;
     if((abs((dst.colone-position.colone))/abs((dst.ligne-position.ligne)))==1){
         return true;
     }

@@ -222,6 +222,11 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
 }
 
 bool Echiquier::check(Piece * piece,Square position_dst){
+        // if(!get_piece(position_dst)->get_type()){
+        //         cout << "vous pouvez pas attaquer un rois dirrectment" << endl;
+        //         return false;
+        // }
+
 
         if(!pseudocheck(piece,position_dst)){
                 cout << "pseudo check géometrique echouer" << endl;
@@ -254,14 +259,13 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
 
         DEBUG("origine avant: " << origine.to_string() << "décalage: " << decalage.to_string())
 
-        origine+=decalage;
         while (est_case_vide(origine)){
+                origine+=decalage;
                 DEBUG("origine: " << origine.to_string() << "\tdestination: " << position_dst.to_string());
                 if(origine==position_dst){
                         VERBEUX("slide ok")
                         return true;
                 }
-                origine+=decalage;
         }
         
         return false;
@@ -271,7 +275,7 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst)const{
         if (get_piece(position_dst) != nullptr)   //test si dest est une piece
         {
                 //destination moi
-                if(get_piece(position_dst)->get_couleur()!=piece->get_couleur()){//test couleur opposer)
+                if(get_piece(position_dst)->get_couleur()==piece->get_couleur()){//test couleur opposer)
                         cout << "vous pouvez pas manger vos propre piece" << endl;
                         return false;
                 }
