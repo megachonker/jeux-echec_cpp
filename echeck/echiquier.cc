@@ -228,8 +228,8 @@ bool Echiquier::check(Piece * piece,Square position_dst){
         // }
 
 
-        if(!pseudocheck(piece,position_dst)){
-                cout << "pseudo check géometrique echouer" << endl;
+        if(!pseudocheck(piece,position_dst,true)){
+                WARNING("pseudo check géometrique echouer");
                 return false;
         }
         if (!slidecheck(piece,position_dst)){
@@ -271,23 +271,24 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
         return false;
 }
 
-bool Echiquier::pseudocheck(Piece * piece,Square position_dst)const{
+bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)const{
         if (get_piece(position_dst) != nullptr)   //test si dest est une piece
         {
                 //destination moi
                 if(get_piece(position_dst)->get_couleur()==piece->get_couleur()){//test couleur opposer)
-                        cout << "vous pouvez pas manger vos propre piece" << endl;
+                        if(print_err)
+                                cout << "vous pouvez pas manger vos propre piece" << endl;
                         return false;
                 }
                 // test déplacement agressif
                 else
-                        if(!piece->check_dst(position_dst,true))
+                        if(!piece->check_dst(position_dst,true,print_err))
                                 return false;
         }
         //case vide
         else
                 //test deplacement
-                if(!piece->check_dst(position_dst,false))
+                if(!piece->check_dst(position_dst,false,print_err))
                         return false;
         return true;
 }

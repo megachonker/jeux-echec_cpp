@@ -28,13 +28,6 @@ void Piece::deplace(Square dst){
     position=dst;
 }
 
-bool Piece::check_dst(Square dst,bool aggression)const{
-    (void)aggression;//utiliser juste pour la redefinition du pion
-    return check_dst(dst);
-}
-
-
-
 string Piece::to_string() const{    
 return  string("\n")+
         "noms:      "+nom+"\n"+
@@ -72,7 +65,7 @@ typePc Pion::get_type() const {return pion;}
  * @return true 
  * @return false 
  */
-bool Pion::mangerdiag(Square dst) const{
+bool Pion::mangerdiag(Square dst,bool print_err) const{
     //si noir on inverse le sens
     int sens = (couleur==Noir ? -1: 1);
     //portée effectif du coup
@@ -82,53 +75,49 @@ bool Pion::mangerdiag(Square dst) const{
     || dst==Square(position.ligne-1,porter))
         return true;
 
-    WARNING("déplacement offensif du pion invalide")
+    if(print_err)
+        WARNING("déplacement offensif du pion invalide")
     return false;
 }
 
-/**
- * @brief vérifie géométriquement la fesabilitée d'un mouvement du pion
- * @param dst 
- * @return true 
- * @return false 
- */
-bool Pion::check_dst(Square dst) const {
+
+bool Pion::check_dst(Square dst,bool offensif,bool print_err)const{
+    if(offensif)
+        return mangerdiag(dst,print_err);
+
     //si noir on inverse le sens
     int sens = couleur==Noir ? -1 : 1;
     int distance =  (dst.ligne-position.ligne)*sens;//distance parcourue
     DEBUG("distance !" << distance);
     if (distance<0)
     {
-        cout << "déplacement négatif" << endl;
+        if (print_err)
+            WARNING("déplacement négatif");
         return false;
     }
 
     //check si le pion avance
     if (distance <= 0)
     {
-        cout << "check_dstment_null" << endl;
+        if (print_err)
+            WARNING("check_dstment_null");
         return false;
     }
 
     
     if (position.colone!=dst.colone)
     {
-        cout << "le pion ne peut ce déplacer que en avant" << endl;
+        if (print_err)
+            WARNING("le pion ne peut ce déplacer que en avant");
         return false;
     }
 
     if((vierge==true && distance<=2)||(distance<=1))
         return true;
     
-    cout << "déplacement imposible" << endl;
+    if (print_err)
+        WARNING("déplacement imposible");
     return false;
-}
-
-bool Pion::check_dst(Square dst,bool offensif)const{
-    if(offensif)
-        return mangerdiag(dst);
-    else
-        return Pion::check_dst(dst);
 }
 
 string Pion::to_string() const{    
@@ -159,7 +148,9 @@ Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"
 typePc Tour::get_type() const {return tour;}
 
 
-bool Tour::check_dst(Square dst) const  {
+bool Tour::check_dst(Square dst,bool offensif,bool print_err) const  {
+    (void)offensif;
+    (void)print_err;
 
     //jeu verifie que la src est destination ne sont pas les meme
     if(position.colone == dst.colone){
@@ -181,7 +172,9 @@ Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u
 
 typePc Fou::get_type() const{return fou;}
 
-bool Fou::check_dst(Square dst) const {
+bool Fou::check_dst(Square dst,bool offensif,bool print_err) const {
+    (void)offensif;
+    (void)print_err;
     //check ratio de déplacement a 1
     if((abs((dst.colone-position.colone))/abs((dst.ligne-position.ligne)))==1){
         return true;
@@ -197,7 +190,9 @@ Cavalier::Cavalier(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u
 
 typePc Cavalier::get_type() const{return cavalier;}
 
-bool Cavalier::check_dst(Square dst) const {
+bool Cavalier::check_dst(Square dst,bool offensif,bool print_err) const {
+    (void)offensif;
+    (void)print_err;
     return
     Square(position.ligne+2,position.colone+1) == dst ||
     Square(position.ligne+2,position.colone-1) == dst ||
@@ -217,7 +212,9 @@ Dame::Dame(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2655" :"
 
 typePc Dame::get_type() const{return dame;}
 
-bool Dame::check_dst(Square dst) const {
+bool Dame::check_dst(Square dst,bool offensif,bool print_err) const {
+    (void)offensif;
+    (void)print_err;
     Fou F(couleur,position);
     Tour T(couleur,position);
 
@@ -233,7 +230,9 @@ Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u
 
 typePc Roi::get_type() const{return roi;}
 
-bool Roi::check_dst(Square dst) const {
+bool Roi::check_dst(Square dst,bool offensif,bool print_err) const {
+    (void)offensif;
+    (void)print_err;
     return
         // position-dst ||
         Square(position.ligne+1,position.colone+1) == dst ||

@@ -21,7 +21,7 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 
-    bool pseudocheck(Piece * piece,Square position_dst)const;
+    bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false)const;
     //classe ?
     bool slidecheck(Piece * source,Square const position_dst);
     bool slide(Square origine,Square decalage);
