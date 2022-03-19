@@ -45,7 +45,6 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
 
         Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
         Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
-        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]: piecesn[4])->get_pos();
 
         //save l'ancienne piece
         Piece * old_piece = get_piece(position_dst);
@@ -62,6 +61,7 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
         echiquier[position_dst.ligne][position_dst.colone]=piece;
 
         Piece * address_piece_effacer;
+
 
         //piece destination existe
         if (old_piece){
@@ -80,17 +80,20 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                 }
         }
 
+        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
 
         // check lecheque est le roi
         if(chk_echec_roi(board_piece,board_pion,pos_roi)){
-                cout << "mise en echeque" << endl;
+                WARNING("vous vous metez en echeque");
+                //on déplace la piece a la position initial
+                piece->deplace(old_pos);
                 //restoration de la piece original
                 echiquier[old_pos.ligne][old_pos.colone]=piece;
                 //restoration de la case dst
                 echiquier[position_dst.ligne][position_dst.colone]=old_piece;
                 //restoration de la piece dans la main joueur
                 if(old_piece)
-                        address_piece_effacer=old_piece;
+                        address_piece_effacer=old_piece;                
                 return false;
         }
 

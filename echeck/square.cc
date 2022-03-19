@@ -81,7 +81,7 @@ Square sens_deplacement(Square source,Square destination){
 }
 
 bool Square::around(int size){
-    return ((ligne*ligne) < size*size) && ((colone*colone) < size*size);
+    return abs(ligne)<=size && abs(colone)<=size;
 }
 
 Square Square::operator-(Square cible) const {

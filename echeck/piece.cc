@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include "square.hh"
-#include <math.h>// absolut facilement
 
 #include "macro.hh"
 
@@ -88,7 +87,6 @@ bool Pion::check_dst(Square dst,bool offensif,bool print_err)const{
     //si noir on inverse le sens
     int sens = couleur==Noir ? -1 : 1;
     int distance =  (dst.ligne-position.ligne)*sens;//distance parcourue
-    DEBUG("distance !" << distance);
     if (distance<0)
     {
         if (print_err)
@@ -176,7 +174,7 @@ bool Fou::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)offensif;
     (void)print_err;
     //check ratio de déplacement a 1
-    if((abs((dst.colone-position.colone))/abs((dst.ligne-position.ligne)))==1){
+    if((abs((dst.colone-position.colone))==abs((dst.ligne-position.ligne)))==1){
         return true;
     }
     return false;
