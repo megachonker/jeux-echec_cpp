@@ -5,12 +5,7 @@
 #include "jeu.hh" //include mouvement
 
 
-
 using namespace std;
-
-
-
-
 #include "macro.hh"
 
 
@@ -20,40 +15,86 @@ void Echiquier::pose_piece(Piece * piece){
 }
 
 
-/**
- * @brief déplace la piece 
- *      effectue les verification necessaire
- * attention les piece ne sont pas désaouler
- * @param piece 
- * @param dst 
- * @return true 
- * @return false 
- */
-void Echiquier::deplace(Piece * piece, Square dst,bool offensif){
+bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
+        //piece origine non vide
+        if (est_case_vide(position_src)==true){
+            INFO("la case origine" << position_src.to_string() <<" est vide ");
+            return false;
+        }
+
+        //piece source bonne couleur dst couleur opposer 
+        //modifier si troc
+        if( get_piece(position_src)->get_couleur()!=couleur_joueur){//tes si la piece sel appartien au joueur
+            INFO("la pece selectioner n'apartien pas au joueur" );    
+            return false;
+        }
+
+        Piece * piece = get_piece(position_src);
+
+
+        if(!pseudocheck(piece,position_dst,true)){
+                WARNING("pseudo check géometrique echouer");
+                return false;
+        }
+        if (!slidecheck(piece,position_dst)){
+                WARNING("les piece entre en colision");
+                return false;
+        }
+
+
+
+        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
+        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]: piecesn[4])->get_pos();
+
+        //save l'ancienne piece
+        Piece * old_piece = get_piece(position_dst);
 
         //save encienne position
         Square old_pos = piece->get_pos();
 
         //on change ça position
-        piece->deplace(dst);
+        piece->deplace(position_dst);
 
         //supression de la piece position sur l'echequier
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         //on place la piece sur lechequier
-        echiquier[dst.ligne][dst.colone]=piece;
+        echiquier[position_dst.ligne][position_dst.colone]=piece;
 
+        Piece * address_piece_effacer;
 
-        if (offensif){
+        //piece destination existe
+        if (old_piece){
                 //supression des piece dans les main des joueur
+
+                //choisie le bon tableuax de piece a tester
+                Piece ** tab_piece = (old_piece->get_type()==pion ? (Piece**)board_pion : board_piece);
+
                 for (size_t i = 0; i < 8; i++)
                 {
-                        if(piecesb[i]!=nullptr && piecesb[i]->get_pos()==old_pos)
-                                piecesb[i]=nullptr;
-                        if(piecesn[i]!=nullptr && piecesn[i]->get_pos()==old_pos)
-                                piecesn[i]=nullptr;
+                        if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos()==old_pos){
+                                address_piece_effacer = tab_piece[i];
+                                tab_piece[i]=nullptr;
+                                break;
+                        }
                 }
-        }        
+        }
 
+
+        // check lecheque est le roi
+        if(chk_echec_roi(board_piece,board_pion,pos_roi)){
+                cout << "mise en echeque" << endl;
+                //restoration de la piece original
+                echiquier[old_pos.ligne][old_pos.colone]=piece;
+                //restoration de la case dst
+                echiquier[position_dst.ligne][position_dst.colone]=old_piece;
+                //restoration de la piece dans la main joueur
+                if(old_piece)
+                        address_piece_effacer=old_piece;
+                return false;
+        }
+
+        return true;
 }
 
 Echiquier::Echiquier () 
@@ -199,10 +240,7 @@ void Echiquier::affiche () const {
         }
 }
 
-bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
-        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
-        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
-        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]: piecesn[4])->get_pos();
+bool Echiquier::chk_echec_roi(Piece ** board_piece,Pion  ** board_pion,Square pos_roi){        
         for (short i = 0; i < 8; i++)
         {
                 
@@ -221,32 +259,6 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
         return false;
 }
 
-bool Echiquier::check(Piece * piece,Square position_dst){
-        // if(!get_piece(position_dst)->get_type()){
-        //         cout << "vous pouvez pas attaquer un rois dirrectment" << endl;
-        //         return false;
-        // }
-
-
-        if(!pseudocheck(piece,position_dst,true)){
-                WARNING("pseudo check géometrique echouer");
-                return false;
-        }
-        if (!slidecheck(piece,position_dst)){
-                WARNING("les piece entre en colision");
-                return false;
-        }
-        
-        // check lecheque est le roi
-        if(chk_echec_roi(piece->get_couleur())){
-                cout << "mise en echeque" << endl;
-                return false;
-        }
-                
-        return true;
-}
-
-
 bool Echiquier::slidecheck(Piece *source,Square position_dst){
         
         if (source->get_type() != tour 
@@ -259,15 +271,15 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
 
         DEBUG("origine avant: " << origine.to_string() << "décalage: " << decalage.to_string())
 
-        while (est_case_vide(origine)){
+        do{
                 origine+=decalage;
                 DEBUG("origine: " << origine.to_string() << "\tdestination: " << position_dst.to_string());
                 if(origine==position_dst){
                         VERBEUX("slide ok")
                         return true;
                 }
-        }
-        
+        }while (est_case_vide(origine));
+
         return false;
 }
 

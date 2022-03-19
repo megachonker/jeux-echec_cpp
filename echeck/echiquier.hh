@@ -21,26 +21,23 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 
+    bool check(Square position_src,Square position_dst,Couleur couleur_joueur);
     bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false)const;
-    //classe ?
     bool slidecheck(Piece * source,Square const position_dst);
     bool slide(Square origine,Square decalage);
-    
-    bool chk_echec_roi(Couleur courleur);
 
+    void pose_piece(Piece * piece);
+    bool chk_echec_roi(Piece ** board_piece,Pion ** board_pion,Square pos_roi);
+
+    Piece * get_piece(Square const square)   const; //peut etre priver a la fin ?
+    bool  est_case_vide(Square const square) const;
 
 public:
-    bool check(Piece * piece,Square position_dst);
-
-
-    bool  est_case_vide(Square const square) const;
-    Piece * get_piece(Square const square)   const; //peut etre priver a la fin ?
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
     void affiche () const;
     Square get_pos();
-    void pose_piece(Piece * piece);
-    void deplace(Piece * piece, Square dst,bool offensif=false);
+    bool deplace(Square piece, Square dst,Couleur couleur_joueur);
     Echiquier();
     ~Echiquier();
 };

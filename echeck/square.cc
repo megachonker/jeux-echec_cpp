@@ -29,9 +29,8 @@ Square::Square(int ligne, int colone) : ligne(ligne),colone(colone)
 {}
 
 std::string Square::to_string() const{
-    return "colone: "+std::to_string(colone)+" Ligne: "+std::to_string(ligne);
+    return std::to_string(colone)+":"+std::to_string(ligne);
 }
-
 
 bool Square::operator== (Square cmp) const{
     return ((ligne==cmp.ligne)&&(colone==cmp.colone));
@@ -79,6 +78,14 @@ Square sens_deplacement(Square source,Square destination){
             decalage.ligne=0;
 
         return decalage;
+}
+
+bool Square::around(int size){
+    return ((ligne*ligne) < size*size) && ((colone*colone) < size*size);
+}
+
+Square Square::operator-(Square cible) const {
+    return Square(ligne-cible.ligne,colone-cible.colone);
 }
 
 std::string Square::print_deplace(Square dst){

@@ -16,6 +16,7 @@ class Square
         void swap();
         bool inside();
     public:
+        bool around(int size=1);
         short ligne, colone;//checker si priver bon
 
         Square(std::string const position);
@@ -24,6 +25,7 @@ class Square
         bool operator== (Square cmp)const;
         Square operator+ (Square add);
         void operator+=(Square cible);
+        Square operator-(Square cible)const;
         std::string print_deplace(Square dst); //,Square src   =   BVITCH =Square(colone,ligne)
 
         // ~Square();

@@ -29,7 +29,7 @@ int main() {
                 if (saisie_correcte_petitroque(mouvement))
                     {/* code pour troquer */}
                 else{
-                    cout << "erreur sintaxe du coup" << endl;
+                    INFO("erreur sintaxe du coup");
                     continue;
                 }
             }

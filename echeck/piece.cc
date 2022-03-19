@@ -69,10 +69,10 @@ bool Pion::mangerdiag(Square dst,bool print_err) const{
     //si noir on inverse le sens
     int sens = (couleur==Noir ? -1: 1);
     //portée effectif du coup
-    int porter = dst.colone+sens;
+    int porter = position.ligne+sens;
 
-    if(dst==Square(position.ligne+1,porter)
-    || dst==Square(position.ligne-1,porter))
+    if(dst==Square(porter,position.colone+1)
+    || dst==Square(porter,position.colone-1))
         return true;
 
     if(print_err)
@@ -233,10 +233,5 @@ typePc Roi::get_type() const{return roi;}
 bool Roi::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)offensif;
     (void)print_err;
-    return
-        // position-dst ||
-        Square(position.ligne+1,position.colone+1) == dst ||
-        Square(position.ligne+1,position.colone-1) == dst ||
-        Square(position.ligne-1,position.colone+1) == dst ||
-        Square(position.ligne-1,position.colone-1) == dst;
+    return (position-dst).around();
 }

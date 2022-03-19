@@ -34,31 +34,11 @@ bool Jeu::deplace(string const orig, string const dest){
 
         VERBEUX(porigine.print_deplace(pdst))
 
-        //piece origine non vide
-        if (mon_echiquier.est_case_vide(porigine)==true){
-            INFO("la case origine" << porigine.to_string() <<" est vide ");
-            return false;
-        }
-
-        Piece * piece_sel = mon_echiquier.get_piece(porigine);
-
-        //piece source bonne couleur dst couleur opposer 
-        //modifier si troc
-        if( piece_sel->get_couleur()!=joueur){//tes si la piece sel appartien au joueur
-            INFO("la pece selectioner n'apartien pas au joueur" );    
-            return false;
-        }
-
-        //si le déplacment final est bon
-        if(!mon_echiquier.check(piece_sel,pdst)){
+        //effectue le deplacemnt
+        if(!mon_echiquier.deplace(porigine,pdst,joueur)){
             INFO("déplacement pas bon");
             return false;
         }
-
-
-
-        //effectue le deplacemnt
-        mon_echiquier.deplace(piece_sel,pdst);
 
         //fin du tour on change
         joueur==Blanc ? joueur=Noir : joueur =Blanc;
