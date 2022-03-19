@@ -16,6 +16,9 @@ void Echiquier::pose_piece(Piece * piece){
 
 
 bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
+
+//fc check
+
         //piece origine non vide
         if (est_case_vide(position_src)==true){
             INFO("la case origine" << position_src.to_string() <<" est vide ");
@@ -42,15 +45,22 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
         }
 
 
-
         Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
         Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
+
+////backup
 
         //save l'ancienne piece
         Piece * old_piece = get_piece(position_dst);
 
         //save encienne position
         Square old_pos = piece->get_pos();
+
+        //addresse pour save
+        Piece * address_piece_effacer;
+
+
+//fc deplace
 
         //on change ça position
         piece->deplace(position_dst);
@@ -59,9 +69,6 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         //on place la piece sur lechequier
         echiquier[position_dst.ligne][position_dst.colone]=piece;
-
-        Piece * address_piece_effacer;
-
 
         //piece destination existe
         if (old_piece){
@@ -79,6 +86,9 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                         }
                 }
         }
+
+
+//echeque
 
         Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
 

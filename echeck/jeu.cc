@@ -23,6 +23,9 @@ Couleur Jeu::get_couleur(){
 
 
 bool Jeu::deplace(string const orig, string const dest){
+        /// affiche si le joueur est en echeque
+        // bool en_echeque = false
+
         if (orig==dest){
             INFO("la source est la déstination ne peuve etre la meme");
             return false;
@@ -37,6 +40,17 @@ bool Jeu::deplace(string const orig, string const dest){
         //effectue le deplacemnt
         if(!mon_echiquier.deplace(porigine,pdst,joueur)){
             INFO("déplacement pas bon");
+            
+
+            //le joueur a réfléchit pour nous il a pas trouver de coup donc a nous de chercher si il y a un coup qui existe
+
+            //on instancie un jeux est on joue un coup
+                //tant qu'il n'y a pas un coup possible
+            //si aucune solution n'es trouver allor
+            //si le joueur etait en echeque au début du tour 
+            //allor MAT
+            //sinon PAT
+
             return false;
         }
 

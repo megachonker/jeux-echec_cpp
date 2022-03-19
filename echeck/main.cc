@@ -19,27 +19,29 @@ int main() {
         cout <<  couleur_to_str(monjeu.get_couleur()) << ": Coup (eg. a1a8) ? ";
         cin >> mouvement;
         //catch le ctrl+d
-        if (mouvement != "/quit" && !mouvement.empty()) {
-            //lower case
-            mouvement[0] = tolower(mouvement[0]);
-            mouvement[2] = tolower(mouvement[2]);
+        if (mouvement == "/quit" || mouvement.empty())
+            break;
 
-            //check syntaxe
-            if(!saisie_correcte(mouvement)){
-                if (saisie_correcte_petitroque(mouvement))
-                    {/* code pour troquer */}
-                else{
-                    INFO("erreur sintaxe du coup");
-                    continue;
-                }
+        //check syntaxe
+        if(!saisie_correcte(mouvement)){
+            if (saisie_correcte_grandroque(mouvement))
+                {/* code pour troquer */}
+            else if (saisie_correcte_petitroque(mouvement))
+                {/* code */}
+            else{
+                INFO("erreur sintaxe du coup");
+                continue;
             }
-            // découper case origine et destination
-            string orig = mouvement.substr(0, 2);
-            string dest = mouvement.substr(2, 2);
-            if(monjeu.deplace(orig, dest)==true)
-                monjeu.affiche();
         }
-        else stop=true;
+        //lower case
+        mouvement[0] = tolower(mouvement[0]);
+        mouvement[2] = tolower(mouvement[2]);
+        // découper case origine et destination
+        string orig = mouvement.substr(0, 2);
+        string dest = mouvement.substr(2, 2);
+        if(monjeu.deplace(orig, dest)==true)
+            monjeu.affiche();
+
     } while (!stop);
 
     return 0;

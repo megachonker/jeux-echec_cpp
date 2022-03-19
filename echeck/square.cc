@@ -8,15 +8,24 @@
 using namespace std;
 
 bool saisie_correcte(string const & cmd) {
-    regex mouvmtpattern("[a-h][1-8][a-h][1-8]");
+    regex mouvmtpattern("[a-h][1-8][a-h][1-8]",regex_constants::icase);
     return regex_match(cmd,mouvmtpattern);
 
+}
+
+
+
+bool saisie_correcte_grandroque(string const & cmd) {
+    regex mouvmtpattern("[Oo0]-[Oo0]-[Oo0]");
+    return regex_match(cmd,mouvmtpattern);
 }
 
 bool saisie_correcte_petitroque(string const & cmd) {
-    regex mouvmtpattern("(O|o|0)-(O|o|0)");
+    regex mouvmtpattern("[Oo0]-[Oo0]");
     return regex_match(cmd,mouvmtpattern);
 }
+
+
                         //& ?
 Square::Square(string const position)
 {
@@ -52,7 +61,7 @@ void Square::inv (){
 void Square::swap(){
     int tmp = ligne;
     ligne = colone;
-    colone = ligne;
+    colone = tmp;
 }
 
 bool Square::inside(){

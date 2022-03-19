@@ -8,6 +8,7 @@ enum Couleur{
 
 bool saisie_correcte(std::string const & cmd);
 bool saisie_correcte_petitroque(std::string const & cmd);
+bool saisie_correcte_grandroque(std::string const & cmd);
 
 class Square
 {
