@@ -27,6 +27,11 @@ void Piece::deplace(Square dst){
     position=dst;
 }
 
+// Piece::Piece(const Piece& rhs)
+// :nom(rhs.nom),couleur(rhs.couleur),position(rhs.position)
+// {}
+
+
 string Piece::to_string() const{    
 return  string("\n")+
         "noms:      "+nom+"\n"+
@@ -68,7 +73,16 @@ Couleur Piece::get_couleur()const{
 Pion::Pion(Couleur couleur,Square position,bool vierge) 
 : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
 {}
-// {cout << to_string()<< endl;}
+
+Piece * Pion::Clone(){
+    return new Pion(*this);
+}
+
+// Piece::Piece(const Piece &obj)
+// :nom(obj.nom),couleur(obj.couleur),position(obj.position)
+// {}
+
+
 
 typePc Pion::get_type() const {return pion;}
 
@@ -161,6 +175,10 @@ void Pion::deplace(Square dst){
 
 Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
 
+Piece * Tour::Clone(){
+    return new Tour(*this);
+}
+
 typePc Tour::get_type() const {return tour;}
 
 
@@ -186,6 +204,11 @@ bool Tour::check_dst(Square dst,bool offensif,bool print_err) const  {
  
 Fou::Fou(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2657" :"\u265D",couleur,position){}
 
+Piece * Fou::Clone(){
+    return new Fou(*this);
+}
+
+
 typePc Fou::get_type() const{return fou;}
 
 bool Fou::check_dst(Square dst,bool offensif,bool print_err) const {
@@ -203,6 +226,11 @@ bool Fou::check_dst(Square dst,bool offensif,bool print_err) const {
 //////////////////
  
 Cavalier::Cavalier(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2658" :"\u265E",couleur,position){}
+
+Piece * Cavalier::Clone(){
+    return new Cavalier(*this);
+}
+
 
 typePc Cavalier::get_type() const{return cavalier;}
 
@@ -226,6 +254,11 @@ bool Cavalier::check_dst(Square dst,bool offensif,bool print_err) const {
  
 Dame::Dame(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2655" :"\u265B",couleur,position){}
 
+Piece * Dame::Clone(){
+    return new Dame(*this);
+}
+
+
 typePc Dame::get_type() const{return dame;}
 
 bool Dame::check_dst(Square dst,bool offensif,bool print_err) const {
@@ -243,6 +276,11 @@ bool Dame::check_dst(Square dst,bool offensif,bool print_err) const {
 /////////////
 
 Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position){}
+
+Piece * Roi::Clone(){
+    return new Roi(*this);
+}
+
 
 typePc Roi::get_type() const{return roi;}
 

@@ -57,11 +57,13 @@ bool Jeu::deplace(string const orig, string const dest){
 }
 
 bool Jeu::fin(){
-    Echiquier plateaux_temporaire = mon_echiquier;
+    Echiquier plateaux_temporaire(mon_echiquier);
     
     //si le cache de résolution est plus valide on le régénère
     if (!cache_resolution)
         resolut = plateaux_temporaire.isstuck(joueur);
+    
+    // plateaux_temporaire.~Echiquier();
 
     //si la partie est irrésolvable
     if(!resolut){
@@ -73,6 +75,7 @@ bool Jeu::fin(){
         }
         return false;
     }
+    INFO("PAS EN ECHEQUE");
     return true;
 }
 

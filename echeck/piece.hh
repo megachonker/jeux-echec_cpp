@@ -29,6 +29,7 @@ public:
     Piece(std::string nom, Couleur couleur, Square position);
     Square get_pos()const;
     Couleur get_couleur()const;
+    virtual Piece * Clone()=0;
     virtual ~Piece(){};
 };
 
@@ -44,6 +45,8 @@ class Pion : public Piece
         bool check_dst(Square dst,bool aggresssion=false,bool print_err=false) const override ;
         std::string to_string() const override;
         Pion(Couleur couleur,Square position,bool vierge);
+        // Pion(const Pion& rhs);
+        Piece * Clone() override;
         virtual ~Pion(){}
 };
 
@@ -53,6 +56,7 @@ class Tour : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Tour(Couleur couleur,Square position);
+        Piece * Clone() override;
         virtual ~Tour(){}
 };
 
@@ -62,6 +66,7 @@ class Fou : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Fou(Couleur couleur,Square position);
+        Piece * Clone() override;
         virtual ~Fou(){}
 };
 
@@ -71,6 +76,7 @@ class Cavalier : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override ;
         Cavalier(Couleur couleur,Square position);
+        Piece * Clone() override;
         virtual ~Cavalier(){}
 };
 
@@ -80,6 +86,7 @@ class Dame : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Dame(Couleur couleur,Square position);
+        Piece * Clone() override;
         virtual ~Dame(){}
 };
 
@@ -89,6 +96,7 @@ class Roi : public Piece
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Roi(Couleur couleur,Square position);
+        Piece * Clone() override;
         virtual ~Roi(){}
 };
 

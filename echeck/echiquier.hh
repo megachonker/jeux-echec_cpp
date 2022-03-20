@@ -43,9 +43,10 @@ public:
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
     void affiche () const;
     Square get_pos();
-    erreurDeplacement deplace(Piece* piece, Square dst,Couleur couleur_joueur);
-    erreurDeplacement deplace(Square piece, Square dst,Couleur couleur_joueur);
+    erreurDeplacement deplace(Piece* piece, Square dst,Couleur couleur_joueur,bool print_err=false);
+    erreurDeplacement deplace(Square piece, Square dst,Couleur couleur_joueur,bool print_err=false);
     Echiquier();
+    Echiquier(const Echiquier &obj);
     ~Echiquier();
 };
 

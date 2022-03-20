@@ -15,12 +15,12 @@ void Echiquier::pose_piece(Piece * piece){
 }
 
 
-erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur){
-        return deplace(piece->get_pos(),dst,couleur_joueur);
+erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
+        return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
 
 
-erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
+erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
 
 //fc check
 
@@ -34,7 +34,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
 
         Piece * piece = get_piece(position_src);
 
-        if(!pseudocheck(piece,position_dst,true))
+        if(!pseudocheck(piece,position_dst,print_err))
                 return checkgeometric;
         if (!slidecheck(piece,position_dst))
                 return collision;
@@ -88,7 +88,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
 //echeque
 
 
-        VERBEUX("check lecheque est le roi");
+        // VERBEUX("check lecheque est le roi");
         if(chk_echec_roi(couleur_joueur)){
                 //on déplace la piece a la position initial
                 piece->deplace(old_pos);
@@ -309,7 +309,7 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)co
                 //destination moi
                 if(get_piece(position_dst)->get_couleur()==piece->get_couleur()){//test couleur opposer)
                         if(print_err)
-                                cout << "vous pouvez pas manger vos propre piece" << endl;
+                                WARNING("vous pouvez pas manger vos propre piece");
                         return false;
                 }
                 // test déplacement agressif
@@ -390,4 +390,26 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
                 }
         }
         return false;
+}
+
+Echiquier::Echiquier(const Echiquier &obj){
+        for (int i = 0; i < 8; i++)
+        {
+                if(obj.piecesb[i]!=nullptr)
+                        piecesb[i] = obj.piecesb[i]->Clone();
+                if(obj.piecesn[i]!=nullptr)
+                        piecesn[i] = obj.piecesn[i]->Clone();
+
+                if (obj.pionsb[i]!=nullptr)
+                        pionsb[i] = new Pion(*obj.pionsb[i]);
+                if (obj.pionsn[i]!=nullptr)
+                        pionsn[i] = new Pion(*obj.pionsn[i]);
+
+
+                //place les piece sur lechiquier
+                pose_piece(piecesb[i]);
+                pose_piece(piecesn[i]);
+                pose_piece(pionsb[i]);
+                pose_piece(pionsn[i]);                
+        }      
 }
