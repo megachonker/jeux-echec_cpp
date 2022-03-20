@@ -3,7 +3,6 @@
 #include "square.hh"
 
 enum typePc{
-    piece,
     pion,
     tour,
     fou,
@@ -21,6 +20,7 @@ protected:
     Couleur couleur;
     Square position; // a metre a jour
 public:
+    std::string typePc_to_string();
     virtual typePc get_type() const =0;//peut etre enlever
     virtual void deplace(Square dst);
     virtual bool check_dst(Square dst,bool aggresssion=false,bool print_err=false) const =0;//metre un false est chanbger

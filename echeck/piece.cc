@@ -38,6 +38,24 @@ void Piece::affiche() const{
     cout << nom ;   
 }
 
+std::string Piece::typePc_to_string(){
+    switch (get_type())
+    {
+    case pion:
+        return "Pion";
+    case tour:
+        return "Tour";
+    case fou:
+        return "Fou";
+    case cavalier:
+        return "Cavalier";
+    case dame:
+        return "Dame";
+    case roi:
+        return "Roi";
+    }
+    return "TYPE NOT FOUND";
+}
 
 Couleur Piece::get_couleur()const{
     return couleur;

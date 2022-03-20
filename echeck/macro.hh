@@ -17,7 +17,7 @@
 #define DEBUG(...) ;
 #endif
 #ifdef INFO_ON
-#define INFO(...) do { std::cout << BLUE() "\033[K\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
+#define INFO(...) do { std::cout << BLUE() "\033[K" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
 #define INFO(...) ;
 #endif

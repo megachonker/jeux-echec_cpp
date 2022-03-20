@@ -14,6 +14,10 @@ void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
 
+// bool check(Square position_src,Square position_dst,Couleur couleur_joueur){
+
+// }
+
 
 bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
 
@@ -44,10 +48,6 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                 return false;
         }
 
-
-        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
-        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
-
 ////backup
 
         //save l'ancienne piece
@@ -62,24 +62,29 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
 
 //fc deplace
 
-        //on change ça position
-        piece->deplace(position_dst);
-
         //supression de la piece position sur l'echequier
         echiquier[old_pos.ligne][old_pos.colone]=nullptr;
         //on place la piece sur lechequier
         echiquier[position_dst.ligne][position_dst.colone]=piece;
 
+        //supression de la piece dans la main des joueur
         //piece destination existe
         if (old_piece){
                 //supression des piece dans les main des joueur
 
-                //choisie le bon tableuax de piece a tester
+                //génération des board en fonction de la couleur du joueur
+                Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+                Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
+
+                //choisie le bon tableuax dans lequelle la piece a suprimer appartien
                 Piece ** tab_piece = (old_piece->get_type()==pion ? (Piece**)board_pion : board_piece);
 
+                //on recherche la piece a effacer dans le tableaux
                 for (size_t i = 0; i < 8; i++)
                 {
-                        if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos()==old_pos){
+                        //si une des piece dans la main a la meme position que la piece rechercher
+                        if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos() == old_piece->get_pos()){
+                WARNING("SUPERESIONBNNN");
                                 address_piece_effacer = tab_piece[i];
                                 tab_piece[i]=nullptr;
                                 break;
@@ -87,13 +92,16 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                 }
         }
 
+        //on change les coordoner dans la piece
+        piece->deplace(position_dst);
+
+        print_all_piece();
 
 //echeque
 
-        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
 
-        // check lecheque est le roi
-        if(chk_echec_roi(board_piece,board_pion,pos_roi)){
+        DEBUG("check lecheque est le roi");
+        if(chk_echec_roi(couleur_joueur)){
                 WARNING("vous vous metez en echeque");
                 //on déplace la piece a la position initial
                 piece->deplace(old_pos);
@@ -106,6 +114,9 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                         address_piece_effacer=old_piece;                
                 return false;
         }
+
+        //suprime la piece de la mémoire
+        delete old_piece;
 
         return true;
 }
@@ -156,7 +167,7 @@ Echiquier::Echiquier ()
 
 
 Echiquier::~Echiquier(){
-        cout << "destructeur echiquier" << endl;
+        VERBEUX("destructeur echiquier");
 
         for (unsigned char i(0);i<8;i++) {
                 if (pionsb[i] != nullptr)
@@ -253,7 +264,10 @@ void Echiquier::affiche () const {
         }
 }
 
-bool Echiquier::chk_echec_roi(Piece ** board_piece,Pion  ** board_pion,Square pos_roi){        
+bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
+        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
+        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
         for (short i = 0; i < 8; i++)
         {
                 
@@ -282,17 +296,23 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
 
-        DEBUG("origine avant: " << origine.to_string() << "décalage: " << decalage.to_string())
+        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
+        string chaine = origine.to_string();
+
 
         do{
                 origine+=decalage;
-                DEBUG("origine: " << origine.to_string() << "\tdestination: " << position_dst.to_string());
+                chaine+=" -> "+origine.to_string();
+
                 if(origine==position_dst){
-                        VERBEUX("slide ok")
+                        VERBEUX(chaine);
+                        VERBEUX("slide OK")
                         return true;
                 }
         }while (est_case_vide(origine));
 
+        VERBEUX(chaine);
+        VERBEUX("slide COLISION")
         return false;
 }
 
@@ -316,4 +336,44 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)co
                 if(!piece->check_dst(position_dst,false,print_err))
                         return false;
         return true;
+}
+
+
+void Echiquier::print_all_piece(){
+        DEBUG("Piece des joueur !")
+        INFO("Piece blanche");
+        cout << YELLO() << "Piece\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (piecesb[i] != nullptr)
+                        piecesb[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+        cout << YELLO() << "Pion\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (pionsb[i] != nullptr)
+                        pionsb[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+
+        INFO("Piece Noir");
+        cout << YELLO() << "Piece\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (piecesn[i] != nullptr)
+                        piecesn[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+        cout << YELLO() << "Pion\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (pionsn[i] != nullptr)
+                        pionsn[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
 }

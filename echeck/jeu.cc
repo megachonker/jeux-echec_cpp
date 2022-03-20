@@ -15,6 +15,9 @@ Jeu::Jeu(/* args */){
 
 void Jeu::affiche(){
     mon_echiquier.affiche();
+    VERBEUX("affichage joueur:");
+    if(mon_echiquier.chk_echec_roi(joueur))
+        INFO("Vous ête en Echèque !");
 }
 
 Couleur Jeu::get_couleur(){
@@ -24,7 +27,8 @@ Couleur Jeu::get_couleur(){
 
 bool Jeu::deplace(string const orig, string const dest){
         /// affiche si le joueur est en echeque
-        // bool en_echeque = false
+        DEBUG("joueur commence sont tour est t'il en echeque ?:")
+        bool en_echeque = mon_echiquier.chk_echec_roi(joueur);
 
         if (orig==dest){
             INFO("la source est la déstination ne peuve etre la meme");
@@ -35,7 +39,7 @@ bool Jeu::deplace(string const orig, string const dest){
         Square porigine(orig);
         Square pdst(dest);
 
-        VERBEUX(porigine.print_deplace(pdst))
+        INFO("INPUT: " << porigine.print_deplace(pdst));
 
         //effectue le deplacemnt
         if(!mon_echiquier.deplace(porigine,pdst,joueur)){
@@ -53,7 +57,6 @@ bool Jeu::deplace(string const orig, string const dest){
 
             return false;
         }
-
         //fin du tour on change
         joueur==Blanc ? joueur=Noir : joueur =Blanc;
         return true;
