@@ -41,12 +41,13 @@ public:
     bool chk_echec_roi(Couleur couleur_joueur);
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
-    void affiche () const;
+    void affiche (Echiquier const * obj=nullptr) const;
     Square get_pos();
     erreurDeplacement deplace(Piece* piece, Square dst,Couleur couleur_joueur,bool print_err=false);
     erreurDeplacement deplace(Square piece, Square dst,Couleur couleur_joueur,bool print_err=false);
     Echiquier();
     Echiquier(const Echiquier &obj);
     ~Echiquier();
+    void comparer(const Echiquier &obj);
 };
 

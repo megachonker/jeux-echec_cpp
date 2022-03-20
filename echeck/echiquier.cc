@@ -228,7 +228,7 @@ string Echiquier::canonical_position() const {
 }
 
 
-void Echiquier::affiche () const {
+void Echiquier::affiche (Echiquier const * obj) const {
 
         string space5 = string(5,' ');
         cout << endl;
@@ -240,7 +240,16 @@ void Echiquier::affiche () const {
                         cout << "|" ;
                         if (echiquier[i][j]) { 
                           cout << "\u0020\u0020";  //U+0020 est un esapce utf-8 taille police
-                          echiquier[i][j]-> affiche();
+
+                        if (obj && !(obj->echiquier[i][j] && (obj->echiquier[i][j]->to_string()==echiquier[i][j]->to_string())))
+                        {
+                                cout << YELLO();
+                                echiquier[i][j]-> affiche();
+                                cout << CLRCOLOR();
+                        }
+                        else
+                                echiquier[i][j]-> affiche();
+
                           cout << "\u0020" << " ";
                         }
                         else 
@@ -383,8 +392,8 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
                 {
                         for (int y = 0; y < 8; y++)
                         {
-                                if (    deplace(board_pion[u],Square(x,y),couleur_joueur)
-                                ||      deplace(board_piece[u],Square(x,y),couleur_joueur))
+                                if (    (deplace(board_pion[u],Square(x,y),couleur_joueur)==ok)
+                                ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
                                         return true;                                                              
                         }
                 }
@@ -393,6 +402,16 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
 }
 
 Echiquier::Echiquier(const Echiquier &obj){
+        VERBEUX("constructeur copy Echiquier")
+        for (size_t y = 0; y < 8; y++){
+                for (size_t x = 0; x < 8; x++)
+                        echiquier[x][y] = nullptr;
+                piecesb[y] = nullptr;
+                piecesn[y] = nullptr;
+                pionsb[y]  = nullptr;
+                pionsn[y]  = nullptr;
+        }
+
         for (int i = 0; i < 8; i++)
         {
                 if(obj.piecesb[i]!=nullptr)
@@ -413,3 +432,4 @@ Echiquier::Echiquier(const Echiquier &obj){
                 pose_piece(pionsn[i]);                
         }      
 }
+

@@ -59,11 +59,16 @@ bool Jeu::deplace(string const orig, string const dest){
 bool Jeu::fin(){
     Echiquier plateaux_temporaire(mon_echiquier);
     
+
     //si le cache de résolution est plus valide on le régénère
-    if (!cache_resolution)
+    if (!cache_resolution){
+        VERBEUX("renouvelment cache");
         resolut = plateaux_temporaire.isstuck(joueur);
+        cache_resolution=true;
+    }
     
-    // plateaux_temporaire.~Echiquier();
+    WARNING("DIFFFFFFF");
+    plateaux_temporaire.affiche(&mon_echiquier);
 
     //si la partie est irrésolvable
     if(!resolut){

@@ -39,7 +39,6 @@ int main() {
         string orig = mouvement.substr(0, 2);
         string dest = mouvement.substr(2, 2);
         if(monjeu.deplace(orig, dest)){
-            monjeu.fin();
             monjeu.affiche();
         }
     //la partie prend elle fin ?
