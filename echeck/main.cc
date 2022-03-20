@@ -10,7 +10,6 @@ using namespace std;
 //--------------------------------------------------------------
 int main() {
     Jeu monjeu;  // initialise le jeu
-    bool stop(false);
     monjeu.affiche();
     string mouvement;
     do
@@ -39,10 +38,11 @@ int main() {
         // découper case origine et destination
         string orig = mouvement.substr(0, 2);
         string dest = mouvement.substr(2, 2);
-        if(monjeu.deplace(orig, dest)==true)
+        if(monjeu.deplace(orig, dest)){
             monjeu.affiche();
-
-    } while (!stop);
+        }
+    //la partie prend elle fin ?
+    } while (true);
 
     return 0;
 }

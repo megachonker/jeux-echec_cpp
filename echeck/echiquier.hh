@@ -1,14 +1,20 @@
 #pragma once
 
+
 class Echiquier; // forfward declaration
 
 #include <iostream>
 #include "piece.hh"
 #include "square.hh"
 
-enum direction{
-        lignecolone,
-        diagonal
+
+enum erreurDeplacement{
+    ok,
+    srcvide,
+    appartenance,
+    checkgeometric,
+    collision,
+    echeque
 };
 
 class Echiquier
@@ -21,10 +27,8 @@ private:
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
 
-    // bool check(Square position_src,Square position_dst,Couleur couleur_joueur);
     bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false)const;
     bool slidecheck(Piece * source,Square const position_dst);
-    // bool slide(Square origine,Square decalage);
 
     void pose_piece(Piece * piece);
 
@@ -32,13 +36,15 @@ private:
     bool  est_case_vide(Square const square) const;
 
 public:
+    bool isstuck(Couleur couleur_joueur);
     void print_all_piece();
     bool chk_echec_roi(Couleur couleur_joueur);
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
     void affiche () const;
     Square get_pos();
-    bool deplace(Square piece, Square dst,Couleur couleur_joueur);
+    erreurDeplacement deplace(Piece* piece, Square dst,Couleur couleur_joueur);
+    erreurDeplacement deplace(Square piece, Square dst,Couleur couleur_joueur);
     Echiquier();
     ~Echiquier();
 };

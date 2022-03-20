@@ -14,39 +14,30 @@ void Echiquier::pose_piece(Piece * piece){
         echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
 }
 
-// bool check(Square position_src,Square position_dst,Couleur couleur_joueur){
 
-// }
+erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur){
+        return deplace(piece->get_pos(),dst,couleur_joueur);
+}
 
 
-bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
+erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur){
 
 //fc check
 
         //piece origine non vide
-        if (est_case_vide(position_src)==true){
-            INFO("la case origine" << position_src.to_string() <<" est vide ");
-            return false;
-        }
+        if (est_case_vide(position_src)==true)
+            return srcvide;
 
-        //piece source bonne couleur dst couleur opposer 
-        //modifier si troc
-        if( get_piece(position_src)->get_couleur()!=couleur_joueur){//tes si la piece sel appartien au joueur
-            INFO("la pece selectioner n'apartien pas au joueur" );    
-            return false;
-        }
+        //joue une piece a luit (modifier si troc)
+        if( get_piece(position_src)->get_couleur()!=couleur_joueur)
+            return appartenance;
 
         Piece * piece = get_piece(position_src);
 
-
-        if(!pseudocheck(piece,position_dst,true)){
-                WARNING("pseudo check géometrique echouer");
-                return false;
-        }
-        if (!slidecheck(piece,position_dst)){
-                WARNING("les piece entre en colision");
-                return false;
-        }
+        if(!pseudocheck(piece,position_dst,true))
+                return checkgeometric;
+        if (!slidecheck(piece,position_dst))
+                return collision;
 
 ////backup
 
@@ -84,7 +75,6 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                 {
                         //si une des piece dans la main a la meme position que la piece rechercher
                         if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos() == old_piece->get_pos()){
-                WARNING("SUPERESIONBNNN");
                                 address_piece_effacer = tab_piece[i];
                                 tab_piece[i]=nullptr;
                                 break;
@@ -95,14 +85,11 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
         //on change les coordoner dans la piece
         piece->deplace(position_dst);
 
-        print_all_piece();
-
 //echeque
 
 
-        DEBUG("check lecheque est le roi");
+        VERBEUX("check lecheque est le roi");
         if(chk_echec_roi(couleur_joueur)){
-                WARNING("vous vous metez en echeque");
                 //on déplace la piece a la position initial
                 piece->deplace(old_pos);
                 //restoration de la piece original
@@ -111,14 +98,14 @@ bool Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur
                 echiquier[position_dst.ligne][position_dst.colone]=old_piece;
                 //restoration de la piece dans la main joueur
                 if(old_piece)
-                        address_piece_effacer=old_piece;                
-                return false;
+                        address_piece_effacer=old_piece;
+                return echeque;
         }
 
         //suprime la piece de la mémoire
         delete old_piece;
 
-        return true;
+        return ok;
 }
 
 Echiquier::Echiquier () 
@@ -376,4 +363,31 @@ void Echiquier::print_all_piece(){
                 cout << "\t";
         }
         cout << endl;
+}
+
+/**
+ * @brief tester si la partie est fini
+ * 
+ * test tout les mouvement possible d'un joueur
+ * 
+ * @return true 
+ * @return false 
+ */
+bool Echiquier::isstuck(Couleur couleur_joueur){
+        Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
+        Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
+        //l'idée de cache mis en place aurait pus etre efficace...
+        for (int u = 0; u < 8; u++)
+        {
+                for (int x = 0; x < 8; x++)
+                {
+                        for (int y = 0; y < 8; y++)
+                        {
+                                if (    deplace(board_pion[u],Square(x,y),couleur_joueur)
+                                ||      deplace(board_piece[u],Square(x,y),couleur_joueur))
+                                        return true;                                                              
+                        }
+                }
+        }
+        return false;
 }
