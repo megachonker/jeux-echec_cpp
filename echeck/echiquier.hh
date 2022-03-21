@@ -17,6 +17,14 @@ enum erreurDeplacement{
     echeque
 };
 
+
+struct main_joueur
+{
+        Piece ** board_piece;
+        Piece ** board_pion;
+        char sens;
+};
+
 class Echiquier
 {
 private:
@@ -32,10 +40,16 @@ private:
 
     void pose_piece(Piece * piece);
 
+    void vider_case(Piece * piece);
+    void vider_case(Square piece);
+
     Piece * get_piece(Square const square)   const; //peut etre priver a la fin ?
     bool  est_case_vide(Square const square) const;
 
+    main_joueur get_main_joueur(Couleur couleur);
+
 public:
+    bool rocker(Couleur couleur,bool grand);
     bool isstuck(Couleur couleur_joueur);
     void print_all_piece();
     bool chk_echec_roi(Couleur couleur_joueur);
