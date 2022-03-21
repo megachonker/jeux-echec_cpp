@@ -90,7 +90,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
 //echeque
 
 
-        // VERBEUX("check lecheque est le roi");
+        VERBEUX("check lecheque est le roi");
         if(chk_echec_roi(couleur_joueur)){
                 //on déplace la piece a la position initial
                 piece->deplace(old_pos);
@@ -303,14 +303,14 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
                 chaine+=" -> "+origine.to_string();
 
                 if(origine==position_dst){
-                        // VERBEUX(chaine);
-                        // VERBEUX("slide OK")
+                        VERBEUX(chaine);
+                        VERBEUX("slide OK")
                         return true;
                 }
         }while (est_case_vide(origine));
 
-        // VERBEUX(chaine);
-        // VERBEUX("slide COLISION")
+        VERBEUX(chaine);
+        VERBEUX("slide COLISION")
         return false;
 }
 

@@ -19,7 +19,8 @@ Jeu::Jeu(/* args */){
 void Jeu::affiche(){
     mon_echiquier.affiche();
     VERBEUX("affichage joueur:");
-    if(mon_echiquier.chk_echec_roi(joueur))
+    //stoque le resultat du test pour savoir si mat
+    if(en_echeque=mon_echiquier.chk_echec_roi(joueur))
         INFO("Vous ête en Echèque !");
 }
 
@@ -30,8 +31,8 @@ Couleur Jeu::get_couleur(){
 
 bool Jeu::deplace(string const orig, string const dest){
         /// affiche si le joueur est en echeque
-        VERBEUX("joueur commence sont tour est t'il en echeque ?:")
-        en_echeque = mon_echiquier.chk_echec_roi(joueur);
+        // VERBEUX("joueur commence sont tour est t'il en echeque ?:")
+        // en_echeque = mon_echiquier.chk_echec_roi(joueur);
 
         if (orig==dest){
             INFO("la source est la déstination ne peuve etre la meme");
