@@ -240,12 +240,15 @@ bool Cavalier::check_dst(Square dst,bool offensif,bool print_err) const {
     return
     Square(position.ligne+2,position.colone+1) == dst ||
     Square(position.ligne+2,position.colone-1) == dst ||
+
     Square(position.ligne-2,position.colone+1) == dst ||
     Square(position.ligne-2,position.colone-1) == dst ||
-    Square(position.colone+2,position.ligne+1) == dst ||
-    Square(position.colone+2,position.ligne-1) == dst ||
-    Square(position.colone-2,position.ligne+1) == dst ||
-    Square(position.colone-2,position.ligne-1) == dst;
+
+    Square(position.ligne+1,position.colone+2) == dst ||
+    Square(position.ligne-1,position.colone+2) == dst ||
+
+    Square(position.ligne+1,position.colone-2) == dst ||
+    Square(position.ligne-1,position.colone-2) == dst ;
 }
 
 //////////////
