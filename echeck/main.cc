@@ -17,30 +17,34 @@ int main() {
         mouvement.clear();    
         cout <<  couleur_to_str(monjeu.get_couleur()) << ": Coup (eg. a1a8) ? ";
         cin >> mouvement;
-        //catch le ctrl+d
+
+
+        //Quite catch le ctrl+d
         if (mouvement == "/quit" || mouvement.empty())
             break;
 
-        //check syntaxe
-        if(!saisie_correcte(mouvement)){
-            if (saisie_correcte_grandroque(mouvement))
-                {/* code pour troquer */}
-            else if (saisie_correcte_petitroque(mouvement))
-                {/* code */}
-            else{
-                INFO("erreur sintaxe du coup");
-                continue;
+        //Mouvement
+        if(saisie_correcte(mouvement)){
+            //lower case
+            mouvement[0] = tolower(mouvement[0]);
+            mouvement[2] = tolower(mouvement[2]);
+            // découper case origine et destination
+            string orig = mouvement.substr(0, 2);
+            string dest = mouvement.substr(2, 2);
+            if(monjeu.deplace(orig, dest)){
+                monjeu.affiche();
             }
         }
-        //lower case
-        mouvement[0] = tolower(mouvement[0]);
-        mouvement[2] = tolower(mouvement[2]);
-        // découper case origine et destination
-        string orig = mouvement.substr(0, 2);
-        string dest = mouvement.substr(2, 2);
-        if(monjeu.deplace(orig, dest)){
-            monjeu.affiche();
-        }
+        //Grand rock
+        else if (saisie_correcte_grandroque(mouvement))
+            monjeu.rock(true);
+        //Petit rock
+        else if (saisie_correcte_petitroque(mouvement))
+            monjeu.rock(false);
+        //Erreur
+        else
+            INFO("erreur sintaxe du coup");
+
     //la partie prend elle fin ?
     } while (monjeu.fin());
 
