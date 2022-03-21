@@ -238,17 +238,7 @@ bool Cavalier::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)offensif;
     (void)print_err;
     return
-    Square(position.ligne+2,position.colone+1) == dst ||
-    Square(position.ligne+2,position.colone-1) == dst ||
-
-    Square(position.ligne-2,position.colone+1) == dst ||
-    Square(position.ligne-2,position.colone-1) == dst ||
-
-    Square(position.ligne+1,position.colone+2) == dst ||
-    Square(position.ligne-1,position.colone+2) == dst ||
-
-    Square(position.ligne+1,position.colone-2) == dst ||
-    Square(position.ligne-1,position.colone-2) == dst ;
+    Square(position.ligne+2,position.colone+1) == Square(abs(dst.ligne),abs(dst.colone));
 }
 
 //////////////
@@ -291,4 +281,4 @@ bool Roi::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)offensif;
     (void)print_err;
     return (position-dst).around();
-}
+}        bool rock(bool grand);
