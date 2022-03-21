@@ -4,8 +4,14 @@ DEBUG= -D VERBEUX_ON -D DEBUG_ON -D INFO_ON -D WARN_ON
 # -O2
 DFLAGS=DEBUG
 
-target : echecs themove.auchan
+test:	echecs themove.auchan
 	valgrind --track-origins=yes --leak-check=full ./echecs < themove.auchan
+
+
+matpat : echecs mat.auchan pat.auchan
+	valgrind --track-origins=yes --leak-check=full ./echecs < mat.auchan > /dev/null
+	valgrind --track-origins=yes --leak-check=full ./echecs < pat.auchan > /dev/null
+
 debug : echecs themove.auchan
 	gdb ./echecs
 	run < themove.auchan
