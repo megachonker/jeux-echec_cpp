@@ -293,8 +293,7 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
         
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
-
-        // DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
+        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
         string chaine = origine.to_string();
 
 
@@ -440,3 +439,58 @@ Echiquier::Echiquier(const Echiquier &obj){
         }      
 }
 
+bool Echiquier::rocker(Couleur couleur_joueur, bool grand){
+        struct main_joueur mes_piece = get_main_joueur(couleur_joueur);
+        Piece * mon_roi = mes_piece.board_piece[4];
+        Piece * ma_tour = mes_piece.board_piece[0];
+
+        if (mon_roi && ma_tour)
+        {
+                //delet de l'echiquier
+                vider_case(ma_tour);
+                vider_case(mon_roi);
+
+                //met a jour les position de la piece
+                Square temp = mon_roi->get_pos().ligne+mes_piece.sens;
+                mon_roi->deplace(ma_tour->get_pos().ligne+mes_piece.sens);
+                ma_tour->deplace(temp);
+                
+                //pose les piece sur le jeux
+                pose_piece(mon_roi);
+                pose_piece(ma_tour);
+                
+                return true;
+        }
+        
+
+
+        if (grand)
+        {
+                /* code */
+        }else{
+
+        }
+        
+        
+        return true;
+}
+
+
+
+main_joueur Echiquier::get_main_joueur(Couleur couleur_joueur){
+        Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
+        Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
+        char sens = (couleur_joueur==Noir ? -1: 1);
+
+        return main_joueur{ board_piece,board_pion,sens };
+}
+
+
+
+void Echiquier::vider_case(Piece * piece){
+        vider_case(piece->get_pos());
+}
+
+void Echiquier::vider_case(Square posit){
+        echiquier[posit.ligne][posit.colone]=nullptr;
+}

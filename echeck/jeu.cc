@@ -30,9 +30,6 @@ Couleur Jeu::get_couleur(){
 
 
 bool Jeu::deplace(string const orig, string const dest){
-        /// affiche si le joueur est en echeque
-        // VERBEUX("joueur commence sont tour est t'il en echeque ?:")
-        // en_echeque = mon_echiquier.chk_echec_roi(joueur);
 
         if (orig==dest){
             INFO("la source est la déstination ne peuve etre la meme");
@@ -59,22 +56,21 @@ bool Jeu::deplace(string const orig, string const dest){
 
 bool Jeu::fin(){
 
-    
-
     //si le cache de résolution est plus valide on le régénère
-    if (!cache_resolution){
-        VERBEUX("renouvelment cache");
-        
-        mon_echiquier.print_all_piece();
-        Echiquier plateaux_temporaire(mon_echiquier);
+    if (!cache_resolution){     
 
+        #ifdef DEBUG_ON
+        mon_echiquier.print_all_piece();
+        #endif
+
+        Echiquier plateaux_temporaire(mon_echiquier);
         resolut = plateaux_temporaire.isstuck(joueur);
 
         if(resolut){
-            WARNING("Solution Empirique");
+            DEBUG("Solution Empirique");
             plateaux_temporaire.affiche(&mon_echiquier);
         }else
-            WARNING("pas de solution");
+            DEBUG("pas de solution");
 
         cache_resolution=true;
     }
@@ -121,4 +117,16 @@ void Jeu::explain(enum erreurDeplacement err){
             WARNING("vous vous metez en echeque");
             break;
     }
+}
+
+void Jeu::rock(bool grand){
+
+        if(mon_echiquier.rocker(joueur,grand)){
+            //fin du tour on change de joueur
+            joueur==Blanc ? joueur=Noir : joueur =Blanc;
+            //on invalide le cache de la fesabilitée du jeux
+            cache_resolution = false;
+        }else{
+            WARNING("rock imposible");
+        }
 }
