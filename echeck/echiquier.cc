@@ -16,6 +16,8 @@ void Echiquier::pose_piece(Piece * piece){
 
 
 erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
+        if (!piece)
+                return srcvide;        
         return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
 
@@ -292,7 +294,7 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
 
-        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
+        // DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
         string chaine = origine.to_string();
 
 
@@ -301,14 +303,14 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst){
                 chaine+=" -> "+origine.to_string();
 
                 if(origine==position_dst){
-                        VERBEUX(chaine);
-                        VERBEUX("slide OK")
+                        // VERBEUX(chaine);
+                        // VERBEUX("slide OK")
                         return true;
                 }
         }while (est_case_vide(origine));
 
-        VERBEUX(chaine);
-        VERBEUX("slide COLISION")
+        // VERBEUX(chaine);
+        // VERBEUX("slide COLISION")
         return false;
 }
 
@@ -327,10 +329,15 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)co
                                 return false;
         }
         //case vide
-        else
+        else{
                 //test deplacement
                 if(!piece->check_dst(position_dst,false,print_err))
                         return false;
+                //verifie si le pion passe par dessu une piece
+                if(piece->get_type()==pion
+                && !est_case_vide(piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0)))
+                        return false;
+        }
         return true;
 }
 
@@ -387,17 +394,14 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
         Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
         //l'idée de cache mis en place aurait pus etre efficace...
         for (int u = 0; u < 8; u++)
+        for (int x = 0; x < 8; x++)
+        for (int y = 0; y < 8; y++)
         {
-                for (int x = 0; x < 8; x++)
-                {
-                        for (int y = 0; y < 8; y++)
-                        {
-                                if (    (deplace(board_pion[u],Square(x,y),couleur_joueur)==ok)
-                                ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
-                                        return true;                                                              
-                        }
-                }
+                if (    (deplace(board_pion[u],Square(x,y),couleur_joueur)==ok)
+                ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
+                        return true;                                                              
         }
+
         return false;
 }
 
@@ -414,22 +418,25 @@ Echiquier::Echiquier(const Echiquier &obj){
 
         for (int i = 0; i < 8; i++)
         {
-                if(obj.piecesb[i]!=nullptr)
+                if(obj.piecesb[i]!=nullptr){
                         piecesb[i] = obj.piecesb[i]->Clone();
-                if(obj.piecesn[i]!=nullptr)
+                        pose_piece(piecesb[i]);
+                }
+
+                if(obj.piecesn[i]!=nullptr){
                         piecesn[i] = obj.piecesn[i]->Clone();
+                        pose_piece(piecesn[i]);
+                }
 
-                if (obj.pionsb[i]!=nullptr)
+                if (obj.pionsb[i]!=nullptr){
                         pionsb[i] = new Pion(*obj.pionsb[i]);
-                if (obj.pionsn[i]!=nullptr)
+                        pose_piece(pionsb[i]);
+                }
+
+                if (obj.pionsn[i]!=nullptr){
                         pionsn[i] = new Pion(*obj.pionsn[i]);
-
-
-                //place les piece sur lechiquier
-                pose_piece(piecesb[i]);
-                pose_piece(piecesn[i]);
-                pose_piece(pionsb[i]);
-                pose_piece(pionsn[i]);                
+                        pose_piece(pionsn[i]);
+                }
         }      
 }
 

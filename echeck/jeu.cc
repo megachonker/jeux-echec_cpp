@@ -57,18 +57,26 @@ bool Jeu::deplace(string const orig, string const dest){
 }
 
 bool Jeu::fin(){
-    Echiquier plateaux_temporaire(mon_echiquier);
+
     
 
     //si le cache de résolution est plus valide on le régénère
     if (!cache_resolution){
         VERBEUX("renouvelment cache");
+        
+        mon_echiquier.print_all_piece();
+        Echiquier plateaux_temporaire(mon_echiquier);
+
         resolut = plateaux_temporaire.isstuck(joueur);
+
+        if(resolut){
+            WARNING("Solution Empirique");
+            plateaux_temporaire.affiche(&mon_echiquier);
+        }else
+            WARNING("pas de solution");
+
         cache_resolution=true;
     }
-    
-    WARNING("DIFFFFFFF");
-    plateaux_temporaire.affiche(&mon_echiquier);
 
     //si la partie est irrésolvable
     if(!resolut){
@@ -80,6 +88,7 @@ bool Jeu::fin(){
         }
         return false;
     }
+
     INFO("PAS EN ECHEQUE");
     return true;
 }
