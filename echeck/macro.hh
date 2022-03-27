@@ -12,22 +12,22 @@
 //definition des marcro variadique
 
 #ifdef DEBUG_ON
-#define DEBUG(...) std::cout << GREEN() "\033[K\t\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;
+#define DEBUG(...) do {std::cout << GREEN() "\033[K\t\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
-#define DEBUG(...) ;
+#define DEBUG(...) do {}while(0);
 #endif
 #ifdef INFO_ON
 #define INFO(...) do { std::cout << BLUE() "\033[K" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
-#define INFO(...) ;
+#define INFO(...) do {}while(0);
 #endif
 #ifdef WARN_ON
-#define WARNING(...) std::cout << YELLO() "\033[K\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;
+#define WARNING(...) do {std::cout << YELLO() "\033[K\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
-#define WARNING(...) ;
+#define WARNING(...) do {}while(0);
 #endif
 #ifdef VERBEUX_ON
-#define VERBEUX(...) std::cout << GREY() "\033[K\t\t\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;
+#define VERBEUX(...) do {std::cout << GREY() "\033[K\t\t\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
 #define VERBEUX(...);
 #endif

@@ -48,7 +48,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
 
         //save encienne position
         Square old_pos = piece->get_pos();
-
+        
         //addresse pour save
         Piece * address_piece_effacer;
 
@@ -284,13 +284,16 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
         return false;
 }
 
-bool Echiquier::slidecheck(Piece *source,Square position_dst){
-        
-        if (source->get_type() != tour 
-        &&  source->get_type() != fou 
-        &&  source->get_type() != dame)
-                return true;        
-        
+bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
+
+        if (!force)
+        {
+                if (source->get_type() != tour 
+                &&  source->get_type() != fou 
+                &&  source->get_type() != dame)
+                        return true; 
+        }
+
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
         DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
@@ -439,40 +442,61 @@ Echiquier::Echiquier(const Echiquier &obj){
         }      
 }
 
-bool Echiquier::rocker(Couleur couleur_joueur, bool grand){
+
+erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
         struct main_joueur mes_piece = get_main_joueur(couleur_joueur);
         Piece * mon_roi = mes_piece.board_piece[4];
-        Piece * ma_tour = mes_piece.board_piece[0];
-
-        if (mon_roi && ma_tour)
-        {
-                //delet de l'echiquier
-                vider_case(ma_tour);
-                vider_case(mon_roi);
-
-                //met a jour les position de la piece
-                Square temp = mon_roi->get_pos().ligne+mes_piece.sens;
-                mon_roi->deplace(ma_tour->get_pos().ligne+mes_piece.sens);
-                ma_tour->deplace(temp);
-                
-                //pose les piece sur le jeux
-                pose_piece(mon_roi);
-                pose_piece(ma_tour);
-                
-                return true;
-        }
+        Piece * ma_tour;
+        Square destination_roi;
+        Square destination_tour;
         
-
-
-        if (grand)
+        // //check que les piece n'on jamais bouger
+        // if (!((Roi*)mon_roi)->isvierge())
+        //         return dejabougerR;
+        
+        
+        if (!grand)
         {
-                /* code */
-        }else{
+                ma_tour = mes_piece.board_piece[7];
+
+                //check que les case sont prete
+                destination_roi = Square(ma_tour->get_pos().ligne,ma_tour->get_pos().colone-1);
+                destination_tour= Square(mon_roi->get_pos().ligne,mon_roi->get_pos().colone+1);
 
         }
+        else if (grand)
+        {
+                ma_tour = mes_piece.board_piece[0];
+
+                //check que les case sont prete
+                Square  case_cavalier    = Square(ma_tour->get_pos().ligne,ma_tour->get_pos().colone+1);
+                        destination_roi  = Square(ma_tour->get_pos().ligne,ma_tour->get_pos().colone+2);
+                        destination_tour = Square(mon_roi->get_pos().ligne,mon_roi->get_pos().colone-1);
+                
+                //on aurait pus utiliser un slide check mais verifier la préseance de 3 piece est plus légée
+                if (!est_case_vide(case_cavalier))
+                        return collision;
+        }             
         
+        if (!est_case_vide(destination_roi) || !est_case_vide(destination_tour))
+                return collision;
+
+        // if (!((Tour*)ma_tour)->isvierge())
+        //         return dejabougerT;
         
-        return true;
+        //delet de l'echiquier
+        vider_case(ma_tour);
+        vider_case(mon_roi);
+
+        //met a jour les position de la piece
+        mon_roi->deplace(destination_roi);
+        ma_tour->deplace(destination_tour);
+
+        //pose les piece sur le jeux
+        pose_piece(mon_roi);
+        pose_piece(ma_tour);
+        
+        return ok;
 }
 
 

@@ -14,7 +14,9 @@ enum erreurDeplacement{
     appartenance,
     checkgeometric,
     collision,
-    echeque
+    echeque,
+    dejabougerR,
+    dejabougerT
 };
 
 
@@ -36,7 +38,7 @@ private:
     Piece * piecesn[8];
 
     bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false)const;
-    bool slidecheck(Piece * source,Square const position_dst);
+    bool slidecheck(Piece * source,Square const position_dst,bool force=false);
 
     void pose_piece(Piece * piece);
 
@@ -49,7 +51,7 @@ private:
     main_joueur get_main_joueur(Couleur couleur);
 
 public:
-    bool rocker(Couleur couleur,bool grand);
+    erreurDeplacement rocker(Couleur couleur,bool grand);
     bool isstuck(Couleur couleur_joueur);
     void print_all_piece();
     bool chk_echec_roi(Couleur couleur_joueur);

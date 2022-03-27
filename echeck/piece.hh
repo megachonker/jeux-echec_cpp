@@ -45,14 +45,17 @@ class Pion : public Piece
         bool check_dst(Square dst,bool aggresssion=false,bool print_err=false) const override ;
         std::string to_string() const override;
         Pion(Couleur couleur,Square position,bool vierge);
-        // Pion(const Pion& rhs);
         Piece * Clone() override;
         virtual ~Pion(){}
 };
 
 class Tour : public Piece
 {
+    private:
+        bool vierge;
     public:
+        bool isvierge();
+        void deplace(Square dst) override; 
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Tour(Couleur couleur,Square position);
@@ -92,7 +95,11 @@ class Dame : public Piece
 
 class Roi : public Piece
 {
+    private:
+        bool vierge;
     public:
+        bool isvierge();
+        void deplace(Square dst) override; 
         virtual typePc get_type() const override;
         bool check_dst(Square dst,bool offensif=false,bool print_err=false) const override;
         Roi(Couleur couleur,Square position);

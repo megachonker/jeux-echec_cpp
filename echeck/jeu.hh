@@ -14,10 +14,9 @@ class Jeu
         Echiquier mon_echiquier;
         int check(struct mouvement);
         void errorhande(int errono);
-        void explain(enum erreurDeplacement errono);
     public:
-        void rock(bool grand);
-
+        erreurDeplacement rock(bool grand);
+        void explain(enum erreurDeplacement errono);
         bool fin();
         void affiche();
         bool deplace(std::string const orig, std::string const dest);

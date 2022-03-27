@@ -20,8 +20,9 @@ void Jeu::affiche(){
     mon_echiquier.affiche();
     VERBEUX("affichage joueur:");
     //stoque le resultat du test pour savoir si mat
-    if(en_echeque=mon_echiquier.chk_echec_roi(joueur))
+    if(en_echeque=mon_echiquier.chk_echec_roi(joueur)){
         INFO("Vous ête en Echèque !");
+    }
 }
 
 Couleur Jeu::get_couleur(){
@@ -68,7 +69,9 @@ bool Jeu::fin(){
 
         if(resolut){
             DEBUG("Solution Empirique");
+            #ifdef DEBUG_ON
             plateaux_temporaire.affiche(&mon_echiquier);
+            #endif            
         }else
             DEBUG("pas de solution");
 
@@ -86,7 +89,7 @@ bool Jeu::fin(){
         return false;
     }
 
-    INFO("PAS EN ECHEQUE");
+    DEBUG("PAS EN ECHEQUE");
     return true;
 }
 
@@ -113,20 +116,27 @@ void Jeu::explain(enum erreurDeplacement err){
         case collision:
             WARNING("les piece entre en colision");
             break;
+        case dejabougerR:
+            WARNING("le rois a déja bouger");
+            break;
+        case dejabougerT:
+            WARNING("la tour a déja bouger");
+            break;
         case echeque:
             WARNING("vous vous metez en echeque");
             break;
     }
 }
 
-void Jeu::rock(bool grand){
-
-        if(mon_echiquier.rocker(joueur,grand)){
+erreurDeplacement Jeu::rock(bool grand){
+        erreurDeplacement retour = mon_echiquier.rocker(joueur,grand);
+        if(retour==ok){
             //fin du tour on change de joueur
             joueur==Blanc ? joueur=Noir : joueur =Blanc;
             //on invalide le cache de la fesabilitée du jeux
             cache_resolution = false;
         }else{
             WARNING("rock imposible");
+            return retour;
         }
 }

@@ -7,6 +7,12 @@
 
 using namespace std;
 
+
+/////////////
+//  Piece  //
+/////////////
+
+
 Square Piece::get_pos()const{
     return position;
 }
@@ -107,7 +113,7 @@ bool Pion::mangerdiag(Square dst,bool print_err) const{
         return true;
 
     if(print_err)
-        WARNING("déplacement offensif du pion invalide")
+        WARNING("déplacement offensif du pion invalide");
     return false;
 }
 
@@ -197,6 +203,15 @@ bool Tour::check_dst(Square dst,bool offensif,bool print_err) const  {
     return false;
 }
 
+void Tour::deplace(Square dst){
+    Piece::deplace(dst);//verrification clasique
+    vierge=false;
+        WARNING("MOVEROI");
+
+}
+bool Tour::isvierge(){
+    return vierge;
+}
 
 //////////////
 //  Fout    //
@@ -238,7 +253,18 @@ bool Cavalier::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)offensif;
     (void)print_err;
     return
-    Square(position.ligne+2,position.colone+1) == Square(abs(dst.ligne),abs(dst.colone));
+    Square(position.ligne+2,position.colone+1) == dst ||
+    Square(position.ligne+2,position.colone-1) == dst ||
+
+    Square(position.ligne-2,position.colone+1) == dst ||
+    Square(position.ligne-2,position.colone-1) == dst ||
+
+    Square(position.ligne+1,position.colone+2) == dst ||
+    Square(position.ligne-1,position.colone+2) == dst ||
+
+    Square(position.ligne+1,position.colone-2) == dst ||
+    Square(position.ligne-1,position.colone-2) == dst ;
+    // Square(position.ligne+2,position.colone+1) == Square(abs(dst.ligne),abs(dst.colone));
 }
 
 //////////////
@@ -264,6 +290,8 @@ bool Dame::check_dst(Square dst,bool offensif,bool print_err) const {
         ||  T.check_dst(dst);
 }
 
+
+
 /////////////
 //  Roi    //
 /////////////
@@ -282,3 +310,13 @@ bool Roi::check_dst(Square dst,bool offensif,bool print_err) const {
     (void)print_err;
     return (position-dst).around();
 }        bool rock(bool grand);
+
+void Roi::deplace(Square dst){
+    Piece::deplace(dst);//verrification clasique
+    vierge=false;
+    WARNING("MOVEROI");
+}
+
+bool Roi::isvierge(){
+    return vierge;
+}

@@ -36,11 +36,17 @@ int main() {
             }
         }
         //Grand rock
-        else if (saisie_correcte_grandroque(mouvement))
-            monjeu.rock(true);
+        else if (saisie_correcte_grandroque(mouvement)){
+            monjeu.explain(monjeu.rock(true));
+            INFO("vous faite le grand rock");
+            monjeu.affiche();
+        }
         //Petit rock
-        else if (saisie_correcte_petitroque(mouvement))
-            monjeu.rock(false);
+        else if (saisie_correcte_petitroque(mouvement)){
+            monjeu.explain(monjeu.rock(false));
+            INFO("vous faite le petit rock");
+            monjeu.affiche();
+        }
         //Erreur
         else
             INFO("erreur sintaxe du coup");
