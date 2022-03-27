@@ -20,7 +20,8 @@ void Jeu::affiche(){
     mon_echiquier.affiche();
     VERBEUX("affichage joueur:");
     //stoque le resultat du test pour savoir si mat
-    if(en_echeque=mon_echiquier.chk_echec_roi(joueur)){
+    en_echeque=mon_echiquier.chk_echec_roi(joueur);
+    if(en_echeque){
         INFO("Vous ête en Echèque !");
     }
 }
@@ -135,8 +136,9 @@ erreurDeplacement Jeu::rock(bool grand){
             joueur==Blanc ? joueur=Noir : joueur =Blanc;
             //on invalide le cache de la fesabilitée du jeux
             cache_resolution = false;
-        }else{
-            WARNING("rock imposible");
-            return retour;
+            return ok;
         }
+    
+        WARNING("rock imposible");
+        return retour;
 }

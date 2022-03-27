@@ -46,17 +46,15 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         //save l'ancienne piece
         Piece * old_piece = get_piece(position_dst);
 
-        //save encienne position
-        Square old_pos = piece->get_pos();
-        
         //addresse pour save
-        Piece * address_piece_effacer;
+        Piece * address_piece_effacer = nullptr;
 
 
 //fc deplace
-
+        //save encienne position
+        Square piece_pos = piece->get_pos();
         //supression de la piece position sur l'echequier
-        echiquier[old_pos.ligne][old_pos.colone]=nullptr;
+        echiquier[piece_pos.ligne][piece_pos.colone]=nullptr;
         //on place la piece sur lechequier
         echiquier[position_dst.ligne][position_dst.colone]=piece;
 
@@ -93,13 +91,14 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         VERBEUX("check lecheque est le roi");
         if(chk_echec_roi(couleur_joueur)){
                 //on déplace la piece a la position initial
-                piece->deplace(old_pos);
+
+                piece->undo_move();
                 //restoration de la piece original
-                echiquier[old_pos.ligne][old_pos.colone]=piece;
+                pose_piece(piece);
                 //restoration de la case dst
                 echiquier[position_dst.ligne][position_dst.colone]=old_piece;
                 //restoration de la piece dans la main joueur
-                if(old_piece)
+                if(old_piece && address_piece_effacer)
                         address_piece_effacer=old_piece;
                 return echeque;
         }
@@ -450,9 +449,9 @@ erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
         Square destination_roi;
         Square destination_tour;
         
-        // //check que les piece n'on jamais bouger
-        // if (!((Roi*)mon_roi)->isvierge())
-        //         return dejabougerR;
+        //check que les piece n'on jamais bouger
+        if (!((Roi*)mon_roi)->isvierge())
+                return dejabougerR;
         
         
         if (!grand)
@@ -481,8 +480,8 @@ erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
         if (!est_case_vide(destination_roi) || !est_case_vide(destination_tour))
                 return collision;
 
-        // if (!((Tour*)ma_tour)->isvierge())
-        //         return dejabougerT;
+        if (!((Tour*)ma_tour)->isvierge())
+                return dejabougerT;
         
         //delet de l'echiquier
         vider_case(ma_tour);

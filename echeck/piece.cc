@@ -30,13 +30,9 @@ Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur
  * @return false déplacement non effecif
  */
 void Piece::deplace(Square dst){
+    old_position = position;
     position=dst;
 }
-
-// Piece::Piece(const Piece& rhs)
-// :nom(rhs.nom),couleur(rhs.couleur),position(rhs.position)
-// {}
-
 
 string Piece::to_string() const{    
 return  string("\n")+
@@ -72,23 +68,23 @@ Couleur Piece::get_couleur()const{
     return couleur;
 }
 
+
+void Piece::undo_move(){
+    Square tmp   = position;
+    position     = old_position;
+    old_position = tmp;
+}
 //////////////
 //  PION    //
 //////////////
 
 Pion::Pion(Couleur couleur,Square position,bool vierge) 
 : Piece(couleur==Blanc ? "\u2659" :"\u265F",couleur,position),vierge(vierge)
-{}
+{old_vierge=false;}
 
 Piece * Pion::Clone(){
     return new Pion(*this);
 }
-
-// Piece::Piece(const Piece &obj)
-// :nom(obj.nom),couleur(obj.couleur),position(obj.position)
-// {}
-
-
 
 typePc Pion::get_type() const {return pion;}
 
@@ -158,7 +154,8 @@ bool Pion::check_dst(Square dst,bool offensif,bool print_err)const{
 
 string Pion::to_string() const{    
 return  Piece::to_string()+"\n"+
-        "vierge:    "+(vierge==true?"Oui":"Non");
+        "vierge     :    "+(vierge==true?"Oui":"Non")+
+        "\nold_vierge :    "+(old_vierge==true?"Oui":"Non");
 }
 
 /**
@@ -171,15 +168,22 @@ return  Piece::to_string()+"\n"+
  */
 void Pion::deplace(Square dst){
     Piece::deplace(dst);//verrification clasique
+    old_vierge=vierge;
     vierge=false;
 }
 
+void Pion::undo_move(){
+    Piece::undo_move();
+    bool tmp   = vierge;
+    vierge = old_vierge;
+    old_vierge = tmp;
+}
 
 //////////////
 //  Tour    //
 //////////////
 
-Tour::Tour(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position){}
+Tour::Tour(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2656" :"\u265C",couleur,position),vierge(vierge){old_vierge=false;}
 
 Piece * Tour::Clone(){
     return new Tour(*this);
@@ -205,12 +209,24 @@ bool Tour::check_dst(Square dst,bool offensif,bool print_err) const  {
 
 void Tour::deplace(Square dst){
     Piece::deplace(dst);//verrification clasique
+    old_vierge=vierge;
     vierge=false;
-        WARNING("MOVEROI");
-
 }
 bool Tour::isvierge(){
     return vierge;
+}
+
+string Tour::to_string() const{    
+return  Piece::to_string()+"\n"+
+        "vierge     :    "+(vierge==true?"Oui":"Non")+
+        "\nold_vierge :    "+(old_vierge==true?"Oui":"Non");
+}
+
+void Tour::undo_move(){
+    Piece::undo_move();
+    bool tmp   = vierge;
+    vierge = old_vierge;
+    old_vierge = tmp;
 }
 
 //////////////
@@ -296,7 +312,7 @@ bool Dame::check_dst(Square dst,bool offensif,bool print_err) const {
 //  Roi    //
 /////////////
 
-Roi::Roi(Couleur couleur,Square position) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position){}
+Roi::Roi(Couleur couleur,Square position,bool vierge) : Piece(couleur==Blanc ? "\u2654" :"\u265A",couleur,position),vierge(vierge){old_vierge=false;}
 
 Piece * Roi::Clone(){
     return new Roi(*this);
@@ -313,10 +329,23 @@ bool Roi::check_dst(Square dst,bool offensif,bool print_err) const {
 
 void Roi::deplace(Square dst){
     Piece::deplace(dst);//verrification clasique
+    old_vierge=vierge;
     vierge=false;
-    WARNING("MOVEROI");
 }
 
 bool Roi::isvierge(){
     return vierge;
+}
+
+string Roi::to_string() const{    
+return  Piece::to_string()+"\n"+
+        "vierge     :    "+(vierge==true?"Oui":"Non")+
+        "\nold_vierge :    "+(old_vierge==true?"Oui":"Non");
+}
+
+void Roi::undo_move(){
+    Piece::undo_move();
+    bool tmp   = vierge;
+    vierge = old_vierge;
+    old_vierge = tmp;
 }
