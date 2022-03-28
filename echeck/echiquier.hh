@@ -16,7 +16,9 @@ enum erreurDeplacement{
     collision,
     echeque,
     dejabougerR,
-    dejabougerT
+    dejabougerT,
+    TK,
+    prisepasantfail
 };
 
 
@@ -39,7 +41,7 @@ private:
     Square pion_passant;
     Square bak_pion_passant;
 
-    bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false);
+    erreurDeplacement pseudocheck(Piece * piece,Square position_dst,bool print_err=false);
     bool slidecheck(Piece * source,Square const position_dst,bool force=false);
 
     erreurDeplacement move_piece(Piece * piece,Square position_dst,bool passant=false);

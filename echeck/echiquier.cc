@@ -170,9 +170,10 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
             return appartenance;
 
         Piece * piece = get_piece(position_src);
-
-        if(!pseudocheck(piece,position_dst,print_err))
-                return checkgeometric;
+        
+        erreurDeplacement tmp = pseudocheck(piece,position_dst,print_err);
+        if(tmp!=ok)
+                return tmp;
 
         if (!slidecheck(piece,position_dst))
                 return collision;
@@ -180,7 +181,6 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
 
         return move_piece(piece,position_dst,prise_passant);
-
 }
 
 
@@ -266,86 +266,6 @@ bool Echiquier::est_case_vide(Square const square) const{
         return false;
 }
 
-string Echiquier::canonical_position() const {
-      string output;
-      for (size_t row(1); row<=8; row++){
-              for (char col('a');col<='h';col++) {
-                      Square square(col+to_string(row)); 
-                      if (!est_case_vide(square))
-                              // get pieces with theit PGN names, 
-                              // true -> with P for pawns, true -> w/b for colors.
-                              output += pgn_piece_name(get_piece(square)->to_string(),true,true);
-                      output += ",";
-              }
-      }
-      return output;
-}
-
- string Echiquier::pgn_piece_name(string const name, bool view_pawn, bool view_color) const {
-
-    string psymb;
-    if      (name=="\u2656") psymb="R";  // Rook W
-    else if (name=="\u2658") psymb="N";  // Knight W
-    else if (name=="\u2657") psymb="B";  // Bishop W
-    else if (name=="\u2655") psymb="Q";  // Queen W
-    else if (name=="\u2654") psymb="K";  // King W
-    else if (name.rfind("\u2659",0)==0 && view_pawn) psymb= "P"; // Pawn W
-    if (psymb.size()>0) { // one of the white piece has been found
-            if (view_color)
-                return "w"+psymb;
-            else
-                return psymb;
-    } 
-    if      (name=="\u265C") psymb= "R";  // Rook B
-    else if (name=="\u265E") psymb= "N";  // Knight B
-    else if (name=="\u265D") psymb= "B"; // Bishop B
-    else if (name=="\u265B")  psymb= "Q"; // Queen B
-    else if (name=="\u265A")  psymb= "K"; // King B
-    else if (name.rfind("\u265F",0)==0 && view_pawn) psymb= "P"; // Pawn B
-    if (psymb.size()>0) { // one of the black piece has been found
-            if (view_color)
-                return "b"+psymb;
-            else
-                return psymb;
-    } 
-    else return "";
-}
-
-
-void Echiquier::affiche (Echiquier const * obj) const {
-        string space5 = string(5,' ');
-        cout << endl;
-        cout << "     a     b     c     d     e     f     g     h    "<< endl;
-        cout << "  ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐" << endl;
-        for (int i(8-1);i>=0;i--) {
-                cout << i+1 << " "; // numérotation ligne dans affichage
-                for (int j(0);j<8;j++) {
-                        cout << "│" ;
-                        if (echiquier[i][j]) { 
-                          cout << "\u0020\u0020";  //U+0020 est un esapce utf-8 taille police
-
-                        if (obj && !(obj->echiquier[i][j] && (obj->echiquier[i][j]->to_string()==echiquier[i][j]->to_string())))
-                        {
-                                cout << YELLO();
-                                echiquier[i][j]-> affiche();
-                                cout << CLRCOLOR();
-                        }
-                        else
-                                echiquier[i][j]-> affiche();
-
-                          cout << "\u0020" << " ";
-                        }
-                        else 
-                                cout << space5;  // 2 ascii spaces
-                }
-                if(i!=0)
-                        cout << "│\n  ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤";
-                else
-                        cout << "│\n  └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘";
-                cout << endl;
-        }
-
-}
 
 bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
 
@@ -379,30 +299,31 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
         return false;
 }
 
-bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
+erreurDeplacement Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
         if (get_piece(position_dst) != nullptr)   //test si dest est une piece
         {
                 //destination moi
-                if(get_piece(position_dst)->get_couleur()==piece->get_couleur()){//test couleur opposer)
-                        if(print_err)
-                                WARNING("vous pouvez pas manger vos propre piece");
-                        return false;
-                }
+                if(get_piece(position_dst)->get_couleur()==piece->get_couleur())//test couleur opposer)
+                        return TK;
                 // test déplacement agressif
                 else
                         if(!piece->check_dst(position_dst,true,print_err))
-                                return false;
+                                return checkgeometric;
         }
         //case vide
         else{
                 // //autorise le mouvement diagonal si la prise en passante est valide
-                if (pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0))
-                        return piece->check_dst(position_dst,true,print_err);
-                
-
+                if (pion_passant != Square(0,0) && 
+                    position_dst == (pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0))){
+                        
+                        if(piece->check_dst(position_dst,true,print_err))
+                                return ok;
+                        else
+                                return prisepasantfail;
+                }
                 //test deplacement standar
                 if(!piece->check_dst(position_dst,false,print_err))
-                        return false;
+                        return checkgeometric;
 
                 //si la piece est un pion
                 if(piece->get_type()==pion){
@@ -413,13 +334,13 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
                         if(position_dst == devant_devant_pion){
                                 //verifie si le pion rentre en colision pendant son déplacement
                                 if(!est_case_vide(devant_pion))
-                                                return false;
+                                                return collision;
                                 //le pion avancant de 2 il est candidat pour etre passant 
                                 pion_passant = position_dst;
                         }
                 }
         }
-        return true;
+        return ok;
 }
 
 bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
@@ -431,13 +352,13 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
                 
                 //piece ataque roi
                 if (board_piece[i] != nullptr
-                && pseudocheck(board_piece[i],pos_roi)
+                && !pseudocheck(board_piece[i],pos_roi)
                 && slidecheck(board_piece[i],pos_roi))
                         return true;
         
                 //pion attaque un roi
                 if (board_pion[i] != nullptr
-                && pseudocheck(board_pion[i],pos_roi) 
+                && !pseudocheck(board_pion[i],pos_roi) 
                 && slidecheck(board_pion[i],pos_roi))
                         return true;
         }
@@ -445,46 +366,6 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
 }
 
 
-
-
-void Echiquier::print_all_piece(){
-        DEBUG("Piece des joueur !");
-        INFO("Piece blanche");
-        cout << YELLO() << "Piece\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
-        {
-                if (piecesb[i] != nullptr)
-                        piecesb[i]->affiche();
-                cout << "\t";
-        }
-        cout << endl;
-        cout << YELLO() << "Pion\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
-        {
-                if (pionsb[i] != nullptr)
-                        pionsb[i]->affiche();
-                cout << "\t";
-        }
-        cout << endl;
-
-        INFO("Piece Noir");
-        cout << YELLO() << "Piece\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
-        {
-                if (piecesn[i] != nullptr)
-                        piecesn[i]->affiche();
-                cout << "\t";
-        }
-        cout << endl;
-        cout << YELLO() << "Pion\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
-        {
-                if (pionsn[i] != nullptr)
-                        pionsn[i]->affiche();
-                cout << "\t";
-        }
-        cout << endl;
-}
 
 /**
  * @brief tester si la partie est fini
@@ -594,3 +475,125 @@ void Echiquier::rst_passant(){
                 pion_passant = Square(0,0);
         bak_pion_passant=pion_passant;
 }
+
+
+void Echiquier::print_all_piece(){
+        DEBUG("Piece des joueur !");
+        INFO("Piece blanche");
+        cout << YELLO() << "Piece\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (piecesb[i] != nullptr)
+                        piecesb[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+        cout << YELLO() << "Pion\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (pionsb[i] != nullptr)
+                        pionsb[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+
+        INFO("Piece Noir");
+        cout << YELLO() << "Piece\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (piecesn[i] != nullptr)
+                        piecesn[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+        cout << YELLO() << "Pion\t" << CLRCOLOR();
+        for (size_t i = 0; i < 8; i++)
+        {
+                if (pionsn[i] != nullptr)
+                        pionsn[i]->affiche();
+                cout << "\t";
+        }
+        cout << endl;
+}
+
+void Echiquier::affiche (Echiquier const * obj) const {
+        string space5 = string(5,' ');
+        cout << endl;
+        cout << "     a     b     c     d     e     f     g     h    "<< endl;
+        cout << "  ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐" << endl;
+        for (int i(8-1);i>=0;i--) {
+                cout << i+1 << " "; // numérotation ligne dans affichage
+                for (int j(0);j<8;j++) {
+                        cout << "│" ;
+                        if (echiquier[i][j]) { 
+                          cout << "\u0020\u0020";  //U+0020 est un esapce utf-8 taille police
+
+                        if (obj && !(obj->echiquier[i][j] && (obj->echiquier[i][j]->to_string()==echiquier[i][j]->to_string())))
+                        {
+                                cout << YELLO();
+                                echiquier[i][j]-> affiche();
+                                cout << CLRCOLOR();
+                        }
+                        else
+                                echiquier[i][j]-> affiche();
+
+                          cout << "\u0020" << " ";
+                        }
+                        else 
+                                cout << space5;  // 2 ascii spaces
+                }
+                if(i!=0)
+                        cout << "│\n  ├─────┼─────┼─────┼─────┼─────┼─────┼─────┼─────┤";
+                else
+                        cout << "│\n  └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘";
+                cout << endl;
+        }
+
+}
+
+string Echiquier::canonical_position() const {
+      string output;
+      for (size_t row(1); row<=8; row++){
+              for (char col('a');col<='h';col++) {
+                      Square square(col+to_string(row)); 
+                      if (!est_case_vide(square))
+                              // get pieces with theit PGN names, 
+                              // true -> with P for pawns, true -> w/b for colors.
+                              output += pgn_piece_name(get_piece(square)->to_string(),true,true);
+                      output += ",";
+              }
+      }
+      return output;
+}
+
+ string Echiquier::pgn_piece_name(string const name, bool view_pawn, bool view_color) const {
+
+    string psymb;
+    if      (name=="\u2656") psymb="R";  // Rook W
+    else if (name=="\u2658") psymb="N";  // Knight W
+    else if (name=="\u2657") psymb="B";  // Bishop W
+    else if (name=="\u2655") psymb="Q";  // Queen W
+    else if (name=="\u2654") psymb="K";  // King W
+    else if (name.rfind("\u2659",0)==0 && view_pawn) psymb= "P"; // Pawn W
+    if (psymb.size()>0) { // one of the white piece has been found
+            if (view_color)
+                return "w"+psymb;
+            else
+                return psymb;
+    } 
+    if      (name=="\u265C") psymb= "R";  // Rook B
+    else if (name=="\u265E") psymb= "N";  // Knight B
+    else if (name=="\u265D") psymb= "B"; // Bishop B
+    else if (name=="\u265B")  psymb= "Q"; // Queen B
+    else if (name=="\u265A")  psymb= "K"; // King B
+    else if (name.rfind("\u265F",0)==0 && view_pawn) psymb= "P"; // Pawn B
+    if (psymb.size()>0) { // one of the black piece has been found
+            if (view_color)
+                return "b"+psymb;
+            else
+                return psymb;
+    } 
+    else return "";
+}
+
+

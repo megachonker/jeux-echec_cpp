@@ -123,6 +123,12 @@ void Jeu::explain(enum erreurDeplacement err){
         case echeque:
             WARNING("vous vous metez en echeque");
             break;
+        case TK:
+            WARNING("vous pouvez pas manger vos propre piece");
+            break;
+        case prisepasantfail:
+            WARNING("la prise en passant n'es pas effectuer avec la bonne piece");
+            break;
     }
 }
 
