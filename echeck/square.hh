@@ -24,6 +24,7 @@ class Square
         Square(int ligne=0, int colone=0);
         std::string to_string() const;
         bool operator== (Square cmp)const;
+        bool operator!= (Square cmp)const;
         Square operator+ (Square add);
         void operator+=(Square cible);
         Square operator-(Square cible)const;

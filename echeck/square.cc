@@ -45,6 +45,11 @@ bool Square::operator== (Square cmp) const{
     return ((ligne==cmp.ligne)&&(colone==cmp.colone));
 }
 
+bool Square::operator!= (Square cmp)const{
+    return !(*this==cmp);
+}
+
+
 Square Square::operator+ (Square add){
     return Square(ligne+add.ligne,colone+add.colone);
 }
