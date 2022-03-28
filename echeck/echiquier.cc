@@ -302,7 +302,7 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
 
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
-        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string())
+        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string());
         string chaine = origine.to_string();
 
 
@@ -312,13 +312,13 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
 
                 if(origine==position_dst){
                         VERBEUX(chaine);
-                        VERBEUX("slide OK")
+                        VERBEUX("slide OK");
                         return true;
                 }
         }while (est_case_vide(origine));
 
         VERBEUX(chaine);
-        VERBEUX("slide COLISION")
+        VERBEUX("slide COLISION");
         return false;
 }
 
@@ -359,7 +359,7 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
 
 
 void Echiquier::print_all_piece(){
-        DEBUG("Piece des joueur !")
+        DEBUG("Piece des joueur !");
         INFO("Piece blanche");
         cout << YELLO() << "Piece\t" << CLRCOLOR();
         for (size_t i = 0; i < 8; i++)
@@ -422,7 +422,7 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
 }
 
 Echiquier::Echiquier(const Echiquier &obj){
-        VERBEUX("constructeur copy Echiquier")
+        VERBEUX("constructeur copy Echiquier");
         for (size_t y = 0; y < 8; y++){
                 for (size_t x = 0; x < 8; x++)
                         echiquier[x][y] = nullptr;
