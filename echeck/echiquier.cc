@@ -10,8 +10,16 @@ using namespace std;
 
 
 
+void Echiquier::pose_piece(Piece * piece,Piece * dst){
+        pose_piece(piece,dst->get_pos());
+}
+
+void Echiquier::pose_piece(Piece * piece,Square  dst){
+        echiquier[dst.ligne][dst.colone]=piece;
+}
+
 void Echiquier::pose_piece(Piece * piece){
-        echiquier[piece->get_pos().ligne][piece->get_pos().colone]=piece;
+        pose_piece(piece,piece);
 }
 
 
@@ -53,6 +61,47 @@ void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer)
         del_board_piece(get_piece(pos_piece),address_piece_effacer);
 }
 
+erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
+        Couleur couleur_joueur = piece->get_couleur();
+////backup
+
+        //addresse pour save
+        Piece * address_piece_effacer = nullptr;
+        //save l'ancienne piece
+        Piece * old_piece = get_piece(position_dst);
+
+
+//fc deplace
+        //supression de la piece position sur l'echequier
+        vider_case(piece);
+        //on place la piece sur lechequier
+        pose_piece(piece,position_dst);
+        //supression de la piece pour les joueur
+        del_board_piece(old_piece,address_piece_effacer);
+        //on change les coordoner dans la piece
+        piece->deplace(position_dst);
+
+//echeque
+        VERBEUX("check lecheque est le roi");
+        if(chk_echec_roi(couleur_joueur)){
+                //on déplace la piece a la position initial
+                piece->undo_move();
+                //restoration de la piece original
+                pose_piece(piece);
+                //restoration de la case dst
+                pose_piece(old_piece,position_dst);
+                //restoration de la piece dans la main joueur
+                if(old_piece && address_piece_effacer)
+                        address_piece_effacer=old_piece;
+                return echeque;
+        }
+
+        //suprime la piece de la mémoire
+        delete old_piece;
+        return ok;
+}
+
+
 erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
 
 //fc check
@@ -69,57 +118,15 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
 
         if(!pseudocheck(piece,position_dst,print_err))
                 return checkgeometric;
-                
-        if (pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0)){
-                //delete le pion passant
-                
-        }
+
+        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
 
         if (!slidecheck(piece,position_dst))
                 return collision;
 
-////backup
 
-        //addresse pour save
-        Piece * address_piece_effacer = nullptr;
-        //save l'ancienne piece
-        Piece * old_piece = get_piece(position_dst);
+        return move_piece(piece,position_dst);
 
-
-
-//fc deplace
-        //supression de la piece position sur l'echequier
-        vider_case(piece);
-        //on place la piece sur lechequier
-        echiquier[position_dst.ligne][position_dst.colone]=piece;
-
-        del_board_piece(old_piece,address_piece_effacer);
-
-        //on change les coordoner dans la piece
-        piece->deplace(position_dst);
-
-//echeque
-
-
-        VERBEUX("check lecheque est le roi");
-        if(chk_echec_roi(couleur_joueur)){
-                //on déplace la piece a la position initial
-
-                piece->undo_move();
-                //restoration de la piece original
-                pose_piece(piece);
-                //restoration de la case dst
-                echiquier[position_dst.ligne][position_dst.colone]=old_piece;
-                //restoration de la piece dans la main joueur
-                if(old_piece && address_piece_effacer)
-                        address_piece_effacer=old_piece;
-                return echeque;
-        }
-
-        //suprime la piece de la mémoire
-        delete old_piece;
-
-        return ok;
 }
 
 Echiquier::Echiquier () 

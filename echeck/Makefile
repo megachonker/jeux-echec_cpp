@@ -1,12 +1,18 @@
 CC=g++
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb
-DEBUG= -D VERBEUX_ON -D DEBUG_ON -D INFO_ON -D WARN_ON 
+DEBUG=  -D INFO_ON -D WARN_ON 
+# -D VERBEUX_ON -D DEBUG_ON -D INFO_ON -D WARN_ON 
 # -O2
 DFLAGS=DEBUG
 
 test:	echecs themove.auchan
 	valgrind --track-origins=yes --leak-check=full ./echecs < themove.auchan
 
+all:	rock	matpat
+
+
+rock: echecs rock.auchan
+	valgrind --track-origins=yes --leak-check=full ./echecs < rock.auchan > /dev/null
 
 matpat : echecs mat.auchan pat.auchan
 	valgrind --track-origins=yes --leak-check=full ./echecs < mat.auchan > /dev/null

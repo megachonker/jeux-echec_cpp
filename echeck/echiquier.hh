@@ -42,8 +42,14 @@ private:
     bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false);
     bool slidecheck(Piece * source,Square const position_dst,bool force=false);
 
-    void pose_piece(Piece * piece);
 
+    erreurDeplacement move_piece(Piece * piece,Square position_dst,bool passant=false);
+
+    //opti ?
+    void pose_piece(Piece * piece);
+    void pose_piece(Piece * piece,Piece * dst);
+    void pose_piece(Piece * piece,Square  dst);
+    
     void vider_case(Piece * piece);
     void vider_case(Square piece);
 
