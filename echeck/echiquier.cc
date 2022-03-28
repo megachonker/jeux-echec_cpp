@@ -174,13 +174,12 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         if(!pseudocheck(piece,position_dst,print_err))
                 return checkgeometric;
 
-        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
-
         if (!slidecheck(piece,position_dst))
                 return collision;
 
+        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
 
-        return move_piece(piece,position_dst);
+        return move_piece(piece,position_dst,prise_passant);
 
 }
 
@@ -196,9 +195,21 @@ erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_j
 
 erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
         Couleur couleur_joueur = piece->get_couleur();
+
+        Piece * address_pion_passant = nullptr;
+        Piece * backup_passant;
+        if (passant)
+        {
+                backup_passant = get_piece(pion_passant);
+                vider_case(pion_passant);
+                del_board_piece(backup_passant,address_pion_passant);
+
+        }
+        
+
 ////backup
 
-        //addresse pour save
+        //addresse dans la main ou est la piece
         Piece * address_piece_effacer = nullptr;
         //save l'ancienne piece
         Piece * old_piece = get_piece(position_dst);
@@ -226,10 +237,18 @@ erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool p
                 //restoration de la piece dans la main joueur
                 if(old_piece && address_piece_effacer)
                         address_piece_effacer=old_piece;
+                if (passant)
+                {
+                        pose_piece(backup_passant);
+                        address_pion_passant=backup_passant;
+                }
+                
                 return echeque;
         }
 
         //suprime la piece de la mémoire
+        if (passant)
+                delete backup_passant;         
         delete old_piece;
         return ok;
 }
