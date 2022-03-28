@@ -150,7 +150,10 @@ Echiquier::Echiquier ()
         for (unsigned char i(0);i<8;i++){
                 if(piecesn[i]!=nullptr)
                         pose_piece(piecesn[i]);   
-        }   
+        }
+
+        //valeur inateignable 0,0 
+        pion_passant = Square(0,0);
 }
 
 
@@ -230,7 +233,7 @@ string Echiquier::canonical_position() const {
 
 
 void Echiquier::affiche (Echiquier const * obj) const {
-
+        VERBEUX("position passant: " << pion_passant);
         string space5 = string(5,' ');
         cout << endl;
         cout << "     a     b     c     d     e     f     g     h    "<< endl;
@@ -319,7 +322,7 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
         return false;
 }
 
-bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)const{
+bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
         if (get_piece(position_dst) != nullptr)   //test si dest est une piece
         {
                 //destination moi
@@ -335,13 +338,21 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err)co
         }
         //case vide
         else{
-                //test deplacement
+                //test deplacement standar
                 if(!piece->check_dst(position_dst,false,print_err))
                         return false;
-                //verifie si le pion passe par dessu une piece
-                if(piece->get_type()==pion
-                && !est_case_vide(piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0)))
-                        return false;
+
+                //si la piece est un pion
+                if(piece->get_type()==pion){
+
+                        //verifie si le pion passe par dessu une piece (si il peut avancer de 2)
+                        if(!est_case_vide(piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0)))
+                                        return false;
+
+                        //ce déplacement est candidat pour etre pris en passant si ces un avancement de 2
+                        if(position_dst == piece->get_pos()+Square((piece->get_couleur()==Noir ? -2: 2),0))
+                                pion_passant = position_dst;
+                }
         }
         return true;
 }
@@ -520,4 +531,8 @@ void Echiquier::vider_case(Piece * piece){
 
 void Echiquier::vider_case(Square posit){
         echiquier[posit.ligne][posit.colone]=nullptr;
+}
+
+void Echiquier::rst_passant(){
+        pion_passant = Square(0,0);
 }

@@ -36,8 +36,9 @@ private:
     Pion  * pionsn[8];
     Piece * piecesb[8];//nombre de Piece par joueur
     Piece * piecesn[8];
+    Square pion_passant;
 
-    bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false)const;
+    bool pseudocheck(Piece * piece,Square position_dst,bool print_err=false);
     bool slidecheck(Piece * source,Square const position_dst,bool force=false);
 
     void pose_piece(Piece * piece);
@@ -65,5 +66,6 @@ public:
     Echiquier(const Echiquier &obj);
     ~Echiquier();
     void comparer(const Echiquier &obj);
+    void rst_passant();
 };
 

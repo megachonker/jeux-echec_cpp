@@ -14,6 +14,7 @@ class Jeu
         Echiquier mon_echiquier;
         int check(struct mouvement);
         void errorhande(int errono);
+        void end_turn();
     public:
         erreurDeplacement rock(bool grand);
         void explain(enum erreurDeplacement errono);

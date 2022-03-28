@@ -49,10 +49,7 @@ bool Jeu::deplace(string const orig, string const dest){
             explain(err);
             return false;
         }
-        //fin du tour on change de joueur
-        joueur==Blanc ? joueur=Noir : joueur =Blanc;
-        //on invalide le cache de la fesabilitée du jeux
-        cache_resolution = false;
+        end_turn();
         return true;
 }
 
@@ -132,13 +129,19 @@ void Jeu::explain(enum erreurDeplacement err){
 erreurDeplacement Jeu::rock(bool grand){
         erreurDeplacement retour = mon_echiquier.rocker(joueur,grand);
         if(retour==ok){
-            //fin du tour on change de joueur
-            joueur==Blanc ? joueur=Noir : joueur =Blanc;
-            //on invalide le cache de la fesabilitée du jeux
-            cache_resolution = false;
+            end_turn();
             return ok;
         }
     
         WARNING("rock imposible");
         return retour;
+}
+
+void Jeu::end_turn(){
+    //fin du tour on change de joueur
+    joueur==Blanc ? joueur=Noir : joueur =Blanc;
+    //on invalide le cache de la fesabilitée du jeux
+    cache_resolution = false;
+    //reset de la prise en passant
+    mon_echiquier.rst_passant();
 }
