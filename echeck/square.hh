@@ -37,3 +37,5 @@ Square sens_deplacement(Square cible,Square destination);
 
 ///////////////////
 std::string couleur_to_str(Couleur ma_couleur);
+
+Couleur operator!(Couleur couleur);
