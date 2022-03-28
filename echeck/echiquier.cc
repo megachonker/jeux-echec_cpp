@@ -21,42 +21,7 @@ erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_j
         return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
 
-
-erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
-
-//fc check
-
-        //piece origine non vide
-        if (est_case_vide(position_src)==true)
-            return srcvide;
-
-        //joue une piece a luit (modifier si troc)
-        if( get_piece(position_src)->get_couleur()!=couleur_joueur)
-            return appartenance;
-
-        Piece * piece = get_piece(position_src);
-
-        if(!pseudocheck(piece,position_dst,print_err))
-                return checkgeometric;
-        if (!slidecheck(piece,position_dst))
-                return collision;
-
-////backup
-
-        //save l'ancienne piece
-        Piece * old_piece = get_piece(position_dst);
-
-        //addresse pour save
-        Piece * address_piece_effacer = nullptr;
-
-
-//fc deplace
-        //save encienne position
-        Square piece_pos = piece->get_pos();
-        //supression de la piece position sur l'echequier
-        echiquier[piece_pos.ligne][piece_pos.colone]=nullptr;
-        //on place la piece sur lechequier
-        echiquier[position_dst.ligne][position_dst.colone]=piece;
+void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
 
         //supression de la piece dans la main des joueur
         //piece destination existe
@@ -64,6 +29,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
                 //supression des piece dans les main des joueur
 
                 //génération des board en fonction de la couleur du joueur
+                Couleur couleur_joueur=old_piece->get_couleur()==Blanc ? Noir : Blanc;
                 Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
                 Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
 
@@ -81,6 +47,53 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
                         }
                 }
         }
+}
+
+void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer){
+        del_board_piece(get_piece(pos_piece),address_piece_effacer);
+}
+
+erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
+
+//fc check
+
+        //piece origine non vide
+        if (est_case_vide(position_src)==true)
+            return srcvide;
+
+        //joue une piece a luit (modifier si troc)
+        if( get_piece(position_src)->get_couleur()!=couleur_joueur)
+            return appartenance;
+
+        Piece * piece = get_piece(position_src);
+
+        if(!pseudocheck(piece,position_dst,print_err))
+                return checkgeometric;
+                
+        if (pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0)){
+                //delete le pion passant
+                
+        }
+
+        if (!slidecheck(piece,position_dst))
+                return collision;
+
+////backup
+
+        //addresse pour save
+        Piece * address_piece_effacer = nullptr;
+        //save l'ancienne piece
+        Piece * old_piece = get_piece(position_dst);
+
+
+
+//fc deplace
+        //supression de la piece position sur l'echequier
+        vider_case(piece);
+        //on place la piece sur lechequier
+        echiquier[position_dst.ligne][position_dst.colone]=piece;
+
+        del_board_piece(old_piece,address_piece_effacer);
 
         //on change les coordoner dans la piece
         piece->deplace(position_dst);
@@ -153,7 +166,7 @@ Echiquier::Echiquier ()
         }
 
         //valeur inateignable 0,0 
-        pion_passant = Square(0,0);
+        bak_pion_passant = pion_passant = Square(0,0);
 }
 
 
@@ -233,7 +246,6 @@ string Echiquier::canonical_position() const {
 
 
 void Echiquier::affiche (Echiquier const * obj) const {
-        VERBEUX("position passant: " << pion_passant);
         string space5 = string(5,' ');
         cout << endl;
         cout << "     a     b     c     d     e     f     g     h    "<< endl;
@@ -338,20 +350,28 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
         }
         //case vide
         else{
+                // //autorise le mouvement diagonal si la prise en passante est valide
+                if (pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0))
+                        return piece->check_dst(position_dst,true,print_err);
+                
+
                 //test deplacement standar
                 if(!piece->check_dst(position_dst,false,print_err))
                         return false;
 
                 //si la piece est un pion
                 if(piece->get_type()==pion){
-
-                        //verifie si le pion passe par dessu une piece (si il peut avancer de 2)
-                        if(!est_case_vide(piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0)))
-                                        return false;
-
-                        //ce déplacement est candidat pour etre pris en passant si ces un avancement de 2
-                        if(position_dst == piece->get_pos()+Square((piece->get_couleur()==Noir ? -2: 2),0))
+                        Square devant_pion = piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0);
+                        Square devant_devant_pion = devant_pion+Square((piece->get_couleur()==Noir ? -1: 1),0);
+                        
+                        //déplace de 2 ver l'avant
+                        if(position_dst == devant_devant_pion){
+                                //verifie si le pion rentre en colision pendant son déplacement
+                                if(!est_case_vide(devant_pion))
+                                                return false;
+                                //le pion avancant de 2 il est candidat pour etre passant 
                                 pion_passant = position_dst;
+                        }
                 }
         }
         return true;
@@ -534,5 +554,7 @@ void Echiquier::vider_case(Square posit){
 }
 
 void Echiquier::rst_passant(){
-        pion_passant = Square(0,0);
+        if (pion_passant==bak_pion_passant)
+                pion_passant = Square(0,0);
+        bak_pion_passant=pion_passant;
 }
