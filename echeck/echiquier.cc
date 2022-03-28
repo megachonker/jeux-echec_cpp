@@ -9,126 +9,6 @@ using namespace std;
 #include "macro.hh"
 
 
-
-void Echiquier::pose_piece(Piece * piece,Piece * dst){
-        pose_piece(piece,dst->get_pos());
-}
-
-void Echiquier::pose_piece(Piece * piece,Square  dst){
-        echiquier[dst.ligne][dst.colone]=piece;
-}
-
-void Echiquier::pose_piece(Piece * piece){
-        pose_piece(piece,piece);
-}
-
-
-erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
-        if (!piece)
-                return srcvide;        
-        return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
-}
-
-void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
-
-        //supression de la piece dans la main des joueur
-        //piece destination existe
-        if (old_piece){
-                //supression des piece dans les main des joueur
-
-                //génération des board en fonction de la couleur du joueur
-                Couleur couleur_joueur=old_piece->get_couleur()==Blanc ? Noir : Blanc;
-                Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
-                Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
-
-                //choisie le bon tableuax dans lequelle la piece a suprimer appartien
-                Piece ** tab_piece = (old_piece->get_type()==pion ? (Piece**)board_pion : board_piece);
-
-                //on recherche la piece a effacer dans le tableaux
-                for (size_t i = 0; i < 8; i++)
-                {
-                        //si une des piece dans la main a la meme position que la piece rechercher
-                        if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos() == old_piece->get_pos()){
-                                address_piece_effacer = tab_piece[i];
-                                tab_piece[i]=nullptr;
-                                break;
-                        }
-                }
-        }
-}
-
-void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer){
-        del_board_piece(get_piece(pos_piece),address_piece_effacer);
-}
-
-erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
-        Couleur couleur_joueur = piece->get_couleur();
-////backup
-
-        //addresse pour save
-        Piece * address_piece_effacer = nullptr;
-        //save l'ancienne piece
-        Piece * old_piece = get_piece(position_dst);
-
-
-//fc deplace
-        //supression de la piece position sur l'echequier
-        vider_case(piece);
-        //on place la piece sur lechequier
-        pose_piece(piece,position_dst);
-        //supression de la piece pour les joueur
-        del_board_piece(old_piece,address_piece_effacer);
-        //on change les coordoner dans la piece
-        piece->deplace(position_dst);
-
-//echeque
-        VERBEUX("check lecheque est le roi");
-        if(chk_echec_roi(couleur_joueur)){
-                //on déplace la piece a la position initial
-                piece->undo_move();
-                //restoration de la piece original
-                pose_piece(piece);
-                //restoration de la case dst
-                pose_piece(old_piece,position_dst);
-                //restoration de la piece dans la main joueur
-                if(old_piece && address_piece_effacer)
-                        address_piece_effacer=old_piece;
-                return echeque;
-        }
-
-        //suprime la piece de la mémoire
-        delete old_piece;
-        return ok;
-}
-
-
-erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
-
-//fc check
-
-        //piece origine non vide
-        if (est_case_vide(position_src)==true)
-            return srcvide;
-
-        //joue une piece a luit (modifier si troc)
-        if( get_piece(position_src)->get_couleur()!=couleur_joueur)
-            return appartenance;
-
-        Piece * piece = get_piece(position_src);
-
-        if(!pseudocheck(piece,position_dst,print_err))
-                return checkgeometric;
-
-        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
-
-        if (!slidecheck(piece,position_dst))
-                return collision;
-
-
-        return move_piece(piece,position_dst);
-
-}
-
 Echiquier::Echiquier () 
 {
         for (size_t y = 0; y < 8; y++){
@@ -176,6 +56,40 @@ Echiquier::Echiquier ()
         bak_pion_passant = pion_passant = Square(0,0);
 }
 
+Echiquier::Echiquier(const Echiquier &obj){
+        VERBEUX("constructeur copy Echiquier");
+        for (size_t y = 0; y < 8; y++){
+                for (size_t x = 0; x < 8; x++)
+                        echiquier[x][y] = nullptr;
+                piecesb[y] = nullptr;
+                piecesn[y] = nullptr;
+                pionsb[y]  = nullptr;
+                pionsn[y]  = nullptr;
+        }
+
+        for (int i = 0; i < 8; i++)
+        {
+                if(obj.piecesb[i]!=nullptr){
+                        piecesb[i] = obj.piecesb[i]->Clone();
+                        pose_piece(piecesb[i]);
+                }
+
+                if(obj.piecesn[i]!=nullptr){
+                        piecesn[i] = obj.piecesn[i]->Clone();
+                        pose_piece(piecesn[i]);
+                }
+
+                if (obj.pionsb[i]!=nullptr){
+                        pionsb[i] = new Pion(*obj.pionsb[i]);
+                        pose_piece(pionsb[i]);
+                }
+
+                if (obj.pionsn[i]!=nullptr){
+                        pionsn[i] = new Pion(*obj.pionsn[i]);
+                        pose_piece(pionsn[i]);
+                }
+        }      
+}
 
 Echiquier::~Echiquier(){
         VERBEUX("destructeur echiquier");
@@ -194,6 +108,133 @@ Echiquier::~Echiquier(){
                         delete piecesn[i];
         }
 }
+
+void Echiquier::pose_piece(Piece * piece,Piece * dst){
+        pose_piece(piece,dst->get_pos());
+}
+
+void Echiquier::pose_piece(Piece * piece,Square  dst){
+        echiquier[dst.ligne][dst.colone]=piece;
+}
+
+void Echiquier::pose_piece(Piece * piece){
+        pose_piece(piece,piece);
+}
+
+
+
+void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
+
+        //supression de la piece dans la main des joueur
+        //piece destination existe
+        if (old_piece){
+                //supression des piece dans les main des joueur
+
+                //génération des board en fonction de la couleur du joueur
+                Couleur couleur_joueur=old_piece->get_couleur()==Blanc ? Noir : Blanc;
+                Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+                Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;
+
+                //choisie le bon tableuax dans lequelle la piece a suprimer appartien
+                Piece ** tab_piece = (old_piece->get_type()==pion ? (Piece**)board_pion : board_piece);
+
+                //on recherche la piece a effacer dans le tableaux
+                for (size_t i = 0; i < 8; i++)
+                {
+                        //si une des piece dans la main a la meme position que la piece rechercher
+                        if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos() == old_piece->get_pos()){
+                                address_piece_effacer = tab_piece[i];
+                                tab_piece[i]=nullptr;
+                                break;
+                        }
+                }
+        }
+}
+
+void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer){
+        del_board_piece(get_piece(pos_piece),address_piece_effacer);
+}
+
+
+
+erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
+
+//fc check
+
+        //piece origine non vide
+        if (est_case_vide(position_src)==true)
+            return srcvide;
+
+        //joue une piece a luit (modifier si troc)
+        if( get_piece(position_src)->get_couleur()!=couleur_joueur)
+            return appartenance;
+
+        Piece * piece = get_piece(position_src);
+
+        if(!pseudocheck(piece,position_dst,print_err))
+                return checkgeometric;
+
+        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
+
+        if (!slidecheck(piece,position_dst))
+                return collision;
+
+
+        return move_piece(piece,position_dst);
+
+}
+
+
+erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
+        if (!piece)
+                return srcvide;        
+        return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
+}
+
+
+
+
+erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
+        Couleur couleur_joueur = piece->get_couleur();
+////backup
+
+        //addresse pour save
+        Piece * address_piece_effacer = nullptr;
+        //save l'ancienne piece
+        Piece * old_piece = get_piece(position_dst);
+
+
+//fc deplace
+        //supression de la piece position sur l'echequier
+        vider_case(piece);
+        //on place la piece sur lechequier
+        pose_piece(piece,position_dst);
+        //supression de la piece pour les joueur
+        del_board_piece(old_piece,address_piece_effacer);
+        //on change les coordoner dans la piece
+        piece->deplace(position_dst);
+
+//echeque
+        VERBEUX("check lecheque est le roi");
+        if(chk_echec_roi(couleur_joueur)){
+                //on déplace la piece a la position initial
+                piece->undo_move();
+                //restoration de la piece original
+                pose_piece(piece);
+                //restoration de la case dst
+                pose_piece(old_piece,position_dst);
+                //restoration de la piece dans la main joueur
+                if(old_piece && address_piece_effacer)
+                        address_piece_effacer=old_piece;
+                return echeque;
+        }
+
+        //suprime la piece de la mémoire
+        delete old_piece;
+        return ok;
+}
+
+
 
 Piece * Echiquier::get_piece(Square const square)const{
         return echiquier[square.ligne][square.colone];
@@ -287,28 +328,6 @@ void Echiquier::affiche (Echiquier const * obj) const {
 
 }
 
-bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
-        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
-        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
-        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
-        for (short i = 0; i < 8; i++)
-        {
-                
-                //piece ataque roi
-                if (board_piece[i] != nullptr
-                && pseudocheck(board_piece[i],pos_roi)
-                && slidecheck(board_piece[i],pos_roi))
-                        return true;
-        
-                //pion attaque un roi
-                if (board_pion[i] != nullptr
-                && pseudocheck(board_pion[i],pos_roi) 
-                && slidecheck(board_pion[i],pos_roi))
-                        return true;
-        }
-        return false;
-}
-
 bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
 
         if (!force)
@@ -384,6 +403,30 @@ bool Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
         return true;
 }
 
+bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
+        Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
+        Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
+        Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
+        for (short i = 0; i < 8; i++)
+        {
+                
+                //piece ataque roi
+                if (board_piece[i] != nullptr
+                && pseudocheck(board_piece[i],pos_roi)
+                && slidecheck(board_piece[i],pos_roi))
+                        return true;
+        
+                //pion attaque un roi
+                if (board_pion[i] != nullptr
+                && pseudocheck(board_pion[i],pos_roi) 
+                && slidecheck(board_pion[i],pos_roi))
+                        return true;
+        }
+        return false;
+}
+
+
+
 
 void Echiquier::print_all_piece(){
         DEBUG("Piece des joueur !");
@@ -448,40 +491,7 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
         return false;
 }
 
-Echiquier::Echiquier(const Echiquier &obj){
-        VERBEUX("constructeur copy Echiquier");
-        for (size_t y = 0; y < 8; y++){
-                for (size_t x = 0; x < 8; x++)
-                        echiquier[x][y] = nullptr;
-                piecesb[y] = nullptr;
-                piecesn[y] = nullptr;
-                pionsb[y]  = nullptr;
-                pionsn[y]  = nullptr;
-        }
 
-        for (int i = 0; i < 8; i++)
-        {
-                if(obj.piecesb[i]!=nullptr){
-                        piecesb[i] = obj.piecesb[i]->Clone();
-                        pose_piece(piecesb[i]);
-                }
-
-                if(obj.piecesn[i]!=nullptr){
-                        piecesn[i] = obj.piecesn[i]->Clone();
-                        pose_piece(piecesn[i]);
-                }
-
-                if (obj.pionsb[i]!=nullptr){
-                        pionsb[i] = new Pion(*obj.pionsb[i]);
-                        pose_piece(pionsb[i]);
-                }
-
-                if (obj.pionsn[i]!=nullptr){
-                        pionsn[i] = new Pion(*obj.pionsn[i]);
-                        pose_piece(pionsn[i]);
-                }
-        }      
-}
 
 
 erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
