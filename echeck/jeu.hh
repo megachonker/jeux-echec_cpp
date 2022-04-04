@@ -12,9 +12,12 @@ class Jeu
         bool en_echeque;
         Couleur joueur;
         Echiquier mon_echiquier;
+        int     numero_tour;
+        Square  deplacement[55][2];
         int check(struct mouvement);
         void errorhande(int errono);
         void end_turn();
+        bool is_pat();
     public:
         erreurDeplacement rock(bool grand);
         void explain(enum erreurDeplacement errono);

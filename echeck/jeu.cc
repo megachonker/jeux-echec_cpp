@@ -14,6 +14,7 @@ Jeu::Jeu(/* args */){
     cache_resolution=false;
     joueur=Blanc;//commance par les blanc
     en_echeque=false;
+    numero_tour=5;
 }
 
 void Jeu::affiche(){
@@ -49,8 +50,37 @@ bool Jeu::deplace(string const orig, string const dest){
             explain(err);
             return false;
         }
+
+        deplacement[numero_tour+1][0] = porigine;
+        deplacement[numero_tour+1][1] = pdst;
+
         end_turn();
         return true;
+}
+
+
+bool Jeu::is_pat(){
+
+    DEBUG("numero tour: " << numero_tour);
+    if (numero_tour > 50)
+    {
+        INFO("PAT plus de 50 coup");
+        return true;
+    }
+
+    if(
+    deplacement[numero_tour  ][1].to_string() == deplacement[numero_tour-4][1].to_string() &&
+    deplacement[numero_tour  ][1].to_string() == deplacement[numero_tour-8][1].to_string() && 
+    deplacement[numero_tour  ][0].to_string() == deplacement[numero_tour-4][0].to_string() &&
+    deplacement[numero_tour  ][0].to_string() == deplacement[numero_tour-8][0].to_string()){
+        INFO("PAT 3 movement identique d'afiler");
+        return true;
+    }
+
+
+    DEBUG("mouvement précédent: " << deplacement[numero_tour  ][1].to_string()<< " <= " <<deplacement[numero_tour-4][1].to_string() << " <== " << deplacement[numero_tour-8][1].to_string());
+
+    return false;
 }
 
 bool Jeu::fin(){
@@ -86,6 +116,10 @@ bool Jeu::fin(){
         }
         return false;
     }
+
+    //verifie le pat
+    if (is_pat())
+        return false;
 
     DEBUG("PAS EN ECHEQUE");
     return true;
@@ -144,6 +178,7 @@ erreurDeplacement Jeu::rock(bool grand){
 }
 
 void Jeu::end_turn(){
+    numero_tour++;
     //fin du tour on change de joueur
     joueur==Blanc ? joueur=Noir : joueur =Blanc;
     //on invalide le cache de la fesabilitée du jeux
