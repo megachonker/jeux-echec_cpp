@@ -1,6 +1,7 @@
 CC=g++
-CFLAGS=--std=c++11 -Wall -Wextra -ggdb
-DEBUG=  -D INFO_ON -D WARN_ON -D VERBEUX_ON -D DEBUG_ON -D INFO_ON -D WARN_ON 
+CFLAGS=--std=c++11 -Wall -Wextra -ggdb3
+DEBUG=  -D INFO_ON -D WARN_ON 
+#-D VERBEUX_ON -D DEBUG_ON
 # -O2
 DFLAGS=DEBUG
 

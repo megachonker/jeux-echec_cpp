@@ -22,7 +22,7 @@
 #define INFO(...) do {}while(0);
 #endif
 #ifdef WARN_ON
-#define WARNING(...) do {std::cout << YELLO() "\033[K\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
+#define WARNING(...) do {std::cerr << YELLO() "\033[K\t" << __VA_ARGS__ << CLRCOLOR() << std::endl;} while(0)
 #else
 #define WARNING(...) do {}while(0);
 #endif
