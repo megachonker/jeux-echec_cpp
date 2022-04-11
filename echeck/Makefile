@@ -1,29 +1,25 @@
 CC=g++
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb3
-DEBUG=  -D INFO_ON -D WARN_ON 
-#-D VERBEUX_ON -D DEBUG_ON
+DEBUG=  -D INFO_ON -D WARN_ON
+# -D VERBEUX_ON -D DEBUG_ON
 # -O2
 DFLAGS=DEBUG
 
-test:	echecs themove.auchan
-	valgrind --track-origins=yes --leak-check=full ./echecs < themove.auchan
+test:	echecs pion
 
-all:	rock	matpat seb
+r%: %-valgrind
+	cat $^
 
-seb:	echecs sebmove.auchan
-	valgrind --track-origins=yes --leak-check=full ./echecs < sebmove.auchan > /dev/null
+%-valgrind: %.auchan echecs
+	valgrind --track-origins=yes --leak-check=full ./echecs < $^ 2> $@ 
+
+%: %.auchan
+	valgrind --track-origins=yes --leak-check=full  ./echecs < $^
 
 
-rock: echecs rock.auchan
-	valgrind --track-origins=yes --leak-check=full ./echecs < rock.auchan > /dev/null
+all:	themove-valgrind pion-valgrind rock-valgrind	pat-valgrind mat-valgrind sebmove-valgrind
+	grep "LEAK SUMMARY:" -A 6 $^
 
-matpat : echecs mat.auchan pat.auchan
-	valgrind --track-origins=yes --leak-check=full ./echecs < mat.auchan > /dev/null
-	valgrind --track-origins=yes --leak-check=full ./echecs < pat.auchan > /dev/null
-
-debug : echecs themove.auchan
-	gdb ./echecs
-	run < themove.auchan
 
 echecs : main.o echiquier.o square.o jeu.o piece.o
 	$(CC) $(CFLAGS) $(DEBUG) $^ -o $@
@@ -44,6 +40,6 @@ piece.o : piece.cc piece.hh
 	$(CC) $(CFLAGS) $(DEBUG) -c $<
 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.*
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* *-valgrind
 
 
