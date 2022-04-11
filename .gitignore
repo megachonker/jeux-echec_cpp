@@ -58,3 +58,4 @@ echeck/echiquier.o
 echeck/echecs
 echeck/.vscode/launch.json
 echeck/.vscode/tasks.json
+echeck/sebmove-valgrind
