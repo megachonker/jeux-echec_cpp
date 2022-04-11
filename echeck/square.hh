@@ -6,9 +6,20 @@ enum Couleur{
     Noir
 };
 
+enum typePc{
+    pion,
+    tour,
+    fou,
+    cavalier,
+    dame,
+    roi
+};
+
+
 bool saisie_correcte(std::string const & cmd);
 bool saisie_correcte_petitroque(std::string const & cmd);
 bool saisie_correcte_grandroque(std::string const & cmd);
+typePc saisie_promotion();
 
 class Square
 {

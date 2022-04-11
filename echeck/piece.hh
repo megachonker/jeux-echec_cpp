@@ -2,14 +2,6 @@
 #include <string>
 #include "square.hh"
 
-enum typePc{
-    pion,
-    tour,
-    fou,
-    cavalier,
-    dame,
-    roi
-};
 
 //15 avrille
 class Piece

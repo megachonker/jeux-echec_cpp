@@ -14,8 +14,8 @@ Echiquier::Echiquier ()
         for (size_t y = 0; y < 8; y++){
                 for (size_t x = 0; x < 8; x++)
                         echiquier[x][y] = nullptr;
-                piecesb[y] = nullptr;
-                piecesn[y] = nullptr;
+                piecesb[y] = piecesb[15-y] = nullptr;
+                piecesn[y] = piecesn[15-y] = nullptr;
         }
         piecesb[0] = new Tour    (Blanc ,Square(0,0));
         piecesb[1] = new Cavalier(Blanc ,Square(0,1));
@@ -61,14 +61,25 @@ Echiquier::Echiquier(const Echiquier &obj){
         for (size_t y = 0; y < 8; y++){
                 for (size_t x = 0; x < 8; x++)
                         echiquier[x][y] = nullptr;
-                piecesb[y] = nullptr;
-                piecesn[y] = nullptr;
+                piecesb[y] = piecesb[15-y] = nullptr;
+                piecesn[y] = piecesn[15-y] = nullptr;
                 pionsb[y]  = nullptr;
                 pionsn[y]  = nullptr;
         }
 
         for (int i = 0; i < 8; i++)
         {
+
+                if(obj.piecesb[15-i]!=nullptr){
+                        piecesb[15-i] = obj.piecesb[15-i]->Clone();
+                        pose_piece(piecesb[15-i]);
+                }
+
+                if(obj.piecesn[15-i]!=nullptr){
+                        piecesn[15-i] = obj.piecesn[15-i]->Clone();
+                        pose_piece(piecesn[15-i]);
+                }
+
                 if(obj.piecesb[i]!=nullptr){
                         piecesb[i] = obj.piecesb[i]->Clone();
                         pose_piece(piecesb[i]);
@@ -106,6 +117,12 @@ Echiquier::~Echiquier(){
                         
                 if(piecesn[i] != nullptr)
                         delete piecesn[i];
+
+                if(piecesb[15-i] != nullptr)
+                        delete piecesb[15-i];
+                        
+                if(piecesn[15-i] != nullptr)
+                        delete piecesn[15-i];
         }
 }
 
@@ -120,8 +137,6 @@ void Echiquier::pose_piece(Piece * piece,Square  dst){
 void Echiquier::pose_piece(Piece * piece){
         pose_piece(piece,piece);
 }
-
-
 
 void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
 
@@ -139,7 +154,7 @@ void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer)
                 Piece ** tab_piece = (old_piece->get_type()==pion ? (Piece**)board_pion : board_piece);
 
                 //on recherche la piece a effacer dans le tableaux
-                for (size_t i = 0; i < 8; i++)
+                for (size_t i = 0; i < 16; i++)
                 {
                         //si une des piece dans la main a la meme position que la piece rechercher
                         if(tab_piece[i]!=nullptr && tab_piece[i]->get_pos() == old_piece->get_pos()){
@@ -153,6 +168,9 @@ void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer)
 
 void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer){
         del_board_piece(get_piece(pos_piece),address_piece_effacer);
+}
+void Echiquier::del_board_piece(Square pos_piece){
+        del_board_piece(pos_piece, get_piece(pos_piece));
 }
 
 
@@ -189,9 +207,6 @@ erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_j
                 return srcvide;        
         return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
-
-
-
 
 erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
         Couleur couleur_joueur = piece->get_couleur();
@@ -347,7 +362,7 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
         Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
         Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
         Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
-        for (short i = 0; i < 8; i++)
+        for (short i = 0; i < 16; i++)
         {
                 
                 //piece ataque roi
@@ -379,11 +394,11 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
         Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
         Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
         //l'idée de cache mis en place aurait pus etre efficace...
-        for (int u = 0; u < 8; u++)
+        for (int u = 0; u < 16; u++)
         for (int x = 0; x < 8; x++)
         for (int y = 0; y < 8; y++)
         {
-                if (    (deplace(board_pion[u],Square(x,y),couleur_joueur)==ok)
+                if (    (deplace(board_pion[u/2],Square(x,y),couleur_joueur)==ok) //on check 2x les pion pas opti doit refaire une boucle 
                 ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
                         return true;                                                              
         }
@@ -451,6 +466,67 @@ erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
 }
 
 
+bool Echiquier::promote(Square piece){
+        Piece * mapiece = get_piece(piece);
+        Square position = mapiece->get_pos();
+        if(mapiece->get_type()!=pion)
+                return false;
+
+        struct main_joueur mamain = get_main_joueur(mapiece->get_couleur());
+        //convertion de + ou - en +1 ou 0
+        char sens = (mamain.sens+1)/2;
+
+        if ( sens*8 != position.ligne)
+        {
+                WARNING("PION NON PROMUS: " << sens*8 <<" != " << position.ligne);
+                return false;
+        }
+        
+
+        //detection l'emplacement du pion dans le board
+        size_t i = 0;
+        for (; i < 8; i++)
+        {
+                if(mamain.board_pion[i]->get_pos() == mapiece->get_pos())
+                        break;
+        }
+
+        Piece * newpiece;        
+
+        switch (saisie_promotion())
+        {
+        case dame:
+                newpiece = new Dame(mapiece->get_couleur(),mapiece->get_pos());
+                break;
+        case tour:
+                newpiece = new Tour(mapiece->get_couleur(),mapiece->get_pos());
+                break;
+        case fou:
+                newpiece = new Fou(mapiece->get_couleur(),mapiece->get_pos());
+                break;
+        case cavalier:
+                newpiece = new Cavalier(mapiece->get_couleur(),mapiece->get_pos());
+                break;
+        default:
+                WARNING("erreur switch promotion");
+                break;
+        }
+
+        //remplacement visuel
+        pose_piece(newpiece,mapiece);
+        delete mapiece;
+
+        //ajout de la nouvelle picece
+        for (int i = 0; i<16; i++){
+                if(mamain.board_piece[i]!=nullptr){
+                        mamain.board_piece[i] = newpiece;
+                        break;
+                }
+        }
+
+        return true;
+
+}
 
 main_joueur Echiquier::get_main_joueur(Couleur couleur_joueur){
         Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
@@ -481,7 +557,7 @@ void Echiquier::print_all_piece(){
         DEBUG("Piece des joueur !");
         INFO("Piece blanche");
         cout << YELLO() << "Piece\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
+        for (size_t i = 0; i < 16; i++)
         {
                 if (piecesb[i] != nullptr)
                         piecesb[i]->affiche();
@@ -499,7 +575,7 @@ void Echiquier::print_all_piece(){
 
         INFO("Piece Noir");
         cout << YELLO() << "Piece\t" << CLRCOLOR();
-        for (size_t i = 0; i < 8; i++)
+        for (size_t i = 0; i < 16; i++)
         {
                 if (piecesn[i] != nullptr)
                         piecesn[i]->affiche();

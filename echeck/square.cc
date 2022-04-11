@@ -26,6 +26,34 @@ bool saisie_correcte_petitroque(string const & cmd) {
     return regex_match(cmd,mouvmtpattern);
 }
 
+//afaire
+typePc saisie_promotion() {
+    //on aurait pus utiliser un char mais on regle pas les débordement 
+    string choix;
+    INFO("{Q,R,B,K} pour respectivement promouvoir en Reine, Tour, Fou, Cavalier.");
+    do
+    {
+        choix.clear();    
+        cin >> choix;        
+        switch (choix.at(0))
+        {
+        case 'Q':
+            return dame;
+        case 'R':
+            return tour;
+        case 'B':
+            return fou;
+        case 'K':
+            return cavalier;
+        default:
+            WARNING("pas bonne piece choisie");
+            break;
+        }
+
+    } while (true);
+    return pion;
+}
+
 
                         //& ?
 Square::Square(string const position)

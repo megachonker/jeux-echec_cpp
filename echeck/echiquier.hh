@@ -36,8 +36,8 @@ private:
     //faire des vecteur comme un clochard
     Pion  * pionsb[8];//nombre de Pion par joueur
     Pion  * pionsn[8];
-    Piece * piecesb[8];//nombre de Piece par joueur
-    Piece * piecesn[8];
+    Piece * piecesb[16];//nombre de Piece par joueur
+    Piece * piecesn[16];
     Square pion_passant;
     Square bak_pion_passant;
 
@@ -59,9 +59,9 @@ private:
 
     main_joueur get_main_joueur(Couleur couleur);
 
+    void del_board_piece(Square pos_piece);
     void del_board_piece(Piece * piece, Piece * address_piece_effacer);
     void del_board_piece(Square pos_piece, Piece * address_piece_effacer);
-
 public:
     erreurDeplacement rocker(Couleur couleur,bool grand);
     Square get_pos();
@@ -71,6 +71,7 @@ public:
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
     erreurDeplacement deplace(Piece* piece, Square dst,Couleur couleur_joueur,bool print_err=false);
     erreurDeplacement deplace(Square piece, Square dst,Couleur couleur_joueur,bool print_err=false);
+    bool promote(Square piece);
     Echiquier();
     Echiquier(const Echiquier &obj);
     ~Echiquier();

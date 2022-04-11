@@ -8,7 +8,7 @@
 
 using namespace std;
 
-Jeu::Jeu(/* args */){
+Jeu::Jeu(){
     //init du plateaux
     resolut=false;
     cache_resolution=false;
@@ -54,6 +54,9 @@ bool Jeu::deplace(string const orig, string const dest){
         deplacement[numero_tour+1][0] = porigine;
         deplacement[numero_tour+1][1] = pdst;
 
+        //promotion
+        // mon_echiquier.promote(pdst);
+
         end_turn();
         return true;
 }
@@ -76,7 +79,6 @@ bool Jeu::is_pat(){
         INFO("PAT 3 movement identique d'afiler");
         return true;
     }
-
 
     DEBUG("mouvement précédent: " << deplacement[numero_tour  ][1].to_string()<< " <= " <<deplacement[numero_tour-4][1].to_string() << " <== " << deplacement[numero_tour-8][1].to_string());
 
