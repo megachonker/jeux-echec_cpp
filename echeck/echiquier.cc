@@ -172,6 +172,9 @@ void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer)
 void Echiquier::del_board_piece(Square pos_piece){
         del_board_piece(pos_piece, get_piece(pos_piece));
 }
+void Echiquier::del_board_piece(Piece *  pos_piece){
+        del_board_piece(pos_piece, pos_piece);
+}
 
 
 
@@ -476,11 +479,9 @@ bool Echiquier::promote(Square piece){
         //convertion de + ou - en +1 ou 0
         char sens = (mamain.sens+1)/2;
 
-        if ( sens*8 != position.ligne)
-        {
-                WARNING("PION NON PROMUS: " << sens*8 <<" != " << position.ligne);
+        if ( sens*7 != position.ligne)
                 return false;
-        }
+        
         
 
         //detection l'emplacement du pion dans le board
@@ -512,17 +513,21 @@ bool Echiquier::promote(Square piece){
                 break;
         }
 
+
         //remplacement visuel
         pose_piece(newpiece,mapiece);
+        del_board_piece(mapiece);
         delete mapiece;
 
         //ajout de la nouvelle picece
         for (int i = 0; i<16; i++){
-                if(mamain.board_piece[i]!=nullptr){
+                if(mamain.board_piece[i]==nullptr){
                         mamain.board_piece[i] = newpiece;
                         break;
                 }
         }
+        INFO(newpiece->to_string());
+        // print_all_piece();
 
         return true;
 

@@ -55,7 +55,7 @@ bool Jeu::deplace(string const orig, string const dest){
         deplacement[numero_tour+1][1] = pdst;
 
         //promotion
-        // mon_echiquier.promote(pdst);
+        mon_echiquier.promote(pdst);
 
         end_turn();
         return true;
