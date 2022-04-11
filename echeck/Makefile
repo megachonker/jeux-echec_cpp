@@ -1,23 +1,23 @@
 CC=g++
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb3
-DEBUG=  -D INFO_ON -D WARN_ON
-# -D VERBEUX_ON -D DEBUG_ON
-# -O2
+DEBUG=  -D INFO_ON -D WARN_ON -D VERBEUX_ON -D DEBUG_ON -O3
 DFLAGS=DEBUG
-
+NUMJOBS=8
 test:	echecs pion
 
 r%: %-valgrind
 	cat $^
 
 %-valgrind: %.auchan echecs
-	valgrind --track-origins=yes --leak-check=full ./echecs < $^ 2> $@ 
+	echo -e "\n================ $< =================" > $@
+	valgrind --track-origins=yes --leak-check=full ./echecs < $^ 2>> $@ 
 
 %: %.auchan
 	valgrind --track-origins=yes --leak-check=full  ./echecs < $^
 
 
 all:	themove-valgrind pion-valgrind rock-valgrind	pat-valgrind mat-valgrind sebmove-valgrind
+	cat $^
 	grep "LEAK SUMMARY:" -A 6 $^
 
 

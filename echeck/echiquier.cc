@@ -488,7 +488,7 @@ bool Echiquier::promote(Square piece){
         size_t i = 0;
         for (; i < 8; i++)
         {
-                if(mamain.board_pion[i]->get_pos() == mapiece->get_pos())
+                if( mamain.board_pion[i] != nullptr && mamain.board_pion[i]->get_pos() == mapiece->get_pos())
                         break;
         }
 
@@ -526,7 +526,7 @@ bool Echiquier::promote(Square piece){
                         break;
                 }
         }
-        INFO(newpiece->to_string());
+        // INFO(newpiece->to_string());
         // print_all_piece();
 
         return true;
