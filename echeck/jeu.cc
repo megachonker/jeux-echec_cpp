@@ -15,6 +15,8 @@ Jeu::Jeu(){
     joueur=Blanc;//commance par les blanc
     en_echeque=false;
     numero_tour=5;
+    deplacement[1][0] = Square(1,1);
+    deplacement[1][1] = Square(1,1);
 }
 
 void Jeu::affiche(){
@@ -30,7 +32,7 @@ void Jeu::affiche(){
 Couleur Jeu::get_couleur(){
     return joueur;
 }
-
+ 
 
 bool Jeu::deplace(string const orig, string const dest){
 

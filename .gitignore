@@ -59,3 +59,7 @@ echeck/echecs
 echeck/.vscode/launch.json
 echeck/.vscode/tasks.json
 echeck/sebmove-valgrind
+echeck/parties/test.log
+echeck/test.log
+echeck/test
+echeck/eee

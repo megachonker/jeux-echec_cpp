@@ -1,26 +1,24 @@
 CC=g++
-CFLAGS=--std=c++11 -Wall -Wextra -ggdb3
-DEBUG=  -D INFO_ON -D WARN_ON -D VERBEUX_ON -D DEBUG_ON -O3
-DFLAGS=DEBUG
-NUMJOBS=8
-test:	echecs pion
-
-r%: %-valgrind
-	cat $^
-
-%-valgrind: %.auchan echecs
-	echo -e "\n================ $< =================" > $@
-	valgrind --track-origins=yes --leak-check=full ./echecs < $^ 2>> $@ 
-
-%: %.auchan
-	valgrind --track-origins=yes --leak-check=full  ./echecs < $^
+CFLAGS=--std=c++11 -Wall -Wextra -ggdb3 -D INFO_ON 
+# DEBUG= -D WARN_ON -D VERBEUX_ON -D DEBUG_ON -O3
 
 
-all:	themove-valgrind pion-valgrind rock-valgrind	pat-valgrind mat-valgrind sebmove-valgrind
+
+.PHONY: clean
+
+#tests les leaks
+all:	parties/themove-valgrind parties/pion-valgrind parties/rock-valgrind parties/pat-valgrind parties/mat-valgrind parties/sebmove-valgrind
 	cat $^
 	grep "LEAK SUMMARY:" -A 6 $^
+	for number in {4..6};do ./test-level.sh $$number;done
+	touch all
 
 
+#execute un test unitaire
+%: parties/%.auchan echecs
+	valgrind --track-origins=yes --leak-check=full  ./echecs < $^
+
+### Génère l'executable
 echecs : main.o echiquier.o square.o jeu.o piece.o
 	$(CC) $(CFLAGS) $(DEBUG) $^ -o $@
 
@@ -39,7 +37,16 @@ square.o : square.cc square.hh macro.hh
 piece.o : piece.cc piece.hh
 	$(CC) $(CFLAGS) $(DEBUG) -c $<
 
+
+###fonction 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* *-valgrind
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all
 
+#génère fichier cache de débug 
+%-valgrind: %.auchan echecs
+	echo -e "\n================ $< =================" > $@
+	valgrind --track-origins=yes --leak-check=full ./echecs < $< 2>> $@ 
 
+#print le cache de débug
+r%: parties/%-valgrind
+	cat $^
