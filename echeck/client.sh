@@ -1,0 +1,1 @@
+nc localhost 6969 || nc localhost 6900
