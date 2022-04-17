@@ -8,7 +8,13 @@
 using namespace std;
 #include "macro.hh"
 
+//avance d'une ligne dans le plateaux en fonction du joueur
+#define AVANCE1BONSENS  Square((piece->get_couleur()==Noir ? -1: 1),0)
 
+/**
+ * @brief Construct a new Echiquier:: Echiquier object
+ * 
+ */
 Echiquier::Echiquier () 
 {
         for (size_t y = 0; y < 8; y++){
@@ -56,6 +62,11 @@ Echiquier::Echiquier ()
         bak_pion_passant = pion_passant = Square(0,0);
 }
 
+/**
+ * @brief duplicate a new Echiquier:: Echiquier object
+ * 
+ * @param obj 
+ */
 Echiquier::Echiquier(const Echiquier &obj){
         VERBEUX("constructeur copy Echiquier");
         for (size_t y = 0; y < 8; y++){
@@ -99,9 +110,16 @@ Echiquier::Echiquier(const Echiquier &obj){
                         pionsn[i] = new Pion(*obj.pionsn[i]);
                         pose_piece(pionsn[i]);
                 }
-        }      
+        }
+        
+        //valeur inateignable 0,0 
+        bak_pion_passant = pion_passant = Square(0,0);
 }
 
+/**
+ * @brief Destroy the Echiquier:: Echiquier object
+ * 
+ */
 Echiquier::~Echiquier(){
         VERBEUX("destructeur echiquier");
 
@@ -177,29 +195,40 @@ void Echiquier::del_board_piece(Piece *  pos_piece){
 }
 
 
-
+/**
+ * @brief 
+ * 
+ * @param position_src 
+ * @param position_dst 
+ * @param couleur_joueur 
+ * @param print_err indique s'il faut indiquer les erreur de déplacement (la fonction est utiliser par le joueur est par des test automatique donc il faut différencier)
+ * @return erreurDeplacement 
+ */
 erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
 
-//fc check
-
+                //Vérification
+        
         //piece origine non vide
         if (est_case_vide(position_src)==true)
             return srcvide;
 
-        //joue une piece a luit (modifier si troc)
+        //joue une piece que le joueur possède
         if( get_piece(position_src)->get_couleur()!=couleur_joueur)
             return appartenance;
 
-        Piece * piece = get_piece(position_src);
+        //on sais que la piece selectioner est valide
+        Piece * piece =  get_piece(position_src);
         
-        erreurDeplacement tmp = pseudocheck(piece,position_dst,print_err);
-        if(tmp!=ok)
+        //vérifie avec les règle de déplacent que la piece que le déplacement est possible
+        erreurDeplacement tmp;
+        if( (tmp = pseudocheck(piece,position_dst,print_err)) !=ok)
                 return tmp;
 
+        //vérifie qu'il n'y a pas de colision pandant le déplacement de la piece
         if (!slidecheck(piece,position_dst))
                 return collision;
 
-        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0));
+        bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+AVANCE1BONSENS);
 
         return move_piece(piece,position_dst,prise_passant);
 }
@@ -284,9 +313,17 @@ bool Echiquier::est_case_vide(Square const square) const{
         return false;
 }
 
-
+/**
+ * @brief simule le déplacement d'une piece sur le plateaux
+ * 
+ * @param source 
+ * @param position_dst 
+ * @param force 
+ * @return true 
+ * @return false 
+ */
 bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
-
+        //sassure d'avoir une piece déplacable en diagonal avant de continue
         if (!force)
         {
                 if (source->get_type() != tour 
@@ -317,8 +354,20 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
         return false;
 }
 
+
+/**
+ * @brief vérifie que le déplacement LOGIQUE de la piece selon les règle de celle cis
+ * - vérifie prise en passant
+ * - set la prise en passant 
+ * 
+ * @param piece
+ * @param position_dst 
+ * @param print_err doit t'on afficher les erreur dans la sortie erreur
+ * @return erreurDeplacement 
+ */
 erreurDeplacement Echiquier::pseudocheck(Piece * piece,Square position_dst, bool print_err){
-        if (get_piece(position_dst) != nullptr)   //test si dest est une piece
+        //si destination est une piece
+        if (get_piece(position_dst) != nullptr)
         {
                 //destination moi
                 if(get_piece(position_dst)->get_couleur()==piece->get_couleur())//test couleur opposer)
@@ -328,32 +377,36 @@ erreurDeplacement Echiquier::pseudocheck(Piece * piece,Square position_dst, bool
                         if(!piece->check_dst(position_dst,true,print_err))
                                 return checkgeometric;
         }
-        //case vide
+        //allor case vide
         else{
-                // //autorise le mouvement diagonal si la prise en passante est valide
-                if (pion_passant != Square(0,0) && 
-                    position_dst == (pion_passant+Square((piece->get_couleur()==Noir ? -1: 1),0))){
-                        
+                
+                //autorise le mouvement diagonal si la prise en passante est valide
+                if (
+                    pion_passant != Square(0,0) &&                     //vérifie que la piece est initialiser
+                    position_dst == (pion_passant+AVANCE1BONSENS))     //fait reculer le pion adverse pour tester la prise en pasant
+                {
+                        //vérification standar si la piece est prenable
                         if(piece->check_dst(position_dst,true,print_err))
                                 return ok;
                         else
                                 return prisepasantfail;
                 }
+
                 //test deplacement standar
                 if(!piece->check_dst(position_dst,false,print_err))
                         return checkgeometric;
 
                 //si la piece est un pion
                 if(piece->get_type()==pion){
-                        Square devant_pion = piece->get_pos()+Square((piece->get_couleur()==Noir ? -1: 1),0);
-                        Square devant_devant_pion = devant_pion+Square((piece->get_couleur()==Noir ? -1: 1),0);
+                        Square devant_pion = piece->get_pos()+AVANCE1BONSENS;
+                        Square devant_devant_pion = devant_pion+AVANCE1BONSENS;
                         
-                        //déplace de 2 ver l'avant
+                        //déplace de 2 ver l'avant unique
                         if(position_dst == devant_devant_pion){
                                 //verifie si le pion rentre en colision pendant son déplacement
                                 if(!est_case_vide(devant_pion))
                                                 return collision;
-                                //le pion avancant de 2 il est candidat pour etre passant 
+                                //le pion avancant de 2 il est candidat pour etre passant
                                 pion_passant = position_dst;
                         }
                 }
@@ -361,10 +414,20 @@ erreurDeplacement Echiquier::pseudocheck(Piece * piece,Square position_dst, bool
         return ok;
 }
 
+/**
+ * @brief vérifie la mise en echeque du rois
+ * 
+ * @param couleur_joueur 
+ * @return true 
+ * @return false 
+ */
 bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
+
+        //remplacer par get_main_joueur ?
         Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
         Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
         Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
+        
         for (short i = 0; i < 16; i++)
         {
                 
@@ -597,6 +660,11 @@ void Echiquier::print_all_piece(){
         cout << endl;
 }
 
+/**
+ * @brief affiche le plataux avec les piece est les coup jouer pour le debug
+ * 
+ * @param obj 2ème plateaux a comarer
+ */
 void Echiquier::affiche (Echiquier const * obj) const {
         string space5 = string(5,' ');
         cout << endl;
@@ -608,13 +676,16 @@ void Echiquier::affiche (Echiquier const * obj) const {
                         cout << "│" ;
                         if (echiquier[i][j]) { 
                           cout << "\u0020\u0020";  //U+0020 est un esapce utf-8 taille police
-
+                        //coup 
+                        
+                        //si 2eme plateaux on compare si la piece a bouger on print le déplacement en jaune
                         if (obj && !(obj->echiquier[i][j] && (obj->echiquier[i][j]->to_string()==echiquier[i][j]->to_string())))
                         {
                                 cout << YELLO();
                                 echiquier[i][j]-> affiche();
                                 cout << CLRCOLOR();
                         }
+                        //afichage du plataux standare
                         else
                                 echiquier[i][j]-> affiche();
 

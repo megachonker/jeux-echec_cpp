@@ -19,6 +19,11 @@ Jeu::Jeu(){
     deplacement[1][1] = Square(1,1);
 }
 
+
+/**
+ * @brief affichage du coup
+ * 
+ */
 void Jeu::affiche(){
     mon_echiquier.affiche();
     VERBEUX("affichage joueur:");
@@ -33,11 +38,18 @@ Couleur Jeu::get_couleur(){
     return joueur;
 }
  
-
+/**
+ * @brief permet de demander a déplacer la piece au vue du jeux
+ * 
+ * @param orig 
+ * @param dest 
+ * @return true 
+ * @return false 
+ */
 bool Jeu::deplace(string const orig, string const dest){
 
         if (orig==dest){
-            INFO("la source est la déstination ne peuve etre la meme");
+            INFO("la source est la déstination ne peuvent pas être la meme");
             return false;
         }
         
@@ -46,9 +58,10 @@ bool Jeu::deplace(string const orig, string const dest){
         Square pdst(dest);
 
         INFO("INPUT: " << porigine.print_deplace(pdst));
+        
         //effectue le deplacemnt
         erreurDeplacement err;
-        if((err = mon_echiquier.deplace(porigine,pdst,joueur))!=ok){
+        if((err = mon_echiquier.deplace(porigine,pdst,joueur,true))!=ok){
             explain(err);
             return false;
         }
@@ -134,7 +147,11 @@ Jeu::~Jeu(){
 }
 
 
-
+/**
+ * @brief traduit les code d'erreur en message pour l'utilisateur
+ * 
+ * @param err 
+ */
 void Jeu::explain(enum erreurDeplacement err){
     switch (err)
     {
@@ -184,7 +201,7 @@ erreurDeplacement Jeu::rock(bool grand){
 void Jeu::end_turn(){
     numero_tour++;
     //fin du tour on change de joueur
-    joueur==Blanc ? joueur=Noir : joueur =Blanc;
+    swapcolor(joueur);
     //on invalide le cache de la fesabilitée du jeux
     cache_resolution = false;
     //reset de la prise en passant
