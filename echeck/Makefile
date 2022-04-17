@@ -1,13 +1,15 @@
-CC=g++
-CFLAGS=--std=c++11 -Wall -Wextra -ggdb3 -D INFO_ON 
-# DEBUG= -D WARN_ON -D VERBEUX_ON -D DEBUG_ON -O3
+CC=g++ --coverage
+CFLAGS=--std=c++11 -Wall -Wextra -ggdb3 -D INFO_ON  -D WARN_ON 
+# DEBUG= -D VERBEUX_ON -D DEBUG_ON
 
-
+SRC := parties
+SOURCES := $(wildcard $(SRC)/*.auchan)
+OBJECTS := $(patsubst $(SRC)/%.auchan, $(SRC)/%-valgrind, $(SOURCES))
 
 .PHONY: clean
 
 #tests les leaks
-all:	parties/themove-valgrind parties/pion-valgrind parties/rock-valgrind parties/pat-valgrind parties/mat-valgrind parties/sebmove-valgrind
+all:	$(OBJECTS)
 	cat $^
 	grep "LEAK SUMMARY:" -A 6 $^
 	for number in {4..6};do ./test-level.sh $$number;done
@@ -40,13 +42,19 @@ piece.o : piece.cc piece.hh
 
 ###fonction 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all out *.gcda *.gcno coverage.info
 
 #génère fichier cache de débug 
-%-valgrind: %.auchan echecs
+$(SRC)/%-valgrind: $(SRC)/%.auchan echecs
 	echo -e "\n================ $< =================" > $@
-	valgrind --track-origins=yes --leak-check=full ./echecs < $< 2>> $@ 
+	valgrind --track-origins=yes --leak-check=full ./echecs < <(cat $< | grep -v '#') 2>> $@ 
 
 #print le cache de débug
 r%: parties/%-valgrind
 	cat $^
+
+#génère un raport lcove
+lcov: all
+	lcov --capture --directory . --output-file coverage.info
+	genhtml coverage.info --output-directory out
+	# firefox out/
