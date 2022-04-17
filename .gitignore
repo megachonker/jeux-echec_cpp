@@ -99,3 +99,5 @@ echeck/square.gcno
 echeck/echiquier.gcda
 echeck/echiquier.gcno
 echeck/all
+echeck/coverage.info
+echeck/parties/passant-valgrind
