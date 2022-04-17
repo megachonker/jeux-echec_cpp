@@ -2,8 +2,8 @@
 #include <string>
 
 enum Couleur{
-    Blanc,
-    Noir
+    Blanc=-1,
+    Noir=1
 };
 
 enum typePc{
@@ -14,6 +14,9 @@ enum typePc{
     dame,
     roi
 };
+
+
+void swapcolor(Couleur & couleur);
 
 
 bool saisie_correcte(std::string const & cmd);
