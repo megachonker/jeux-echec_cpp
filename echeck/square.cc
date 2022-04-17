@@ -13,7 +13,7 @@ bool saisie_correcte(string const & cmd) {
 
 }
 
-Couleur operator!(Couleur couleur){return couleur==Blanc?Noir:Blanc;}
+void swapcolor(Couleur & couleur){couleur = (couleur==Blanc ? Noir : Blanc);}
 
 
 bool saisie_correcte_grandroque(string const & cmd) {
