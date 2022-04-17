@@ -18,7 +18,7 @@ all:	$(OBJECTS)
 
 #execute un test unitaire
 %: parties/%.auchan echecs
-	valgrind --track-origins=yes --leak-check=full  ./echecs < $^
+	valgrind --track-origins=yes --leak-check=full  ./echecs < <(cat $< | grep -v '#')
 
 ### Génère l'executable
 echecs : main.o echiquier.o square.o jeu.o piece.o
