@@ -67,7 +67,7 @@ Square::Square(int ligne, int colone) : ligne(ligne),colone(colone)
 {}
 
 std::string Square::to_string() const{
-    return std::to_string(colone)+":"+std::to_string(ligne);
+    return std::string(1,(char)colone+'A')+":"+std::to_string(ligne+1);
 }
 
 bool Square::operator== (Square cmp) const{
@@ -132,7 +132,7 @@ Square Square::operator-(Square cible) const {
 }
 
 std::string Square::print_deplace(Square dst){
-    return std::to_string(colone+1)+":"+std::to_string(ligne+1)+"->"+std::to_string(dst.colone+1)+":"+std::to_string(dst.ligne+1);
+    return to_string()+"->"+dst.to_string();
 }
 
 
