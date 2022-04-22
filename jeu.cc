@@ -21,14 +21,12 @@ Jeu::Jeu(){
 
 
 /**
- * @brief affichage du coup
+ * @brief affiche le plateaux 
  * 
  */
 void Jeu::affiche(){
     mon_echiquier.affiche();
     VERBEUX("affichage joueur:");
-    //stoque le resultat du test pour savoir si mat
-    en_echeque=mon_echiquier.chk_echec_roi(joueur);
     if(en_echeque){
         INFO("Vous ête en Echèque !");
     }
@@ -105,16 +103,16 @@ bool Jeu::fin(){
     //si le cache de résolution est plus valide on le régénère
     if (!cache_resolution){     
 
-        #ifdef DEBUG_ON
+        #ifdef DEBUG_EMP
         mon_echiquier.print_all_piece();
         #endif
 
         Echiquier plateaux_temporaire(mon_echiquier);
-        resolut = plateaux_temporaire.isstuck(joueur);
+        resolut = plateaux_temporaire.isstuck(joueur,en_echeque);
 
         if(resolut){
             DEBUG("Solution Empirique");
-            #ifdef DEBUG_ON
+            #ifdef DEBUG_EMP
             plateaux_temporaire.affiche(&mon_echiquier);
             #endif            
         }else
@@ -202,6 +200,8 @@ void Jeu::end_turn(){
     numero_tour++;
     //fin du tour on change de joueur
     swapcolor(joueur);
+    //met a jour si le joueur suivant est en echeque
+    en_echeque=mon_echiquier.chk_echec_roi(joueur);
     //on invalide le cache de la fesabilitée du jeux
     cache_resolution = false;
     //reset de la prise en passant
