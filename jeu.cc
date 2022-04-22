@@ -78,7 +78,7 @@ bool Jeu::deplace(string const orig, string const dest){
 bool Jeu::is_pat(){
 
     DEBUG("numero tour: " << numero_tour);
-    if (numero_tour > 50)
+    if (numero_tour > (50+2))
     {
         INFO("PAT plus de 50 coup");
         return true;
