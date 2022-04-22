@@ -42,6 +42,7 @@ en cas de changent de flag
 - constructueur des piece oneline qui stoque la chaine de caractere
 - pour lester la mise en echeque j'ai du faire des constructeur pour dupliquer mon object compliquer car celuit cis contien d'autre object qui a leur tour doive être dupliquer
 - fuite mémoire grace a l'outille **valgrind**
+- comprendre par le débugue que le rois n'a pas le droit de manger quand il est en echeque
 
 # Mode MULTIJOUEUR en LIGNE
 - ```./server.sh``` lance le serveur
