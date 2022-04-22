@@ -1,7 +1,6 @@
 CC=g++ --coverage
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb3 -D INFO_ON  -D WARN_ON 
-# DEBUG= -D VERBEUX_ON -D DEBUG_ON
-
+# DEBUG=  -D DEBUG_ON -D VERBEUX_ON  -D DEBUG_ECHEQUE -D DEBUG_EMP
 SRC := parties
 SOURCES := $(wildcard $(SRC)/*.auchan)
 OBJECTS := $(patsubst $(SRC)/%.auchan, $(SRC)/%-valgrind, $(SOURCES))
@@ -14,7 +13,6 @@ all:	$(OBJECTS)
 	grep "LEAK SUMMARY:" -A 6 $^
 	for number in {4..6};do ./test-level.sh $$number;done
 	touch all
-
 
 #execute un test unitaire
 %: parties/%.auchan echecs
@@ -42,7 +40,12 @@ piece.o : piece.cc piece.hh
 
 ###fonction 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all out *.gcda *.gcno coverage.info
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all out *.gcda *.gcno coverage.info test.log
+	
+#force la recompilation (utile quand on change les flag)
+r:
+	make clean
+	make echecs
 
 #génère fichier cache de débug 
 $(SRC)/%-valgrind: $(SRC)/%.auchan echecs

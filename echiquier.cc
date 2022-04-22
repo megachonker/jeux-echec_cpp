@@ -207,7 +207,6 @@ void Echiquier::del_board_piece(Piece *  pos_piece){
  * @return erreurDeplacement 
  */
 erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Couleur couleur_joueur,bool print_err){
-
                 //Vérification
         
         //piece origine non vide
@@ -222,7 +221,7 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         Piece * piece =  get_piece(position_src);
         
         //vérifie avec les règle de déplacent que la piece que le déplacement est possible
-        DEBUG("test déplacement logique");
+        VERBEUX("test déplacement logique");
         erreurDeplacement tmp;
         if( (tmp = pseudocheck(piece,position_dst,print_err)) !=ok)
                 return tmp;

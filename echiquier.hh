@@ -66,7 +66,7 @@ private:
 public:
     erreurDeplacement rocker(Couleur couleur,bool grand);
     Square get_pos();
-    bool isstuck(Couleur couleur_joueur);
+    bool isstuck(Couleur couleur_joueur,bool en_echeque);
     bool chk_echec_roi(Couleur couleur_joueur);
     std::string canonical_position() const;
     std::string pgn_piece_name(std::string const name,bool view_pawn=false,bool view_color=false) const;
