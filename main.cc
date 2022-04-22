@@ -7,7 +7,6 @@
 #include "macro.hh"
 using namespace std;
 
-//--------------------------------------------------------------
 int main() {
     Jeu monjeu;  // initialise le jeu
     monjeu.affiche();

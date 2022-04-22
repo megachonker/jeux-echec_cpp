@@ -7,26 +7,63 @@
 
 using namespace std;
 
+
+/**
+ * @brief vérifie que la chaine de caracter corespon a un movement
+ * 
+ * utilise des expression reguliere
+ * 
+ * type accepter ex: **a2a4**
+ * 
+ * @param cmd 
+ * @return true 
+ * @return false 
+ */
 bool saisie_correcte(string const & cmd) {
     regex mouvmtpattern("[a-h][1-8][a-h][1-8]",regex_constants::icase);
     return regex_match(cmd,mouvmtpattern);
 
 }
 
-void swapcolor(Couleur & couleur){couleur = (couleur==Blanc ? Noir : Blanc);}
-
-
+/**
+ * @brief test syntax grand rock
+ * 
+ * @param cmd 
+ * @return true 
+ * @return false 
+ */
 bool saisie_correcte_grandroque(string const & cmd) {
     regex mouvmtpattern("[Oo0]-[Oo0]-[Oo0]");
     return regex_match(cmd,mouvmtpattern);
 }
 
+/**
+ * @brief test syntax petit rock
+ * 
+ * @param cmd 
+ * @return true 
+ * @return false 
+ */
 bool saisie_correcte_petitroque(string const & cmd) {
     regex mouvmtpattern("[Oo0]-[Oo0]");
     return regex_match(cmd,mouvmtpattern);
 }
 
-//afaire
+
+/**
+ * @brief intervertie les coulleur
+ * opération ternaire d'un booléan est plus lisible sous cette fome 
+ * @param couleur 
+ */
+void swapcolor(Couleur & couleur){couleur = (couleur==Blanc ? Noir : Blanc);}
+
+
+
+/**
+ * @brief demande la saisie est la rentranscrit sous un énume
+ * 
+ * @return typePc 
+ */
 typePc saisie_promotion() {
     //on aurait pus utiliser un char mais on regle pas les débordement 
     string choix;
@@ -55,7 +92,11 @@ typePc saisie_promotion() {
 }
 
 
-                        //& ?
+/**
+ * @brief construit un square a partire d'un string
+ * 
+ * @param position 
+ */
 Square::Square(string const position)
 {
     //a déplacer dans le ':' si ça marche
@@ -63,12 +104,19 @@ Square::Square(string const position)
     colone = (char)position[0]-'a';
 }
 
+/**
+ * @brief construit un square a partire d'integer
+ * tres pratique pour comparer des coordonnée * 
+ * @param ligne 
+ * @param colone 
+ */
 Square::Square(int ligne, int colone) : ligne(ligne),colone(colone)
 {}
 
 std::string Square::to_string() const{
     return std::string(1,(char)colone+'A')+":"+std::to_string(ligne+1);
 }
+
 
 bool Square::operator== (Square cmp) const{
     return ((ligne==cmp.ligne)&&(colone==cmp.colone));
@@ -77,7 +125,6 @@ bool Square::operator== (Square cmp) const{
 bool Square::operator!= (Square cmp)const{
     return !(*this==cmp);
 }
-
 
 Square Square::operator+ (Square add){
     return Square(ligne+add.ligne,colone+add.colone);
@@ -110,6 +157,13 @@ Square sens_deplacement(Square source,Square destination){
         return decalage;
 }
 
+/**
+ * @brief verfifie qu'une coordonée soit inférieur a un périmère
+ * 
+ * @param size perimetre a tester
+ * @return true 
+ * @return false 
+ */
 bool Square::around(int size){
     return abs(ligne)<=size && abs(colone)<=size;
 }
@@ -122,9 +176,6 @@ std::string Square::print_deplace(Square dst){
     return to_string()+"->"+dst.to_string();
 }
 
-
-
-////////////////////////////////////////////////
 std::string couleur_to_str(Couleur ma_couleur){
     return ma_couleur==Blanc ? "Blanc" : "Noir";
 }

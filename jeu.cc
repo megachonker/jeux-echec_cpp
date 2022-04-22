@@ -38,6 +38,10 @@ Couleur Jeu::get_couleur(){
  
 /**
  * @brief permet de demander a déplacer la piece au vue du jeux
+ * - gère le déplacement *est ces erreur*
+ * - les sauvegarde *pour gestion du pat si 3 déplacement same*
+ * - gère la promotion
+ * - gère la fin du tour
  * 
  * @param orig 
  * @param dest 
@@ -64,6 +68,7 @@ bool Jeu::deplace(string const orig, string const dest){
             return false;
         }
 
+        //sauvegarde les déplacement effectuer l'ors du tour
         deplacement[numero_tour+1][0] = porigine;
         deplacement[numero_tour+1][1] = pdst;
 
@@ -75,8 +80,15 @@ bool Jeu::deplace(string const orig, string const dest){
 }
 
 
+/**
+ * @brief vérifie le pat 50 et 3 mouvement similaire
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Jeu::is_pat(){
 
+    //check =<50 tour
     DEBUG("numero tour: " << numero_tour);
     if (numero_tour > (50+2))
     {
@@ -84,6 +96,7 @@ bool Jeu::is_pat(){
         return true;
     }
 
+    //check 3 mouvement emem d'afiler
     if(
     deplacement[numero_tour  ][1].to_string() == deplacement[numero_tour-4][1].to_string() &&
     deplacement[numero_tour  ][1].to_string() == deplacement[numero_tour-8][1].to_string() && 
@@ -98,6 +111,13 @@ bool Jeu::is_pat(){
     return false;
 }
 
+
+/**
+ * @brief apres chaque interaction du joueur vérifie si le jeux peut continuer 
+ * 
+ * @return true 
+ * @return false 
+ */
 bool Jeu::fin(){
 
     //si le cache de résolution est plus valide on le régénère
@@ -140,6 +160,10 @@ bool Jeu::fin(){
     return true;
 }
 
+/**
+ * @brief Destroy the Jeu:: Jeu object
+ * 
+ */
 Jeu::~Jeu(){
     cout << "destructeur jeux " << endl;
 }
@@ -185,6 +209,12 @@ void Jeu::explain(enum erreurDeplacement err){
     }
 }
 
+/**
+ * @brief permet de rocker 
+ * 
+ * @param grand 
+ * @return erreurDeplacement 
+ */
 erreurDeplacement Jeu::rock(bool grand){
         erreurDeplacement retour = mon_echiquier.rocker(joueur,grand);
         if(retour==ok){
@@ -196,6 +226,10 @@ erreurDeplacement Jeu::rock(bool grand){
         return retour;
 }
 
+/**
+ * @brief met a jour les variable du jeux a chaque toure
+ * 
+ */
 void Jeu::end_turn(){
     numero_tour++;
     //fin du tour on change de joueur

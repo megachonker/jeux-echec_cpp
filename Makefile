@@ -42,7 +42,7 @@ piece.o : piece.cc piece.hh
 
 ###fonction 
 clean:
-	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all out *.gcda *.gcno coverage.info test.log
+	rm -rf *.gch *.dSYM *.o echecs *~ vgcore.* parties/*-valgrind all out *.gcda *.gcno coverage.info test.log DoxygenDoc
 	
 #force la recompilation (utile quand on change les flag)
 r:
@@ -63,3 +63,7 @@ lcov: all
 	lcov --capture --directory . --output-file coverage.info
 	genhtml coverage.info --output-directory out
 	# firefox out/
+
+doxy:
+	doxygen DoxygenLayout.xml
+	firefox DoxygenDoc/html/index.html

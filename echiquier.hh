@@ -60,9 +60,7 @@ private:
     main_joueur get_main_joueur(Couleur couleur);
 
     void del_board_piece(Piece * pos_piece);
-    void del_board_piece(Square pos_piece);
     void del_board_piece(Piece * piece, Piece * address_piece_effacer);
-    void del_board_piece(Square pos_piece, Piece * address_piece_effacer);
 public:
     erreurDeplacement rocker(Couleur couleur,bool grand);
     Square get_pos();

@@ -146,21 +146,54 @@ Echiquier::~Echiquier(){
         }
 }
 
-void Echiquier::pose_piece(Piece * piece,Piece * dst){
-        pose_piece(piece,dst->get_pos());
-}
 
-void Echiquier::pose_piece(Piece * piece,Square  dst){
-        echiquier[dst.ligne][dst.colone]=piece;
-}
-
+/**
+ * @brief pose la piece sur le plataux (elle utilise ça propre position) 
+ * 
+ * @param piece 
+ */
 void Echiquier::pose_piece(Piece * piece){
         pose_piece(piece,piece);
 }
 
-void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
+/**
+ * @brief pose une pièce a une position donnée d'une **Piece** sur le plataux
+ * 
+ * @param source
+ * @param dst 
+ */
+void Echiquier::pose_piece(Piece * source,Piece * dst){
+        pose_piece(source,dst->get_pos());
+}
 
-        //supression de la piece dans la main des joueur
+/**
+ * @brief pose une pièce a une position **Square** sur le plataux
+ * 
+ * @param piece 
+ * @param dst 
+ */
+void Echiquier::pose_piece(Piece * piece,Square  dst){
+        echiquier[dst.ligne][dst.colone]=piece;
+}
+
+/**
+ * @brief renvoid l'adresse de la main a la place de l'adresse de la piece
+ * 
+ * @param pos_piece 
+ */
+void Echiquier::del_board_piece(Piece *  pos_piece){
+        del_board_piece(pos_piece, pos_piece);
+}
+
+/**
+ * @brief supression de la piece dans la main des joueur
+ * fonction tricky elle ne désaloue pas directement la mémoir elle renvoie dans un pointeur
+ *  l'adresse a désalouer cela nou laisse la posibiliter de ne pas la déalouer pour donc anuler la supression
+ * 
+ * @param old_piece             future sacrifice a écarteler sur la place publique 
+ * @param address_piece_effacer pointeur servant a renvoiller l'adresse de la piece a désalouer
+ */
+void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer){
         //piece destination existe
         if (old_piece){
                 //supression des piece dans les main des joueur
@@ -186,19 +219,18 @@ void Echiquier::del_board_piece(Piece * old_piece,Piece * address_piece_effacer)
         }
 }
 
-void Echiquier::del_board_piece(Square pos_piece, Piece * address_piece_effacer){
-        del_board_piece(get_piece(pos_piece),address_piece_effacer);
-}
-void Echiquier::del_board_piece(Square pos_piece){
-        del_board_piece(pos_piece, get_piece(pos_piece));
-}
-void Echiquier::del_board_piece(Piece *  pos_piece){
-        del_board_piece(pos_piece, pos_piece);
-}
+
 
 
 /**
- * @brief 
+ * @brief permet de demander a déplacer la piece au vue du jeux
+ * 
+ * # la fonction a 3 partie
+ * - test la chaine de caracter *string d'entrée bien écrit*
+ * - test logique en fonction des regle du jeux
+ * - déplacement de la piece
+ *  - durant le movement la piece peut ce mettre en echeque ce qui anulera ce dernier
+ * 
  * 
  * @param position_src 
  * @param position_dst 
@@ -235,13 +267,30 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         return move_piece(piece,position_dst,prise_passant);
 }
 
-
+/**
+ * @brief déplacement a partire d'une piece
+ * 
+ * @param piece 
+ * @param dst 
+ * @param couleur_joueur 
+ * @param print_err 
+ * @return erreurDeplacement 
+ */
 erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
         if (!piece)
                 return srcvide;
         return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
 
+
+/**
+ * @brief permet de backup la piece est de la bouger est tester si echeque
+ * 
+ * @param piece 
+ * @param position_dst 
+ * @param passant 
+ * @return erreurDeplacement 
+ */
 erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool passant){
         Couleur couleur_joueur = piece->get_couleur();
 
@@ -469,24 +518,25 @@ bool Echiquier::isstuck(Couleur couleur_joueur,bool en_echeque){
         Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
         Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
         //l'idée de cache mis en place aurait pus etre efficace...
+#define DEBUG_ECHEQUE
 #ifndef DEBUG_ECHEQUE
         for (int u = 0; u < 16; u++)
         for (int x = 0; x < 8; x++)
         for (int y = 0; y < 8; y++)
         {
                 if (    (deplace(board_pion[u/2],Square(x,y),couleur_joueur)==ok) //on check 2x les pion pas opti doit refaire une boucle 
-                ||      (deplace((u == 4 && en_echeque)?board_piece[u]:nullptr,Square(x,y),couleur_joueur)==ok))
+                ||      (deplace((!board_piece[u] || (u == 4 && en_echeque))?board_piece[u]:nullptr,Square(x,y),couleur_joueur)==ok))
                         return true;                                                              
         }
 #else
         // swapcolor(couleur_joueur);
-        INFO("PARTIE BLOQUER ?");
-        INFO("Test deplacement pion");
+        // INFO("PARTIE BLOQUER ?");
+        // INFO("Test deplacement pion");
         for (int u = 0; u < 8; u++){
                 Piece* piece = board_pion[u];
                 if (!piece)
                         break;
-                INFO(piece->to_string());
+                // INFO(piece->to_string());
 
                 for (int x = 0; x < 8; x++)
                 for (int y = 0; y < 8; y++){
@@ -504,14 +554,14 @@ bool Echiquier::isstuck(Couleur couleur_joueur,bool en_echeque){
                         // }
                 }
         }
-        INFO("Test deplacement piece");
+        // INFO("Test deplacement piece");
         for (int u = 0; u < 16; u++){
                 Piece* piece = board_piece[u];
                 //on skip le test ou la piece n'existe pas 
                 //ET quand le rois est en echeque est veux ce déplacer
                 if (!piece || (u == 4 && en_echeque))
                         break;
-                INFO(piece->to_string());
+                // INFO(piece->to_string());
 
                 for (int x = 0; x < 8; x++)
                 for (int y = 0; y < 8; y++){
@@ -589,7 +639,14 @@ erreurDeplacement Echiquier::rocker(Couleur couleur_joueur, bool grand){
         return ok;
 }
 
-
+/**
+ * @brief promot une piece a une coordoner donnée
+ * 
+ * 
+ * @param piece 
+ * @return true 
+ * @return false 
+ */
 bool Echiquier::promote(Square piece){
         Piece * mapiece = get_piece(piece);
         Square position = mapiece->get_pos();
@@ -613,25 +670,27 @@ bool Echiquier::promote(Square piece){
                         break;
         }
 
+        //contien addresse de la future piece
         Piece * newpiece;        
 
+        //convertie la bonne piece en fonction de l'énume renvoiller
         switch (saisie_promotion())
         {
-        case dame:
-                newpiece = new Dame(mapiece->get_couleur(),mapiece->get_pos());
-                break;
-        case tour:
-                newpiece = new Tour(mapiece->get_couleur(),mapiece->get_pos());
-                break;
-        case fou:
-                newpiece = new Fou(mapiece->get_couleur(),mapiece->get_pos());
-                break;
-        case cavalier:
-                newpiece = new Cavalier(mapiece->get_couleur(),mapiece->get_pos());
-                break;
-        default:
-                WARNING("erreur switch promotion");
-                break;
+                case dame:
+                        newpiece = new Dame(mapiece->get_couleur(),mapiece->get_pos());
+                        break;
+                case tour:
+                        newpiece = new Tour(mapiece->get_couleur(),mapiece->get_pos());
+                        break;
+                case fou:
+                        newpiece = new Fou(mapiece->get_couleur(),mapiece->get_pos());
+                        break;
+                case cavalier:
+                        newpiece = new Cavalier(mapiece->get_couleur(),mapiece->get_pos());
+                        break;
+                default:
+                        WARNING("erreur switch promotion");
+                        break;
         }
 
 
@@ -647,13 +706,23 @@ bool Echiquier::promote(Square piece){
                         break;
                 }
         }
-        // INFO(newpiece->to_string());
+
+        DEBUG(newpiece->to_string());
         // print_all_piece();
 
         return true;
-
 }
 
+/**
+ * @brief remplie la structure main_joueur
+ * methode rapide permetant d'avoir tout ce que contien un joueur:
+ * - le sens du joueur *pour le calcule du déplacement* on ce met dans le sens du joueur
+ * - les piece du joueur
+ * - les pion
+ * donne une abstraction ou on a plus a ce soucier de quelle couleur est le joueur quand on  veux y faire une action
+ * @param couleur_joueur 
+ * @return main_joueur 
+ */
 main_joueur Echiquier::get_main_joueur(Couleur couleur_joueur){
         Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
         Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
@@ -663,11 +732,20 @@ main_joueur Echiquier::get_main_joueur(Couleur couleur_joueur){
 }
 
 
-
+/**
+ * @brief place un *nullptr* dans l'addresse de la **piece** donnée en argument
+ * 
+ * @param piece 
+ */
 void Echiquier::vider_case(Piece * piece){
         vider_case(piece->get_pos());
 }
 
+/**
+ * @brief place un *nullptr* dans la **case** donnée en argument
+ * 
+ * @param posit 
+ */
 void Echiquier::vider_case(Square posit){
         echiquier[posit.ligne][posit.colone]=nullptr;
 }
@@ -679,6 +757,10 @@ void Echiquier::rst_passant(){
 }
 
 
+/**
+ * @brief affichage des piece que possède les 2 joueur
+ * 
+ */
 void Echiquier::print_all_piece(){
         DEBUG("Piece des joueur !");
         INFO("Piece blanche");

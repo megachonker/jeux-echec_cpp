@@ -30,6 +30,8 @@ make produit les test est l'executable peut prendre 30seconde
 ### rejouer un test valgrind
 ```make r[noms du test]```
 utilise des cache générée par make (plus rapide)
+### Documentation **Doxygène**
+```make doxy```
 ### raport lcov:
 ```make lcov``` permet d'avoir une estimation réel du nombre de ligne executer par le programe
 ### netoyer le repertoire
