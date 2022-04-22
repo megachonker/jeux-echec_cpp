@@ -26,10 +26,6 @@ typePc saisie_promotion();
 
 class Square
 {
-    private:
-        void inv ();
-        void swap();
-        bool inside();
     public:
         bool around(int size=1);
         short ligne, colone;//checker si priver bon

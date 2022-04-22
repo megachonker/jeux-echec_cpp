@@ -89,19 +89,6 @@ void Square::operator+=(Square cible){
     // Square(ligne,colone) = Square(ligne,colone)+cible;
 }
 
-void Square::inv (){
-    ligne*=-1;
-}
-void Square::swap(){
-    int tmp = ligne;
-    ligne = colone;
-    colone = tmp;
-}
-
-bool Square::inside(){
-    return (colone<8)&&(ligne<8);
-}
-
 
 /**
  * @brief determine dans quelle sens la piece bouge
