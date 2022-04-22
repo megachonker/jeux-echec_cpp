@@ -13,8 +13,8 @@ fi
 CHESS_PROG="./echecs"
 LOG="test.log"
 
-leg_games="parties/${level}-leg-*"
-ill_games="parties/${level}-ill-*"
+leg_games="parties/${level}-leg-*.auchan"
+ill_games="parties/${level}-ill-*.auchan"
 
 for g in $leg_games $ill_games
 do
