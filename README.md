@@ -25,7 +25,7 @@ dans la variable debug du makefile est stoquer les différent flag suivant
 
 ## utilitaire :
 ### faire tout les test:
-make produit les test est l'executable
+make produit les test est l'executable peut prendre 30seconde
 ```make```
 ### rejouer un test valgrind
 ```make r[noms du test]```

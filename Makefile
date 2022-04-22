@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+MAKEFLAGS="-j $(nproc)"
 CC=g++ --coverage
 CFLAGS=--std=c++11 -Wall -Wextra -ggdb3 -D INFO_ON  -D WARN_ON 
 # DEBUG=  -D DEBUG_ON -D VERBEUX_ON  -D DEBUG_ECHEQUE -D DEBUG_EMP
