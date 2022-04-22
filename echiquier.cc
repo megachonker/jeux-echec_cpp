@@ -456,10 +456,11 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
  * @return true 
  * @return false 
  */
-bool Echiquier::isstuck(Couleur couleur_joueur){
+bool Echiquier::isstuck(Couleur couleur_joueur,bool en_echeque){
         Piece ** board_piece = couleur_joueur==Noir ? piecesn: piecesb;
         Piece ** board_pion  = (Piece**)(couleur_joueur==Noir ? pionsn : pionsb);
         //l'idée de cache mis en place aurait pus etre efficace...
+#ifndef DEBUG_ECHEQUE
         for (int u = 0; u < 16; u++)
         for (int x = 0; x < 8; x++)
         for (int y = 0; y < 8; y++)
@@ -468,7 +469,55 @@ bool Echiquier::isstuck(Couleur couleur_joueur){
                 ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
                         return true;                                                              
         }
+#else
+        // swapcolor(couleur_joueur);
+        INFO("PARTIE BLOQUER ?");
+        INFO("Test deplacement pion");
+        for (int u = 0; u < 8; u++){
+                Piece* piece = board_pion[u];
+                if (!piece)
+                        break;
+                INFO(piece->to_string());
 
+                for (int x = 0; x < 8; x++)
+                for (int y = 0; y < 8; y++){
+
+                if    (deplace(board_pion[u-1],Square(x,y),couleur_joueur)==ok) // <========================= bug tres tres chelou il faut u-1 est rien d'autre ? ? ?? 
+                        return true;
+                 //on check 2x les pion pas opti doit refaire une boucle 
+
+
+                
+                        // if ((deplace(piece,Square(x,y),couleur_joueur)==ok))
+                        // {
+                        //         WARNING("NON BLOQUER");
+                        //         return true;
+                        // }
+                }
+        }
+        INFO("Test deplacement piece");
+        for (int u = 0; u < 16; u++){
+                Piece* piece = board_piece[u];
+                //on skip le test ou la piece n'existe pas 
+                //ET quand le rois est en echeque est veux ce déplacer
+                if (!piece || (u == 4 && en_echeque))
+                        break;
+                INFO(piece->to_string());
+
+                for (int x = 0; x < 8; x++)
+                for (int y = 0; y < 8; y++){
+                        //le déplacemnet du fout a tuer la reine 
+                        if (deplace(piece,Square(x,y),couleur_joueur)==ok)
+                        {
+                                WARNING("NON BLOQUER");
+                                return true;
+                        }
+                }
+        }
+
+        
+        WARNING("BLOQUER");
+#endif
         return false;
 }
 
