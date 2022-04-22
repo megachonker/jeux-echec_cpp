@@ -1,4 +1,3 @@
-/.vscode
 try/camera.h
 try/color.h
 try/hittable_list.h
@@ -19,17 +18,6 @@ try/sphere.h
 try/test
 try/test.cpp
 try/vec3.h
-try/.vscode/c_cpp_properties.json
-try/.vscode/launch.json
-try/.vscode/settings.json
-try/.vscode/tasks.json
-azer
-agence/.vscode/launch.json
-agence/.vscode/settings.json
-agence/.vscode/tasks.json
-agence/a.out
-agence/main
-echeck/.vscode/settings.json
 echeck/echecs
 echeck/average.m
 echeck/jeu.o
@@ -47,7 +35,6 @@ puissance4/couleur.h.gch
 puissance4/jeux.h.gch
 puissance4/joueur.h.gch
 puissance4/partie.h.gch
-puissance4/.vscode/settings.json
 puissance4/main
 echeck/run.m
 echeck/square.o
@@ -56,8 +43,6 @@ echeck/main.o
 echeck/jeu.o
 echeck/echiquier.o
 echeck/echecs
-echeck/.vscode/launch.json
-echeck/.vscode/tasks.json
 echeck/sebmove-valgrind
 echeck/parties/test.log
 echeck/test.log
