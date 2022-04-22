@@ -102,12 +102,14 @@ Echiquier::Echiquier(const Echiquier &obj){
                 }
 
                 if (obj.pionsb[i]!=nullptr){
-                        pionsb[i] = new Pion(*obj.pionsb[i]);
+                        pionsb[i] =  (Pion*)obj.pionsb[i]->Clone();
+                        // pionsb[i] = new Pion(*obj.pionsb[i]);
                         pose_piece(pionsb[i]);
                 }
 
                 if (obj.pionsn[i]!=nullptr){
-                        pionsn[i] = new Pion(*obj.pionsn[i]);
+                        pionsn[i] =  (Pion*)obj.pionsn[i]->Clone();
+                        // pionsn[i] = new Pion(*obj.pionsn[i]);
                         pose_piece(pionsn[i]);
                 }
         }
@@ -220,23 +222,24 @@ erreurDeplacement Echiquier::deplace(Square position_src, Square position_dst,Co
         Piece * piece =  get_piece(position_src);
         
         //vérifie avec les règle de déplacent que la piece que le déplacement est possible
+        DEBUG("test déplacement logique");
         erreurDeplacement tmp;
         if( (tmp = pseudocheck(piece,position_dst,print_err)) !=ok)
                 return tmp;
 
         //vérifie qu'il n'y a pas de colision pandant le déplacement de la piece
+        DEBUG("test colision piece");
         if (!slidecheck(piece,position_dst))
                 return collision;
 
         bool prise_passant = (piece->get_type()==pion && pion_passant != Square(0,0) && position_dst == pion_passant+AVANCE1BONSENS);
-
         return move_piece(piece,position_dst,prise_passant);
 }
 
 
 erreurDeplacement Echiquier::deplace(Piece * piece, Square dst,Couleur couleur_joueur,bool print_err){
         if (!piece)
-                return srcvide;        
+                return srcvide;
         return deplace(piece->get_pos(),dst,couleur_joueur,print_err);
 }
 
@@ -273,7 +276,7 @@ erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool p
         piece->deplace(position_dst);
 
 //echeque
-        VERBEUX("check lecheque est le roi");
+        DEBUG("Le rois est en ECHEQUE ?");
         if(chk_echec_roi(couleur_joueur)){
                 //on déplace la piece a la position initial
                 piece->undo_move();
@@ -334,7 +337,7 @@ bool Echiquier::slidecheck(Piece *source,Square position_dst,bool force){
 
         Square origine = source->get_pos();
         Square decalage= sens_deplacement(origine,position_dst);
-        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.to_string());
+        DEBUG("Déplacemnt de: "<< source->typePc_to_string() << "\t" << origine.to_string() << "==>"<< position_dst.to_string() << "\tdécalage: " << decalage.colone<<":"<<decalage.ligne);
         string chaine = origine.to_string();
 
 
@@ -425,6 +428,8 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
 
         //remplacer par get_main_joueur ?
         Square pos_roi = (couleur_joueur==Blanc ? piecesb[4]->get_pos() : piecesn[4]->get_pos());
+        VERBEUX("----chk_echec_roi----");
+        VERBEUX("ROI Position:"<< pos_roi.to_string());
         Piece ** board_piece = couleur_joueur==Blanc ? piecesn: piecesb;
         Pion  ** board_pion  = couleur_joueur==Blanc ? pionsn : pionsb;        
         
@@ -434,15 +439,20 @@ bool Echiquier::chk_echec_roi(Couleur couleur_joueur){
                 //piece ataque roi
                 if (board_piece[i] != nullptr
                 && !pseudocheck(board_piece[i],pos_roi)
-                && slidecheck(board_piece[i],pos_roi))
+                && slidecheck(board_piece[i],pos_roi)){
+                        VERBEUX("====ECHEQUE====");
                         return true;
+                }
         
                 //pion attaque un roi
-                if (board_pion[i] != nullptr
-                && !pseudocheck(board_pion[i],pos_roi) 
-                && slidecheck(board_pion[i],pos_roi))
-                        return true;
+                if (board_pion[i/2] != nullptr
+                && !pseudocheck(board_pion[i/2],pos_roi) 
+                && slidecheck(board_pion[i/2],pos_roi)){
+                        VERBEUX("====ECHEQUE====");
+                        return true;              
+                }
         }
+        VERBEUX("====Pas ECHEQUE====");
         return false;
 }
 
