@@ -475,7 +475,7 @@ bool Echiquier::isstuck(Couleur couleur_joueur,bool en_echeque){
         for (int y = 0; y < 8; y++)
         {
                 if (    (deplace(board_pion[u/2],Square(x,y),couleur_joueur)==ok) //on check 2x les pion pas opti doit refaire une boucle 
-                ||      (deplace(board_piece[u],Square(x,y),couleur_joueur)==ok))
+                ||      (deplace((u == 4 && en_echeque)?board_piece[u]:nullptr,Square(x,y),couleur_joueur)==ok))
                         return true;                                                              
         }
 #else
