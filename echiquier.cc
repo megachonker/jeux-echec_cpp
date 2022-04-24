@@ -126,7 +126,7 @@ Echiquier::~Echiquier(){
         VERBEUX("destructeur echiquier");
 
         for (unsigned char i(0);i<8;i++) {
-                if (pionsb[i] != nullptr)
+                if (pionsb[i] != nullptr)//LUL KAPA le nullptr ptdrtki en vrais ces pas désalouer mais null
                         delete pionsb[i];
         
                 if (pionsn[i] != nullptr)        
@@ -343,6 +343,28 @@ erreurDeplacement Echiquier::move_piece(Piece * piece,Square position_dst,bool p
                 
                 return echeque;
         }
+
+
+        // if (true)
+        // {
+        //         //on déplace la piece a la position initial
+        //         piece->undo_move();
+        //         //restoration de la piece original
+        //         pose_piece(piece);
+        //         //restoration de la case dst
+        //         pose_piece(old_piece,position_dst);
+        //         //restoration de la piece dans la main joueur
+        //         if(old_piece && address_piece_effacer)
+        //                 address_piece_effacer=old_piece;
+        //         if (passant)
+        //         {
+        //                 pose_piece(backup_passant);
+        //                 address_pion_passant=backup_passant;
+        //         }
+        //         return true;
+        // }
+        
+
 
         //suprime la piece de la mémoire
         if (passant)
