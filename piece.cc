@@ -19,6 +19,9 @@ Square Piece::get_pos()const{
 
 Piece::Piece(std::string nom, Couleur couleur,Square position): nom(nom),couleur(couleur),position(position){}
 
+std::string Piece::get_nom(){
+    return nom;
+}
 
 /**
  * @brief déplace la piece

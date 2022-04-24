@@ -12,6 +12,7 @@ protected:
     Square position; // a metre a jour
     Square old_position;
 public:
+    std::string get_nom();
     virtual void undo_move();
     std::string typePc_to_string();
     virtual typePc get_type() const =0;//peut etre enlever

@@ -19,6 +19,7 @@ class Jeu
         void end_turn();
         bool is_pat();
     public:
+        void print_canonical_position() const;
         erreurDeplacement rock(bool grand);
         void explain(enum erreurDeplacement errono);
         bool fin();

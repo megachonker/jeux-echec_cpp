@@ -51,6 +51,6 @@ int main() {
 
     //la partie prend elle fin ?
     } while (monjeu.fin());
-
+    monjeu.print_canonical_position();
     return 0;
 }

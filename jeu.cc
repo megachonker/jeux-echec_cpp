@@ -241,3 +241,7 @@ void Jeu::end_turn(){
     //reset de la prise en passant
     mon_echiquier.rst_passant();
 }
+
+void Jeu::print_canonical_position() const{
+    cout << mon_echiquier.canonical_position() << endl;
+}
